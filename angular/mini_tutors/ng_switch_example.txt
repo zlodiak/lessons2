@@ -1,0 +1,37 @@
+<h2>ngSwitch</h2>
+<div [ngSwitch]="value">
+	<p *ngSwitchCase="10">10</p>
+	<p *ngSwitchCase="100">100</p>
+	<p *ngSwitchDefault>default</p>
+</div>
+
+
+
+=========
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'dir-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'dir works!';
+
+  private switch = true;
+
+  private items = [1, 2, 3, 4, 5];
+
+  private value = 10;
+
+  onSwitch() {
+  	this.switch = !this.switch;
+  }
+}
+
+
+=========
+=========
+=========
+=========

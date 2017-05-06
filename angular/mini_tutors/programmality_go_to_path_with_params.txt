@@ -1,0 +1,98 @@
+если нужно программно преейти по роуту с параметром. например попась на страничку с детальной информацией продукта с id=2
+
+==========================================
+
+html parent:
+ <button (click)="onClick($event)">alert start</button>
+
+ js parent:
+ import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+
+@Component({
+  selector: 'app-page1',
+  templateUrl: './page1.component.html',
+  styleUrls: ['./page1.component.css']
+})
+export class Page1Component implements OnInit {
+
+  constructor (private router: Router) {}
+
+  ngOnInit() {
+  }
+
+  products: string[] = [
+    'apples',
+    'oranges',
+    'bananas'
+  ];
+
+  onClick (ev) {
+    console.log(ev);
+    this.router.navigate(['/product', 2]);    
+  }
+
+}
+
+
+
+==========================================
+js child:
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+@Component({
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.css']
+})
+export class ProductComponent implements OnInit, OnDestroy {
+
+  constructor(private route: ActivatedRoute, private router: Router) { }
+
+  private id;
+  private sub;
+
+  ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+       this.id = +params['id'];
+    });
+  }
+
+	ngOnDestroy() {
+		this.sub.unsubscribe();
+	}  
+
+  goBack () {
+    this.router.navigate(['/page1']);
+  }
+
+}
+
+
+
+html child:
+<p>
+  product {{id}}
+</p>
+
+<a [routerLink]="['specs']">Technical Specs</a>
+
+<button (click)="goBack($event)">back</button>
+
+
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================
+==========================================

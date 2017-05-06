@@ -1,0 +1,34 @@
+в пользовательских директивах можно отслеживать события:
+
+import { Directive, HostListener, HostBinding } from '@angular/core';
+
+@Directive({
+  selector: '[dirHighlight]'
+})
+export class HighlightDirective {
+	@HostListener('mouseenter') mouseover() {
+		this.backgroundColor = "lime";
+	};
+	@HostListener('mouseleave') mouseleave() {
+		this.backgroundColor = "yellow";
+	};	
+	@HostBinding('style.backgroundColor') get setColor() {
+		return this.backgroundColor;
+	};
+	private backgroundColor = 'orange';
+}
+
+
+==================================
+<h2>custom attribute directive</h2>
+<div dirHighlight>some text</div>
+
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================

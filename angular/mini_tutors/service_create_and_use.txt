@@ -1,0 +1,88 @@
+можно перенести в сервис повторяющийся функционал:
+
+ng g s recipe
+
+========================
+подключаем в app.module.ts:
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+import { RecipeService } from './recipes/recipe.service';
+
+@NgModule({
+  declarations: [],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule
+  ],
+  providers: [RecipeService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+========================
+сам сервис:
+import { Injectable } from '@angular/core';
+
+import { Recipe } from './recipe-list/recipe';
+
+@Injectable()
+export class RecipeService {
+
+	recipes: Recipe[] = [
+		new Recipe('Schnitzel', 'Very tasty', 'http://www.daringgourmet.com/wp-content/uploads/2014/03/Schnitzel-7_edited.jpg'),
+		new Recipe('Summer salad', 'Okayish', 'http://cdn.iowagirleats.com/wp-content/uploads/2013/05/Triple-Berry-Summer-Salad-03_mini.jpg')
+	];
+
+  	constructor() { }
+
+  	getRecipes() {
+  		return this.recipes;
+  	}
+
+}
+
+
+========================
+его использование:
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Ingredient } from "../../shared/ingredient";
+
+import { Recipe } from './recipe';
+import { RecipeItemComponent } from './recipe-item.component';
+import { RecipeService } from '../recipe.service';
+
+@Component({
+  selector: 'rb-recipe-list',
+  templateUrl: './recipe-list.component.html',
+  styleUrls: ['./recipe-list.component.css']
+})
+export class RecipeListComponent implements OnInit {
+	recipes: Recipe[] = [];
+	@Output() recipeSelected = new EventEmitter<Recipe>();
+
+	constructor(private recipeService: RecipeService) { }
+
+	ngOnInit() {
+		this.recipes = this.recipeService.getRecipes();
+	}
+
+	onSelected(recipe: Recipe) {
+		this.recipeSelected.emit(recipe);
+	}
+
+}
+
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================

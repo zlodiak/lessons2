@@ -1,0 +1,77 @@
+можно преедавать параметры между компонентами, генерируя объект события:
+
+наприер есть 
+bind1 - parent
+event-bindeing - child
+
+=======================
+в event-bilding на элемент повесим событие
+
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-event-binding',
+  templateUrl: './event-binding.component.html',
+  styleUrls: ['./event-binding.component.css']
+})
+export class EventBindingComponent {
+
+	@Output() clicked = new EventEmitter<string>();
+	onClicked() {
+		this.clicked.emit('it works');
+	}
+}
+
+
+<p  (click)="onClicked()">
+  event-binding works!
+</p>
+
+здесь после клика происходит генерация события и излучение его.
+в то же время событие делаем доступным извне
+
+=======================
+в bind1 html:
+<app-event-binding (clicked)="onClicked($event)">{{$event | json}}</app-event-binding>
+
+отслеживает был ли клик на дочернем элементе. если происходит, то срабатыват обраотчик:
+import { Component, OnInit } from '@angular/core';
+import { Input} from '@angular/core';
+import { Bind2Component } from './bind2.component';
+import { EventBindingComponent } from './event-binding.component';
+
+@Component({
+  selector: 'app-bind1',
+  templateUrl: './bind1.component.html',
+  styleUrls: ['./bind1.component.css']
+})
+export class Bind1Component implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  name= "Евгений";
+
+  onClicked(value:string) {
+  	alert(value);
+  }
+
+}
+
+
+фокус в том, что $event подменяется на излучённое событие
+
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================

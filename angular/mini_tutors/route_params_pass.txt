@@ -1,0 +1,144 @@
+передача гет-параметра через адресную строку:
+
+пусть есть 2 клмпонента: список продуктов и детальная информация продукта
+
+====================================
+import { Component, OnInit } from '@angular/core';
+
+js:
+@Component({
+  selector: 'app-page1',
+  templateUrl: './page1.component.html',
+  styleUrls: ['./page1.component.css']
+})
+export class Page1Component implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  products: string[] = [
+    'apples',
+    'oranges',
+    'bananas'
+  ];
+
+}
+
+
+html:
+<a class="product" *ngFor="let product of products; let i = index" [routerLink]="['/product', i]">
+	{{product}}({{i}})
+</a>
+
+
+
+====================================
+
+js:
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.css']
+})
+export class ProductComponent implements OnInit, OnDestroy {
+
+  constructor(private route: ActivatedRoute) { }
+
+  private id;
+  private sub;
+
+  ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+       this.id = +params['id'];
+    });  
+  }
+
+	ngOnDestroy() {
+		this.sub.unsubscribe();
+	}  
+
+}
+
+
+
+
+html:
+<p>
+  product {{id}}
+</p>
+
+
+
+====================================
+routing:
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { Page1Component } from './page1/page1.component';
+import { Bind1Component } from './bind1/bind1.component';
+import { ProductComponent } from './product/product.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    children: []
+  },
+  {
+    path: 'page1',
+    children: [],
+    component: Page1Component
+  }, 
+  {
+    path: 'bind1',
+    children: [],
+    component: Bind1Component
+  }, 
+  {
+    path: 'product/:id',
+    children: [],
+    component: ProductComponent
+  }      
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+
+====================================
+в результате при клике по продукту через ажресную сроку передаётся параметр и открывается новый шаблон
+
+====================================
+если нужен редирект, то:
+  {
+    path: '',
+    redirectTo: 'page1', 
+    pathMatch: 'full'
+  },
+
+====================================
+====================================
+https://angular-2-training-book.rangle.io/handout/routing/routeparams.html
+
+
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================

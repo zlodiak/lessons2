@@ -1,0 +1,42 @@
+в директиву можно передавать значения через атриббуты:
+<h2>custom attribute directive</h2>
+<div dirHighlight [highlightColor]="'blue'" [defaultColor]="'red'">some text</div>
+
+
+===========================
+import { Directive, HostListener, HostBinding, Input } from '@angular/core';
+
+@Directive({
+  selector: '[dirHighlight]'
+})
+export class HighlightDirective {
+	@HostListener('mouseenter') mouseover() {
+		this.backgroundColor = this.highlightColor;
+	};
+	@HostListener('mouseleave') mouseleave() {
+		this.backgroundColor = this.defaultColor;
+	};	
+	@HostBinding('style.backgroundColor') get setColor() {
+		return this.backgroundColor;
+	};
+	@Input() defaultColor = 'white'
+	@Input() highlightColor = 'green'
+	private backgroundColor = this.defaultColor;
+
+
+}
+
+
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================

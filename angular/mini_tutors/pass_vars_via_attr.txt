@@ -1,0 +1,70 @@
+можно создать дочерний компонент и встроить его в родительский. при этом передавать параметр через атрибут:
+bind1 - parent
+bind2 - child
+
+===========================
+bind2 js:
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-bind2',
+  template: `
+    <p>
+      bind2 Works! {{result}}
+    </p>
+  `,
+  styles: []
+})
+export class Bind2Component {
+
+  @Input() result: number = 0;
+
+}
+
+
+
+===========================
+bind1 js:
+import { Component, OnInit } from '@angular/core';
+import { Input} from '@angular/core';
+import { Bind2Component } from './bind2.component';
+
+@Component({
+  selector: 'app-bind1',
+  templateUrl: './bind1.component.html',
+  styleUrls: ['./bind1.component.css']
+})
+export class Bind1Component implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  name= "Евгений";
+
+
+
+}
+
+
+
+bind1 html:
+
+  <h2>Добро пожаловать {{name}}!</h2>
+
+  from component page1: <app-bind2 [result]="123"></app-bind2>
+
+
+
+===========================
+в резльтате в шаблоне выводится вместо {{result}} - 123
+
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
