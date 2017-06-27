@@ -1,0 +1,23 @@
+<div>Я квадрат</div>
+
+
+
+--------------
+div {
+    width: 30%;
+    margin: auto;
+    background: silver;
+    overflow: hidden; /* clearfix */
+}
+
+div:before {
+    content: "";
+    padding-top: 100%;
+    float: left;
+}
+   
+
+--------------
+
+
+http://jsfiddle.net/fzzxs759/

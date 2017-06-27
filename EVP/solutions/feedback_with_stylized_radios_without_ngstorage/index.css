@@ -1,0 +1,94 @@
+.feedback-page{
+
+  .feedback-page-inner{
+
+    .question{
+      font-weight: bold;
+      padding-bottom: 16px;
+    }
+
+    .question_desc{
+      font-style: italic;
+      color: #ccc;
+      font-size: 90%;
+      margin-top: -15px;
+      padding-bottom: 20px;
+    }
+
+    .table_feedback{
+      padding-bottom: 20px;
+
+      ul{
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+
+        li{
+
+          .label{
+            padding-bottom: 10px;
+            clear: left;
+          }
+
+          .variants{
+
+            .variant{
+              display: inline-block;
+              margin-right: 20px;
+            }
+          }
+
+          .text_box{
+            width: 100%;
+            margin: 9px 0;
+
+            .text_body{
+
+            }
+          }
+
+          .rating_box{
+            margin-top: 15px;
+            padding-bottom: 10px;
+            display: block;
+
+            .rating{
+              float: left;
+              width: 20%;
+              margin-bottom: 0;
+
+              .md-ink-ripple{
+                margin: 0 auto;
+                position: static;
+                display: block;
+              }
+
+              .md-label{
+                top: 0px;
+                margin-left: 0px;
+                height: 40px;
+                width: 100%;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .send_feedback_outer{
+      padding: 10px 0;
+
+      .submit_feedback{
+        margin: 0;
+        padding: 0 14px;
+        background: $primary-color;
+        color: #fff;
+      }
+    }
+
+    .send_feedback_outer {
+      padding: 43px 0 11px;
+    }
+  }
+}

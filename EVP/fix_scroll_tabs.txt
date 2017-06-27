@@ -1,0 +1,5 @@
+  если вкладки уезжают вверх при прокрутке, то использовать это:
+
+  md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
+    min-height: calc(100vh - 76px);
+  }

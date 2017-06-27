@@ -1,0 +1,24 @@
+angular.module('restaurants', [])
+    .controller('restaurantsCtrl', ['$rootScope', '$scope','db','restHelper','$mdDialog', '$timeout', '$state','scroll','communication', '$http', '$location', '$anchorScroll',
+        function($rootScope, $scope, db, restHelper, $mdDialog, $timeout, $state,scroll, communication, $http, $location, $anchorScroll) {
+        ....
+        ....
+        ...
+            // обрабтчик нажатия на иконку комментариев (должен произойти скролл к списку комментариев)
+            $scope.scrollToCommentsArea = function(commentsArea) {
+                $location.hash(commentsArea);
+                $anchorScroll();
+            };
+
+
+
+
+==============
+<div class="comments-icon" ng-click="scrollToCommentsArea('commentsArea')"></div>
+
+...
+...
+...
+
+        <div class="comments-area" ng-show="true" name="comments" id="commentsArea">
+            <div class="comments-list" id="commentsList">            

@@ -1,0 +1,32 @@
+    если с чёрным фоном ничего поделать нельзя, то скрываем его из шаблона так:
+
+    /*main,*/
+    .pagecontent, .speakers-page {
+        height: 100% !important;
+    }
+
+
+
+    ------
+
+
+    <style>
+    /*.md-button.md-primary.md-raised[disabled] {
+        background-color: #d3d3d3 !important;
+        color: #fff !important;
+    }*/
+
+    .pagecontent{
+        height: 100%;
+        background: #fff !important;
+    }
+
+    /*main,*/
+    .pagecontent, .speakers-page {
+        height: 100% !important;
+    }
+    
+    main{
+        background: #fff !important;
+    }
+</style>

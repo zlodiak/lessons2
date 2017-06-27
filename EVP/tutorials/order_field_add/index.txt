@@ -1,0 +1,49 @@
+допустим в таблице есть список спикеров. допустим он выводится в шаблоне через ng-repeat.
+
+добавим в таблицу поле, по которому можно будет сорировать вывод в шаблон
+
+==================
+добавляем текстовое поле order
+
+==================
+в контроллере перебираем массив:
+db.get('module_participants').success(function (data) {
+    var values = [];
+    for (var v in data.values) {
+        var _values = data.values[v];
+        _values['id'] = v;
+        _values['order'] = +_values['order'];
+        values.push(_values);
+    }
+    $scope.participants = values;
+});
+
+==================
+в шаблоне выводим:
+<md-card class="user-item" ng-repeat="participant in participants | simpleSearch:search | orderBy:'order'">
+    <div class="participant">
+        <div class="avatar" style="{{(participant.photo | file:'cover') || '../img/avatar.svg'}}"></div>
+
+        <div class="info-outer">
+            <div class="info">
+                <h3>
+                  <div class="name">{{participant.name}}</div>
+                  <div class="family">{{participant.family}}</div>
+                </h3>
+            </div>
+
+            <md-button class="question-button md-raised" ng-click="openQuestionPage(participant.family, participant.name, '')">Задать вопрос</md-button>
+        </div>
+    </div>
+</md-card>
+
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================

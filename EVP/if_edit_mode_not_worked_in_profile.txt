@@ -1,0 +1,1 @@
+<md-button ng-show="header.edit" class="icon edit-icon" ng-click="header.edit()"></md-button><md-button ng-show="header.done" class="icon done-icon" ng-click="header.done()"></md-button>

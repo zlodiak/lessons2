@@ -1,0 +1,23 @@
+<div class="info" ng-bind-html="manager.info | cutPhone"></div>
+
+angular.module('app.filters', [])
+    .filter('cutPhone', function($rootScope) {
+      return function (phone) {
+          if (!phone) return;
+          var width = document.documentElement.clientWidth;
+          if('ios' == $rootScope.vars.device_platform && width > 760) {
+              phone = phone.replace(/\/\?epadvisorIgnoreRequest=true/g, "");
+          } else if ('android' == $rootScope.vars.device_platform){
+              phone = phone.replace(/\/\?epadvisorIgnoreRequest=true/g, "");
+          }
+          return phone;
+      }
+    })
+
+
+
+в БД:
+<a href='tel:+79279724833/?epadvisorIgnoreRequest=true'></a>
+
+
+

@@ -1,0 +1,39 @@
+<md-content class="static_page info-page">
+  <md-tabs md-swipe-content md-border-bottom md-selected="0">
+    <md-tab ng-repeat="(id, tab) in headers.tab.options" label="{{tab ? tab : ''}}">
+      <div ng-hide="id == 1 || id == 3" class="block" ng-class="{images: !event.title && !event.description}" ng-repeat="(key, event) in values | filter:{ tab: id } | orderBy: 'order'">
+        <h2 class="title" ng-if="event.title" style="text-align: {{headers.title_align.options[event.title_align]}}">{{event.title}}</h2>
+        <div ng-if="event.description" class="text" ng-bind-html="event.description">{{event.description}}</div>
+        <div class="image" ng-if="event.picture"><img src="{{event.picture | file}}" alt=""></div>
+      </div>
+
+      <div class="block" ng-show="id == 1">
+        <div class="image ng-scope">
+          <a href="../img/custom/service_campus.pdf" style="border-bottom: none;"><img src="../img/custom/serviseskampus.jpg" alt=""></a>
+        </div>
+
+        <div class="text ng-binding ng-scope" >
+          * Для оформления абонемента с выносом книг в номер необходимо оформить регистрацию у библиотекаря с 9:00 до 18:00.
+          <br><br>
+          **Для комфортного посещения спортивного комплекса рекомендуем вам взять соответствующую одежду: спортивную форму и купальные принадлежности (купальник, сланцы и шапочку для волос).
+        </div>
+      </div>
+
+      <div class="block" ng-show="id == 3">
+        <div class="image ng-scope">
+          <a href="../img/custom/kartakampus.pdf" style="border-bottom: none;"><img src="../img/custom/kartakampus.jpg" alt=""></a>
+        </div>
+
+        <center>Нажмите, чтобы увеличить</center>
+
+        <div class="image ng-scope">
+          <a href="../img/custom/planetkorpcentr.pdf" style="border-bottom: none;"><img src="../img/custom/planetkorpcentr.jpg" alt=""></a>
+        </div>
+
+        <center>Нажмите, чтобы увеличить</center>
+
+        <br>
+      </div>
+    </md-tab>
+  </md-tabs>
+</md-content>

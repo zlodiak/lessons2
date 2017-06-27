@@ -1,0 +1,46 @@
+чтобы в хедере на кнопке Назад убрать залипающий эффект:
+
+в разметке хэдера в index.html заменить:
+          <md-button class="back-icon" ng-click="animateTimeout(header.back)"></md-button>
+          <!--<md-button ng-show="header.back" class="icon back-icon" ng-click="animateTimeout(header.back)"></md-button>-->
+
+======================
+в layout.css заменить(см комментарии):
+    .right-items {
+      text-align: right;
+      &>* {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      button {
+        /*&.search-icon {
+          background-image: url('../img/search_icon_white.svg');
+        }
+        &.back-icon {
+          background-image: url('../img/back_icon_white.svg');
+        }
+        &.edit-icon {
+          background-image: url('../img/edit_icon_white.svg');
+        }
+        &.done-icon {
+          background-image: url('../img/done_icon_white.svg');
+        }
+        &.close-search-icon {
+          background-image: url('../img/close_search_icon.svg')
+        }*/
+
+        padding: 0;
+        margin: 0;
+        height: 56px;
+        min-width: 56px;
+        width: 56px;
+        &.back-icon {
+          background: url('../img/back_icon_white.svg') center no-repeat;
+          background-size: 50%;
+        }
+      }
+
+======================
+======================
+======================
+======================

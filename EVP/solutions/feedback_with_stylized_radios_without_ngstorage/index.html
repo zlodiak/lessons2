@@ -1,0 +1,131 @@
+<div layout-padding class="feedback-page inner-page">
+  <div class="feedback-page-inner">
+    <div class="question">Оцени, пожалуйста, семинар в целом. Выскажи свое мнение о событии, чтобы мы могли учесть его для следующих корпоративных мероприятий.</div>
+
+    <div class="table_feedback table_feedback_0">
+      <ul>
+        <li>
+          <div class="label">Тебе понравилось событие в целом?</div>
+          <md-radio-group class="variants" ng-model="data.group0_0">
+            <md-radio-button class="variant" value="Да">Да</md-radio-button>
+            <md-radio-button class="variant" value="Нет">Нет</md-radio-button>
+          </md-radio-group>
+        </li>
+
+        <li>
+          <div class="label">Обучение было информативным?</div>
+          <md-radio-group class="variants" ng-model="data.group0_1">
+            <md-radio-button class="variant" value="Да">Да</md-radio-button>
+            <md-radio-button class="variant" value="Нет">Нет</md-radio-button>
+          </md-radio-group>
+        </li>
+
+        <li>
+          <div class="label">Школа была интересной?</div>
+          <md-radio-group class="variants" ng-model="data.group0_2">
+            <md-radio-button class="variant" value="Да">Да</md-radio-button>
+            <md-radio-button class="variant" value="Нет">Нет</md-radio-button>
+          </md-radio-group>
+        </li>
+
+        <li>
+          <div class="label">Событие оправдало твои ожидания?</div>
+          <md-radio-group class="variants" ng-model="data.group0_3">
+            <md-radio-button class="variant" value="Да">Да</md-radio-button>
+            <md-radio-button class="variant" value="Нет">Нет</md-radio-button>
+          </md-radio-group>
+        </li>
+
+        <li>
+          <div class="label">Как ты считаешь, должна ли увеличиться продолжительность Школы?</div>
+          <md-radio-group class="variants" ng-model="data.group0_4">
+            <md-radio-button class="variant" value="Да">Да</md-radio-button>
+            <md-radio-button class="variant" value="Нет">Нет</md-radio-button>
+          </md-radio-group>
+        </li>
+      </ul>
+    </div>
+
+
+    <div class="question">Предложи, пожалуйста, несколько тем или вопросов для обучения, которые наиболее актуальны именно для тебя.</div>
+
+    <div class="table_feedback table_feedback_1">
+      <ul>
+        <li>
+          <md-input-container class="text_box">
+            <input class="text_body" ng-model="data.group1_0" placeholder="1.">
+          </md-input-container>
+        </li>
+
+        <li>
+          <md-input-container class="text_box">
+            <input class="text_body" ng-model="data.group1_1" placeholder="2.">
+          </md-input-container>
+        </li>
+
+        <li>
+          <md-input-container class="text_box">
+            <input class="text_body" ng-model="data.group1_2" placeholder="3.">
+          </md-input-container>
+        </li>
+      </ul>
+    </div>
+
+
+    <div class="question">Пожалуйста, оцени общий уровень организации  события по 5-ти балльной шкале</div>
+    <div class="question_desc">(1-очень плохо, 2-плохо, 3-удовлетворительно, 4-хорошо, 5-отлично).</div>
+
+    <div class="table_feedback table_feedback_2">
+      <ul>
+        <li>
+          <div class="label">Чартер</div>
+          <md-radio-group class="rating_box" ng-model="data.group2_0">
+            <md-radio-button class="rating" value="1">1</md-radio-button>
+            <md-radio-button class="rating" value="2">2</md-radio-button>
+            <md-radio-button class="rating" value="3">3</md-radio-button>
+            <md-radio-button class="rating" value="4">4</md-radio-button>
+            <md-radio-button class="rating" value="5">5</md-radio-button>
+          </md-radio-group>
+        </li>
+
+        <li>
+          <div class="label">Трансферы</div>
+          <md-radio-group class="rating_box" ng-model="data.group2_1">
+            <md-radio-button class="rating" value="1">1</md-radio-button>
+            <md-radio-button class="rating" value="2">2</md-radio-button>
+            <md-radio-button class="rating" value="3">3</md-radio-button>
+            <md-radio-button class="rating" value="4">4</md-radio-button>
+            <md-radio-button class="rating" value="5">5</md-radio-button>
+          </md-radio-group>
+        </li>
+
+        <li>
+          <div class="label">Проживание</div>
+          <md-radio-group class="rating_box" ng-model="data.group2_2">
+            <md-radio-button class="rating" value="1">1</md-radio-button>
+            <md-radio-button class="rating" value="2">2</md-radio-button>
+            <md-radio-button class="rating" value="3">3</md-radio-button>
+            <md-radio-button class="rating" value="4">4</md-radio-button>
+            <md-radio-button class="rating" value="5">5</md-radio-button>
+          </md-radio-group>
+        </li>
+      </ul>
+    </div>
+
+    <div class="send_feedback_outer">
+      <md-button class="submit_feedback md-raised" ng-click="submitFeedback(data)">Отправить</md-button>
+    </div>
+  </div>
+</div>
+
+<style>
+  main {
+    /*height: 100%;*/
+  }
+  header,.search_block {
+    /*display: none;*/
+  }
+
+
+</style>
+

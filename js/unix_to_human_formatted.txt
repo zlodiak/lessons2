@@ -1,0 +1,24 @@
+// перевод даты из юникс-формата в человеческий
+$scope.timeConverter = function(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Янв','Фев','Мар','Апр','Май','Июнь','Июль','Авг','Сен','Окт','Ноя','Дек'];
+  var year = a.getFullYear();
+  //var month = months[a.getMonth()];
+  var month = a.getMonth() + 1;
+  if (month < 10) month = '0' + month;
+
+  var date = a.getDate();
+
+  var hour = a.getHours();
+  if (hour < 10) hour = '0' + hour;
+
+  var min = a.getMinutes();
+  if (min < 10) min = '0' + min;
+
+  var sec = a.getSeconds();
+  if (sec < 10) sec = '0' + sec;
+
+  var time = date + '.' + month + '.' + year + ' ' + hour + ':' + min + ':' + sec ;
+
+  return time;
+};

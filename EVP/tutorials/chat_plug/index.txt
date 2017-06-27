@@ -1,0 +1,106 @@
+подключить чат
+скачать чат с гита
+
+--------------------------
+в админке в разделе Чаты создать чат. через инспектор найти id
+
+--------------------------
+в контроллете прописать:
+
+$rootScope.chatReference = 'ua5qom11';
+
+в:
+
+db.get('devices', !$rootScope.vars.dev).success(function (resp) {
+    var participants = {};
+    for (var i = 0; i < resp.length; i++) {
+        participants[resp[i]["id"]] = resp[i];
+    }
+    $rootScope.chatReference = 'ua5qom11';
+    $scope.participants = participants;
+    chats.start();
+});
+
+или в начале контроллера
+
+--------------------------
+в:
+messages: function (date, chatReference, messages) {
+    var key = "chat_messages_" + chatReference;
+
+    for (var index in messages)  {
+        if (!$rootScope.vars[key].index.hasOwnProperty(messages[index].reference)) {
+            $rootScope.vars[key].list.push(messages[index]);
+            $rootScope.vars[key].index[messages[index].reference] = $rootScope.vars[key].list.length - 1;
+        } else {
+            $rootScope.vars[key].list[$rootScope.vars[key].index[messages[index].reference]] = messages[index];
+        }
+    }
+    var chat = $rootScope.vars.chats_list.list[$rootScope.vars.chats_list.index[chatReference]];
+    if (chat) {
+        chat.date_of_new = date;
+        chat.messages_new = 0;
+    }
+
+
+добавить:
+    if (chat) {
+
+    }
+
+
+
+--------------------------
+добавить:
+    // здесь код вывода из кеша
+    hub.connect({ withCredentials: false }).done(function () {
+        if ($rootScope.chatReference) {
+            var key = "chat_messages_" + $rootScope.chatReference;
+            if (!$rootScope.vars.hasOwnProperty(key)) {
+                $rootScope.vars[key] = {
+                    list: [],
+                    index: {},
+                    date: 0
+                };
+            }
+            hub.getMessages($rootScope.vars.event_guid, $rootScope.vars.device_guid, $rootScope.vars[key].date, $rootScope.chatReference);
+        } else
+            hub.getChats($rootScope.vars.event_guid, $rootScope.vars.device_guid, $rootScope.vars.chats_list.date);
+    });
+
+--------------------------
+в результате должен выводиться не список чатов, а конкретный чат. отому что указан референс
+
+--------------------------
+не забыть про кнопку "вернуться"
+
+            $scope.$parent.header.back = function () {
+                if ($rootScope.chatReference) {
+                    location.hash = '#/main';
+                    /*rootScope.chatReference = false;
+                    chats.getChats();*/
+                } else {
+                    location.hash = '#/main';
+                }
+            };
+
+--------------------------
+добавитьв  files devices.json
+
+
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------
+--------------------------

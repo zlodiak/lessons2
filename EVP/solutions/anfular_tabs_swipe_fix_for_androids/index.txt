@@ -1,0 +1,32 @@
+Коллеги, вот корректный костыль фикс для переключения табов свайпом (пока не обновиться webview): 
+0. Незабываем проtврить подключен ли angular-touch 
+1. К md-tabs добавляем: 
+md-selected="tab" 
+ng-swipe-left="swipe($event,'right')" 
+ng-swipe-right="swipe($event, 'left')" 
+
+2. К каждому табу: 
+md-on-select="setTab(0)" 
+где параметр функции это порядковый номер таба (как число) 
+
+3. В js прописать: 
+
+//Свайп по табам 
+$scope.swipe = function (ev, turn) { 
+var _tabs = ev.currentTarget.querySelectorAll('md-tab-item'); 
+if (turn == 'right') { 
+if ($scope.tab < _tabs.length - 1) { 
+$scope.tab += 1; 
+} 
+} else { 
+if ($scope.tab > 0) { 
+$scope.tab -= 1 
+} 
+} 
+}; 
+
+//Принудительное изменения номера таба в результате клика по нему. 
+//Для избежания некорректного подсчета при свайпе 
+$scope.setTab = function (id) { 
+$scope.tab = id; 
+};

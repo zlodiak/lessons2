@@ -1,0 +1,191 @@
+загрузка и удаление фото в профиле
+
+-----------------
+controller:
+angular.module('module_profile', [])
+    .controller('module_profileCtrl', ['communication', '$rootScope', '$scope', 'file',
+        function(communication, $rootScope, $scope, file) {
+            $scope.editable = false;
+            $scope.avatar_preview = false;
+
+            var toggle = function(){
+                $scope.editable = !$scope.editable;
+                $scope.$parent.header.edit = !$scope.editable ? toggle : false;
+                $scope.$parent.header.done =  $scope.editable ? toggle : false;
+
+                if(!$scope.editable){
+                    communication.send('data_remote', $scope.user);
+
+                    $rootScope.vars['personal_first_name'] =    $scope.user.personal_first_name;
+                    $rootScope.vars['personal_last_name'] =     $scope.user.personal_last_name;
+                    $rootScope.vars['contacts_mobile'] =        $scope.user.contacts_mobile;
+                    $rootScope.vars['contacts_email'] =         $scope.user.contacts_email.trim();
+                    $rootScope.vars["participants_hidden"] =    $scope.user.participants_hidden;
+                    $rootScope.vars['personal_visible_phone'] = $scope.user.personal_visible_phone;
+                    $rootScope.vars['personal_visible_email'] = $scope.user.personal_visible_email;
+                }
+            };
+            $scope.$parent.header.edit = toggle;
+
+            $scope.user = {
+                personal_first_name:        $rootScope.vars["personal_first_name"],
+                personal_last_name:         $rootScope.vars["personal_last_name"],
+                personal_photo:             $rootScope.vars['personal_photo'] || 'false',
+                contacts_email:             $rootScope.vars["contacts_email"].trim(),
+                contacts_mobile:            $rootScope.vars["contacts_mobile"],
+                participants_hidden:        $rootScope.vars["participants_hidden"],
+                personal_visible_email:     $rootScope.vars["personal_visible_email"],
+                personal_visible_phone:     $rootScope.vars["personal_visible_phone"]
+            };
+
+            communication.receive = function(type, data){
+                if(type=='gallery' || type=='photo'){
+                    var url = data.result.split('/');
+                    $scope.user.personal_photo = 'ondemand/' + url[url.length-1];
+                    $scope.avatar_preview = data.result;
+                    $rootScope.vars['personal_photo'] = 'ondemand/' + url[url.length-1];
+                    communication.send("data_remote",{"personal_photo": 'ondemand/' + url[url.length-1]});
+                    $scope.$apply();
+                }
+            };
+
+            $scope.setPhoto = function(){
+                file.attach();
+            };
+
+            $scope.removeAvatar = function() {
+                $rootScope.vars['personal_photo'] = 'false';
+                $scope.user.personal_photo = 'false';
+                $rootScope.avatar_preview = 'false';
+                $scope.$applyAsync();
+
+                communication.send("data_remote", {"personal_photo": 'false'});
+
+                $scope.showModal('Выполнено!', "Ваша фотография удалена", 'Ок');
+            };
+        }
+    ]);
+
+
+
+
+
+
+-----------------
+--{{user.personal_photo}}--<br>++
+
+<md-content ng-hide="editable" layout-padding class="page-profile">
+    <div class="profile">
+        <div class="avatar" ng-if="user.personal_photo == 'false'">
+            <div class="first-letter-outer" >
+                <span class="first-letter">{{user.personal_first_name.charAt(0).toUpperCase()}}</span>
+            </div>
+        </div>
+
+        <div class="avatar" ng-if="user.personal_photo != 'false'"
+             style="background-image: url({{((user.personal_photo | file) || avatar_preview)}})">
+        </div>
+
+        <div class="title">
+            <div>{{user.personal_first_name}}</div>
+            <div>{{user.personal_last_name}}</div>
+        </div>
+    </div>
+
+    <p ng-show="user.contacts_email"><a href="mailto:{{user.contacts_email}}">{{user.contacts_email}}</a></p>
+    <p ng-show="user.contacts_mobile"><a href="tel:{{user.contacts_mobile}}">{{user.contacts_mobile}}</a></p>
+</md-content>
+
+<md-content ng-show="editable" layout-padding class="page-profile edit">
+    <div>
+        <div class="avatar" ng-if="user.personal_photo == 'false'" ng-click="setPhoto()">
+            <div class="first-letter-outer" >
+                <!--<img src="../img/user1.png">-->
+                <span class="first-letter">{{user.personal_first_name.charAt(0).toUpperCase()}}</span>
+            </div>
+        </div>
+
+        <div class="avatar" ng-if="user.personal_photo != 'false'" ng-click="setPhoto()" style="background-image: url({{((user.personal_photo | file) || avatar_preview)}})"></div>
+        <p ng-if="user.personal_photo != 'false'" style="text-align: center;padding: 15px 0 0 0;">
+            <a style="text-align: center;" ng-click="removeAvatar()">Удалить фото</a>
+        </p>
+
+        <md-input-container class="md-block">
+            <label>Фамилия</label>
+            <input required ng-model="user.personal_last_name">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Имя</label>
+            <input required ng-model="user.personal_first_name">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>E-mail</label>
+            <input required ng-model="user.contacts_email">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Телефон</label>
+            <input mask="+9 (999) 999-99-99" required ng-model="user.contacts_mobile">
+        </md-input-container>
+
+        <div class="h3">Настройки приватности</div>
+
+        <div class="switches">
+            <div class="switch">{{user.participants_hidden}}
+                <div class="label">Отображать меня как участника Клуба Друзей </div>
+                <md-switch class="toggler" ng-model="user.participants_hidden" aria-label="Отображать меня как участника Клуба Друзей"></md-switch>
+            </div>
+
+            <div class="switch">{{user.personal_visible_email}}
+                <div class="label">Отображать Email</div>
+                <md-switch class="toggler" ng-model="user.personal_visible_email" aria-label="Отображать Email"></md-switch>
+            </div>
+
+            <div class="switch">{{user.personal_visible_phone}}
+                <div class="label">Отображать телефон </div>
+                <md-switch class="toggler" ng-model="user.personal_visible_phone" aria-label="Отображать телефон"></md-switch>
+            </div>
+        </div>
+    </div>
+</md-content>
+
+
+-----------------
+работает так:
+если фото не ззагружено, то показывается буква в круге.
+если фото загружено, то показывается фото и ссылка для удаления
+
+
+
+-----------------
+так как ресив на локалке проверить невозможно, то хардкодим так:
+            communication.receive = function(type, data){
+                if(type=='gallery' || type=='photo'){
+                    var url = data.result.split('/');
+                    $scope.user.personal_photo = 'ondemand/' + url[url.length-1];
+                    $scope.avatar_preview = data.result;
+                    $rootScope.vars['personal_photo'] = 'ondemand/' + url[url.length-1];
+                    communication.send("data_remote",{"personal_photo": 'ondemand/' + url[url.length-1]});
+                    $scope.$apply();
+                }
+            };
+
+и соответсвенно в шаблоне в фильтр не передаём 'cover':
+        <div class="avatar" ng-if="user.personal_photo != 'false'" ng-click="setPhoto()" style="background-image: url({{((user.personal_photo | file) || avatar_preview)}})"></div>
+        <p ng-if="user.personal_photo != 'false'" style="text-align: center;padding: 15px 0 0 0;">
+            <a style="text-align: center;" ng-click="removeAvatar()">Удалить фото</a>
+        </p>
+
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
+-----------------
