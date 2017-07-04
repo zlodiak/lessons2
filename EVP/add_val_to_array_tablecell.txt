@@ -1,0 +1,1 @@
+db.edit('users', {rest_favorites: '+' + rest_id}, localStorage.row_id);

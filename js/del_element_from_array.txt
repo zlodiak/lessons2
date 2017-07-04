@@ -1,0 +1,3 @@
+можно удалить значение массива не по ключу, а по значению:
+
+this.items.splice(this.items.indexOf(item), 1);

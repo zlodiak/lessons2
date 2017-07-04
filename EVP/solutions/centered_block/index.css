@@ -1,0 +1,15 @@
+	.header-left{
+		min-height: 280px;
+		position: relative;
+		/*display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: flex-start;*/
+	}
+
+		.header-left img{
+		  position: absolute;
+		  top: 50%;
+		  left:50%;
+		  transform: translate(-50%,-50%);
+		}

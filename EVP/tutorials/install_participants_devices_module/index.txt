@@ -1,0 +1,40 @@
+install_participants_devices_module
+
+---------------
+скопировать сам модуль
+
+---------------
+в vendor положить nginfinitescroll.min.js
+подключить его из index.html
+
+---------------
+в app.js подключить модуль ''infinite-scroll','
+
+---------------
+скачать devices.json из ondemand
+
+
+---------------
+js/config.js:
+angular.module('app.config', [])
+
+.constant('defaultVariables', {
+  chats_list: {date: 0, list: [], index: {}},
+  event_guid: '6o5arvvm',
+  device_guid: '02842DD5-48D5-4671-BDC2-D4E5F7253403',
+  organization_position: 'Director',
+  personal_first_name: 'Василий',
+  personal_last_name: 'Ivanov',
+  personal_middle_name: 'Ivanovich',
+  personal_city: 'Saransk',
+  contacts_mobile: '+79601666600',
+  contacts_email: 'rsa@pochta.ru',
+  dev: true
+})
+
+---------------
+---------------
+---------------
+---------------
+---------------
+---------------

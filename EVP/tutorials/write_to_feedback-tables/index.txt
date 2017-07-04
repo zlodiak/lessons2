@@ -1,0 +1,189 @@
+нужно собирать данные с анкеты и записывать их в feedback-таблицу 
+
+================
+шаблон анкеты. фрагмент:
+  <div class="table_feedback table_feedback_0">
+    <md-input-container>
+      <input ng-model="data.fio" placeholder="Ф.И.О.:">
+    </md-input-container>
+  </div>
+
+  <div class="table_feedback table_feedback_1">
+    <p>Пожалуйста, выскажите своё мнение о мероприятии, ответив на следующие вопросы:</p>
+
+    <ul>
+      <li>
+        <div class="label">Получили ли Вы удовольствие от мероприятия?</div>
+        <md-radio-group ng-model="data.group1_0">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+
+      <li>
+        <div class="label">Было ли это мероприятие полезным для Вас лично?</div>
+        <md-radio-group ng-model="data.group1_1">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+
+      <li>
+        <div class="label">Оправдало ли это мероприятие Ваши ожидания?</div>
+        <md-radio-group ng-model="data.group1_2">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+
+      <li>
+        <div class="label">Является ли участие в этом мероприятии эффективным вложением времени менеджмента?</div>
+        <md-radio-group ng-model="data.group1_3">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+    </ul>
+  </div>
+
+  <div class="table_feedback table_feedback_2">
+    <div class="question">Пожалуйста, выскажите своё мнение о семинаре, который состоялся во вторник, 4 октября:</div>
+    <ul>
+      <li>
+        <div class="label">Не участвовал(а) в семинаре</div>
+        <md-radio-group ng-model="data.group2_0">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+
+      <li>
+        <div class="label">Получили ли Вы удовольствие от семинара?</div>
+        <md-radio-group ng-model="data.group2_1">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+
+      <li>
+        <div class="label">Был ли семинар полезным для Вас?</div>
+        <md-radio-group ng-model="data.group2_2">
+          <md-radio-button value="Да">Да</md-radio-button>
+          <md-radio-button value="Нет">Нет</md-radio-button>
+        </md-radio-group>
+      </li>
+    </ul>
+  </div>
+
+================
+функция в контроллеке, которая пишет в таблицу. таблица создаётся на лету:
+            $scope.send_feedback = function(text) {
+                console.log(text);
+                // text.trim().length == 0
+                /*if (!text) {
+                  $mdDialog.show(
+                    $mdDialog.alert()
+                      .title('Ошибка')
+                      .textContent("Введите текст вопроса!")
+                      .ok('ОК')
+                  );
+
+                  return;
+                };*/
+
+                var _data = [];
+                _data.push({'title':'Отправитель', 'value': $rootScope.vars.personal_last_name + ' ' + $rootScope.vars.personal_first_name + ' ' + $rootScope.vars.personal_email, 'reference':'author'});
+
+                _data.push({'title':'Ф.И.О:', 'value': text.fio, 'reference':'fio'});
+
+                _data.push({'title':'Получили ли Вы удовольствие от мероприятия?', 'value': text.group1_0, 'reference':'group1_0'});
+                _data.push({'title':'Было ли это мероприятие полезным для Вас лично?', 'value': text.group1_1, 'reference':'group1_1'});
+                _data.push({'title':'Оправдало ли это мероприятие Ваши ожидания?', 'value': text.group1_2, 'reference':'group1_2'});
+                _data.push({'title':'Является ли участие в этом мероприятии эффективным вложением времени менеджмента?', 'value': text.group1_3, 'reference':'group1_3'});
+
+                _data.push({'title':'4 октября: Не участвовал(а) в семинаре', 'value': text.group2_0, 'reference':'group2_0'});
+                _data.push({'title':'4 октября: Получили ли Вы удовольствие от семинара?', 'value': text.group2_1, 'reference':'group2_1'});
+                _data.push({'title':'4 октября: Был ли семинар полезным для Вас?', 'value': text.group2_2, 'reference':'group2_2'});
+
+                _data.push({'title':'«Менеджмент поколений»: Не участвовал(а) в семинаре', 'value': text.group3_0, 'reference':'group3_0'});
+                _data.push({'title':'«Менеджмент поколений»: Получили ли Вы удовольствие от семинара?', 'value': text.group3_1, 'reference':'group3_1'});
+                _data.push({'title':'«Менеджмент поколений»: Был ли семинар полезным для Вас?', 'value': text.group3_2, 'reference':'group3_2'});
+
+                _data.push({'title':'7 октября: Не участвовал(а) в семинаре', 'value': text.group4_0, 'reference':'group4_0'});
+                _data.push({'title':'7 октября: Получили ли Вы удовольствие от семинара?', 'value': text.group4_1, 'reference':'group4_1'});
+                _data.push({'title':'7 октября: Был ли семинар полезным для Вас?', 'value': text.group4_2, 'reference':'group4_2'});
+
+                _data.push({'title':'8 октября: Не участвовал(а) в семинаре', 'value': text.group5_0, 'reference':'group5_0'});
+                _data.push({'title':'8 октября: Получили ли Вы удовольствие от семинара?', 'value': text.group5_1, 'reference':'group5_1'});
+                _data.push({'title':'8 октября: Был ли семинар полезным для Вас?', 'value': text.group5_2, 'reference':'group5_2'});
+
+                _data.push({'title':'Мнение: Должна ли увеличиться продолжительность мероприятия?', 'value': text.group6_0, 'reference':'group6_0'});
+                _data.push({'title':'Мнение: Была ли программа достаточно сбалансированной с точки зрения «Работа/Учёба» vs. «свободное время»?', 'value': text.group6_1, 'reference':'group6_1'});
+                _data.push({'title':'Мнение: Необходимо ли больше приглашенных спикеров?', 'value': text.group6_2, 'reference':'group6_2'});
+
+                _data.push({'title':'Предложите тему:', 'value': text.offer1, 'reference':'offer1'});
+                _data.push({'title':'Предложите тему:', 'value': text.offer2, 'reference':'offer2'});
+                _data.push({'title':'Предложите тему:', 'value': text.offer3, 'reference':'offer3'});
+
+                _data.push({'title':'Чартер : Не участвовал(а) в семинаре', 'value': text.group9_0, 'reference':'group9_0'});
+                _data.push({'title':'Трансферы : Не участвовал(а) в семинаре', 'value': text.group9_1, 'reference':'group9_1'});
+                _data.push({'title':'Проживание : Не участвовал(а) в семинаре', 'value': text.group9_2, 'reference':'group9_2'});
+                _data.push({'title':'Конференц-зал : Не участвовал(а) в семинаре', 'value': text.group9_3, 'reference':'group9_3'});
+                _data.push({'title':'Техническая поддержка/обеспечение : Не участвовал(а) в семинаре', 'value': text.group9_4, 'reference':'group9_4'});
+                _data.push({'title':'Ресторан/Питание: Не участвовал(а) в семинаре', 'value': text.group9_5, 'reference':'group9_5'});
+                _data.push({'title':'Уровень сервиса  : Не участвовал(а) в семинаре', 'value': text.group9_6, 'reference':'group9_6'});
+
+                _data.push({'title':'Укажите комментарии:', 'value': text.comment1, 'reference':'comment1'});
+                _data.push({'title':'Укажите комментарии:', 'value': text.comment2, 'reference':'comment2'});
+                _data.push({'title':'Укажите комментарии:', 'value': text.comment3, 'reference':'comment3'});
+
+                communication.send("guid",{for:"feedback.add"});
+                $scope.question_data = _data;
+                $scope.text = '';
+                $mdDialog.show(
+                  $mdDialog.alert()
+                    .title('Спасибо!')
+                    .textContent("Данные отправлены.")
+                    .ok('ОК')
+                );
+            };
+            communication.receive = function (c, d) {
+                if("guid"==c&&"feedback.add"==d.for) {
+                    communication.send("feedback",{
+                        feedback_reference: "question_form3",
+                        title: "Обратная связь", // название анкеты в админке
+                        post_reference: d.guid,
+                        values: $scope.question_data});
+                }
+            };
+
+
+================
+эта функция отрабатывает после нажатия на кнопку сабмит
+
+================
+если страничка закрыта авторизацией, то :
+            $scope.save_name = function(fname, sname, email) {
+                if (!fname || !sname || !email) {
+                    $scope.noname_error = true;
+                    $timeout(function(){
+                        $scope.noname_error = false;
+                    }, 2000);
+                    return;
+                }
+
+                $scope.welcome = false;
+                communication.send("data_remote", {"personal_first_name": fname, "personal_last_name": sname, "personal_email": email});
+                $rootScope.vars["personal_first_name"] = fname;
+                $rootScope.vars["personal_last_name"] = sname;
+                $rootScope.vars["personal_email"] = email;
+            };
+
+================
+================
+================
+================
+================
+================
+================
+================

@@ -1,0 +1,15 @@
+1. добавить функцию 
+$scope.scroll = function(ScrollData) {
+    $timeout(function () {
+        scroll.element = document.querySelector(‘main’);
+        scroll.set(ScrollData, 2);
+        ScrollData = 0;
+    }, 100);
+};
+
+2. Там, где нужно, запоминаем скролл:
+var content = document.querySelector(‘main’);
+var sd=content.scrollTop;
+
+3. Там, где надо, вызываем функцию
+$scope.scroll(sd);

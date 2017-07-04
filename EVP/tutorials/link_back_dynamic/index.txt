@@ -1,0 +1,65 @@
+динамически переопределить кнопку "назад" можно. 
+например есть станица со списком спикеов. после клика по спикеру происходит переход на личную страничку спикера. а с неё на страничку вопроса.
+со транички вопроса можно вернуться на страничку спикера
+
+=======================
+так формируется ссылкка перехода на личную страничку спикера:
+<div class="participant" ng-if="event.participant" ng-repeat="p in event.participant">
+    <span>
+        <img class="col-icon" src="../img/custom/participant.svg" alt="">
+        <div class="col-text" ng-click="openParticipant(p)"><a class="underline">{{participants[p].name}} {{participants[p].family}}</a></div>
+    </span>
+</div>
+
+=======================
+на старничке конкретного спикера есть кнопа для перехода на старничку вопроса:
+<md-button class="question-button md-raised" ng-click="openQuestionPage(participantDetails.family, participantDetails.name, participantDetails.id)">
+	Задать вопрос
+</md-button>
+
+соответствующая функция:
+$scope.openQuestionPage = function (family, name) {
+  console.log('open q p', family, name, $stateParams);
+  $state.go('participant_question', {
+    family: '' + family,
+    name: '' + name,
+    id: $stateParams.id
+  });
+};
+
+при этом '$stateParams' подключен в контроллере
+
+
+=======================
+в контроллере старнички вопроса переопределяем кнопку "назад": 
+$rootScope.header.back = function(){
+  var id = $stateParams.id;
+
+  if(id.length == 0){
+    location.hash = '#/module_participants';				// на страничку со списком спикеров
+  } else {
+    location.hash = '#/participant_details/' + id;			// на страничку конкретного спикера
+  };
+};
+
+'$stateParams' так же не забыть подключить в контроллере
+
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================

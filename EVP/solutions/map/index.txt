@@ -1,0 +1,8 @@
+var animals = [ "кот", "собака", "рыба" ];
+
+var lengths = animals.map( function( animal )
+{
+  return animal.length;
+} );
+
+console.log( lengths ); // [ 3, 6, 4 ]

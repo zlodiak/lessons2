@@ -1,0 +1,108 @@
+для табов не действует директива scrollTop. но это можно исправить.
+допустим, у нас имеетются табы. продублируем:
+
+========================
+globalCtrl:
+  $rootScope.scrollTop = function(){
+      scroll.element = document.querySelector('main');
+      scroll.animateTo('top', 0);
+  };
+
+  $rootScope.scrollTop2 = function(ev){
+      console.log('scrollTop2');
+      scroll.element = document.querySelector("md-tab-content.md-active");
+      console.log(scroll.element);
+      scroll.animateTo('top', 0);
+  };
+
+========================
+angular.module('app.directives', [])
+    .directive("scrolltop", function ($window) {
+        return function (scope, element, attrs) {
+            angular.element(document.querySelector("main")).bind("scroll", function () {
+                scope.scrolled = (this.scrollTop >= window.innerHeight * 0.6);
+                scope.$apply();
+            });
+        };
+    })
+
+========================
+<md-content class="race-page inner-page" ng-swipe-left="swipe($event,'right')" ng-swipe-right="swipe($event, 'left')">
+  <md-tabs md-border-bottom md-stretch-tabs ng-cloak md-selected="today">
+    <md-tab label="{{(lang == 'ru') ? 'Описание' : 'Description'}}">
+    	ffff
+    </md-tab>
+
+    <md-tab label="{{(lang == 'ru') ? 'Расписание' : 'Agenda'}}">
+    	fffff
+    </md-tab>
+  </md-tabs>
+</md-content>
+
+<div ng-click="scrollTop2($event)" class="scroll-to-app-button tab-scroll"  ng-class="{show:scrolled}"></div>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            var skroll = $(".tab-scroll");
+            $('md-tab-content').scroll(function () {
+                if(this.scrollTop > window.innerHeight){
+                    if(!skroll.hasClass('show')){
+                        skroll.addClass("show");
+                    }
+                }
+                else{
+                    if(skroll.hasClass('show')){
+                        skroll.removeClass("show");
+                    }
+                }
+            });
+        },300)
+    });
+</script>
+
+========================
+добавим в фикс свайпа 2 строки:
+            //Свайп по табам
+            $scope.swipe = function(ev,turn) {
+                var _tabs = document.querySelectorAll('md-tab-item');
+
+                if (turn === 'right') {
+                    if ($scope.today < _tabs.length - 1) $scope.today += 1
+                } else {
+                    if ($scope.today > 0) {
+                        $scope.today -= 1
+                    }
+                }
+                $timeout(function () {
+                    _tabs[$scope.today].click()
+                })
+                var skroll = $(".tab-scroll");
+                skroll.removeClass("show");
+            };
+
+это нужно для того чтобы при свайпе исчезала активная стрелочка            
+
+========================
+так же нужно эти строки добавить в:
+            $scope.currentTab = function (tab) {
+                $scope.today = +tab;
+                $scope.tab = tab;
+                var skroll = $(".tab-scroll");
+                skroll.removeClass("show");
+            };
+
+это нужно для того чтобы при смене таба(кликом) исчезала активная стрелочка
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
