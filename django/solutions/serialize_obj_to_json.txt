@@ -1,0 +1,27 @@
+получаем набор объектов и хотим отдать его в формате json
+
+==========================
+для этго нужно предварительно его сериализовать
+
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.core import serializers
+
+from .models import Day
+
+def days(request):
+    days = Day.objects.all()   
+    days_serialized = serializers.serialize('json', days)
+    return JsonResponse(days_serialized, safe=False) 
+
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================

@@ -1,0 +1,58 @@
+body{
+    padding: 200px;
+}
+
+.tag {
+    position: relative;
+    display: inline-block;
+    height: 16px;
+}
+
+.tag-inner {
+    background: #676767;
+    color: #fff!important;
+    font-size: 10px;
+    vertical-align: middle;
+    line-height: 15px;
+    height: 16px;
+    padding: 0 7px;
+    margin: 0 3px 0 8px;
+    display: block;
+    position: relative;
+    letter-spacing: 0;
+    border-radius: 0 2px 2px 0;
+    text-decoration: none;
+}
+
+.tag-inner:before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 8px;
+    position: absolute;
+    top: 0;
+    border-color: transparent #676767 transparent transparent;
+    right: 100%;
+}
+
+.tag-inner:after {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background: #fff;
+    position: absolute;
+    top: 6px;
+    left: 0;
+}
+
+.inner {
+    display: inline-block;
+    max-width: 250px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

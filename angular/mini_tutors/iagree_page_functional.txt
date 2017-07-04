@@ -1,0 +1,111 @@
+реализуем окно предварительного соглашения:
+
+======================
+html:
+<div class="wrap">
+	<div class="wrap-inner">
+		<div class="text">
+			Сегодня существует от 10 до 15 тысяч особей этого вида. Изначальная численность неизвестна, однако по всей вероятности новозеландский морской лев некогда встречался намного чаще, чем сегодня, и имел обширные колонии в том числе и на обоих новозеландских островах. В XIX веке многие животные стали жертвами промышленников. На островах Окленд они были всего за 20 лет полностью истреблены, после того как были открыты там в 1806 году. Сегодня острова являются запретной природоохранной зоной и на них возобновилась популяция морских львов.
+		</div>
+
+		<div class="bottom">
+			<div class="ckeckbox">
+				<input type="checkbox" id="checkbox" value="yes" [(ngModel)]="checkboxSelected">
+				<label for="checkbox">I agree</label>
+			</div>		
+
+			<button class="iagree-btn" type="button" (click)="submitAgree()">Далее</button>
+		</div>
+	</div>
+</div>
+
+
+======================
+css:
+.wrap{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 100%;
+	background: #fff;	
+}
+
+	.wrap-inner{
+		width: 100%;
+		max-width: 400px;
+		overflow-y: auto;
+		margin: 0 20px;
+	}
+
+		.text{
+			padding-bottom: 20px;
+		}
+
+		.bottom{
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			flex-wrap: nowrap;
+		}
+
+			.checkbox{
+				width: 50%;
+			}
+
+			.iagree-btn{
+				width: 50%;
+			}
+
+======================
+js:
+import { Component, OnInit } from '@angular/core';
+import {Router} from "@angular/router";
+
+@Component({
+  selector: 'app-agree',
+  templateUrl: './agree.component.html',
+  styleUrls: ['./agree.component.css']
+})
+export class AgreeComponent implements OnInit {
+
+	checkboxSelected: boolean = false;
+
+	constructor(private router: Router) { }
+
+	ngOnInit() {
+		this.checkAgree();	
+	}
+
+	checkAgree(): void{
+		console.log('check');
+		if(localStorage.iAgree == 'true') {
+			console.log('go');
+			//this.router.navigate(['./SomewhereElse']);
+			this.router.navigateByUrl("/");
+		}		
+	};
+
+	submitAgree(): void{
+		console.log('agree is:', this.checkboxSelected);
+		if(this.checkboxSelected == true) {
+			localStorage.iAgree = 'true';
+			this.checkAgree();
+		};			
+	}
+
+}
+
+}
+
+
+======================
+======================
+======================
+======================
+======================
+======================
+======================

@@ -1,0 +1,115 @@
+чтобы реализовать роутинг удобно при создании проекта сгенерировать всё нужное:
+ng new name --routing
+
+================================
+затем создадим компонеты:
+ng g c books
+ng g c panel
+ng g c home
+
+================================
+затем подсключим их в app-routing.module.ts.
+и пропишем в конфиг:
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { HomeComponent } from './home/home.component';
+import { BooksComponent } from './books/books.component';
+import { PanelComponent } from './panel/panel.component';
+
+const routes: Routes = [
+  {
+    path: 'home',
+    children: [],
+    component: HomeComponent
+  },
+  {
+    path: 'panel',
+    children: [],
+    component: PanelComponent
+  }, 
+  {
+    path: 'books',
+    children: [],
+    component: BooksComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+
+================================
+в итоге имеем в app.component.ts лэйаут, в который встроена навигация:
+<h1>
+	{{title}}
+</h1>
+<div class="nav">
+	<a [routerLink]="['/home']">home</a>
+	<a [routerLink]="['/panel']">panel</a>
+	<a [routerLink]="['/books']">books</a>
+</div>
+
+<router-outlet></router-outlet>
+
+
+
+
+================================
+================================
+перенаправление на главную и отлов несуществующей страницы делаются так:
+
+
+const routes: Routes = [
+  { 
+    path: '', 
+    redirectTo: '/home', 
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    children: [],
+    component: HomeComponent
+  },
+  {
+    path: 'panel',
+    children: [],
+    component: PanelComponent
+  }, 
+  {
+    path: 'books',
+    children: [],
+    component: BooksComponent
+  },
+  { 
+    path: '**', 
+    children: [],
+    component: NotFoundComponent 
+  }
+];
+
+
+
+
+
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
