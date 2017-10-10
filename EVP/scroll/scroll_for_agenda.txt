@@ -1,0 +1,67 @@
+для вкладок программы скролл не простой:
+
+=========================
+js:
+
+            $rootScope.isScroller = false;
+            $scope.Scroll.setElement('md-tab-content.md-active');
+
+            $scope.tab = 0;
+
+            $scope.swipe = function (ev, turn) {
+                var _tabs = ev.currentTarget.querySelectorAll('md-tab-item');
+                if (turn == 'right') {
+                    if ($scope.tab < _tabs.length - 1) {
+                        $scope.tab += 1;
+                    }
+                } else {
+                    if ($scope.tab > 0) {
+                        $scope.tab -= 1
+                    }
+                }
+                $timeout(function () {
+                    _tabs[+$scope.tab].click();
+                }, 500);
+            };
+
+            $scope.currentTab = function (tab) {
+                //console.log(tab);
+                $rootScope.isScroller = false;
+                $scope.tab = +tab;
+                /*      console.log($scope.today + ' click' + $scope.tab);*/
+                $scope.Scroll.setElement('md-tab-content.md-active');
+            };
+
+
+=========================
+<md-content class="agenda-page" ng-if="!loading" ng-hide="_sightsee">
+    <md-tabs md-selected="tab" ng-swipe-left="swipe($event,'right')" ng-swipe-right="swipe($event, 'left')">
+        <md-tab md-on-select="currentTab(id)" ng-repeat="(id, day) in headers.day.options" label="{{day?day:''}}">
+
+=========================
+при этом сделать в шаблоне:
+    main,
+    .pagecontent{
+        height: 100%;
+        overflow: hidden;
+    }
+
+=========================
+но скроллящийся контейнер должен иметь высоту, превышающую 100% и overflow-y: auto;
+
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================

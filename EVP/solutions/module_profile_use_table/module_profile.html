@@ -1,0 +1,113 @@
+<md-content layout-padding class="page-profile inner-page">
+    <md-tabs class="tabs" md-dynamic-height md-border-bottom md-selected="tab" ng-swipe-left="swipe($event,'right')" ng-swipe-right="swipe($event, 'left')">
+        <md-tab label="Личная информация" md-on-select="setTab(0)">
+            <div class="md-padding tab-inner">
+                <div class="profile-area">
+                    <!-- профиль -->
+                    <div ng-hide="editable">
+                        <div class="profile">
+                            <div class="top">
+                                <div class="avatar"
+                                     ng-if="user.photo != '' && user.photo != 'False'"
+                                     style="background-image: url({{(preview || ('ondemand/'+user.photo | file) || '../img/avatar.svg')}})">
+                                </div>
+
+                                <div class="no-photo"
+                                     ng-if="user.photo == '' || user.photo == 'False'">
+                                    <div class="letters">
+                                        {{user.fname.slice(0, 1)}}{{user.lname.slice(0, 1)}}
+                                    </div>
+                                </div>
+
+                                <div class="names">
+                                    <span>{{user.fname}}</span>
+                                    <span>{{user.lname}}</span>
+                                </div>
+                            </div>
+
+                            <div class="fields fields-list">
+                                <div class="line" ng-if="user.team">
+                                    <div class="label">Отдел</div>
+                                    <span class="body">{{user.team}}</span>
+                                </div>
+
+                                <div class="line" ng-if="user.position">
+                                    <div class="label">Должность</div>
+                                    <span class="body">{{user.position}}</span>
+                                </div>
+
+                                <div class="line" ng-if="user.city">
+                                    <div class="label">Город</div>
+                                    <span class="body">{{user.city}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- редактирование профиля -->
+                    <div ng-show="editable" layout-padding class="page-profile edit inner-page">
+                        <div class="top edit-top">
+                            <div class="avatar" ng-click="setPhoto()"
+                                 ng-if="user.photo != '' && user.photo != 'False'"
+                                 style="background-image: url({{(preview || ('ondemand/'+user.photo | file) || '../img/avatar.svg')}}); ">
+                            </div>
+
+                            <div class="no-photo"
+                                 ng-click="setPhoto()"
+                                 ng-if="user.photo == '' || user.photo == 'False'">
+                                <div class="letters">
+                                    {{user.fname.slice(0, 1)}}{{user.lname.slice(0, 1)}}
+                                </div>
+                            </div>
+
+                            <div class="delete-photo" ng-if="user.photo != '' && user.photo != 'False'">
+                                <a ng-click="removeAvatar()">Удалить фото</a>
+                            </div>
+                        </div>
+
+                        <div class="fields fields-inputs">
+                            <md-input-container class="md-block">
+                                <label>Фамилия</label>
+                                <input required ng-model="user.lname">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Имя</label>
+                                <input required ng-model="user.fname">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Отдел</label>
+                                <input required ng-model="user.team">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Должность</label>
+                                <input required ng-model="user.position">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Город</label>
+                                <input required ng-model="user.city">
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-tab>
+
+        <md-tab label="Логистика" md-on-select="setTab(1)">
+            <div class="md-padding tab-inner">
+                <div class="logistic-area">
+                    Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].Обыкнове́нный ёж[1][2], или европе́йский ёж[2] (лат. Erinaceus europaeus) — млекопитающее из рода евразийских ежей семейства ежовых. Широко распространён в Европе, Малой Азии, Западной Сибири, северо-западе Казахстана, Амурской области, северном и северо-восточном Китае[3].
+                </div>
+            </div>
+        </md-tab>
+    </md-tabs>
+</md-content>
+
+
+
+<style>
+    body{ background: #fff }
+</style>

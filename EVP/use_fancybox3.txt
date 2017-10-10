@@ -1,0 +1,5 @@
+<a ng-bind-html="team.title" data-fancybox="gallery" href="../{{team.pdf}}" style="width: 100%; text-align: center; position: relative; z-index: 9999;"></a>
+
+
+
+здесь team.pdf == files/q.jpg

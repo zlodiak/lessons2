@@ -1,0 +1,4 @@
+можно не закачивать каждый раз json , аолучать их напрямую
+
+var table = $rootScope.vars.dev ? api.getTable() : db.get()
+users.then()

@@ -1,0 +1,63 @@
+сервис для генерации вебкея:
+        this.getPassword = function (table, column, password, expires) {
+            if (!expires) expires = 240; // по-умолчанию жизнь ключа 4 часа
+            var xsrf = {};
+            xsrf[column] = password;
+            return $http.post(this.rootpath + 'table?action=exists&key=create&expires=' + expires + '&eventGuid=' + $rootScope.vars.event_guid + '&table=' + table,
+                JSON.stringify(xsrf))
+                .then(function (response) {
+                    return response.data;
+                }, function (obj) {
+                });
+        };
+
+
+==================
+на главной:
+            // вебкей получаем и помещаем
+            api.getPassword('password','password','rjgrer8rtyemrihwwewgwetqw23423').then(function(d) {
+                console.log(d);
+                localStorage.webKey = d.key;
+                $rootScope.webKey = d.key;
+                //alert($rootScope.webKey);
+                console.log('webKey', localStorage.webKey);
+            });
+
+==================
+пример таблицы в каталоге рядом
+
+==================
+внимание. не забыть в сервисе прописать ключ key=create
+
+==================
+сервис для отправки комментариев:
+
+        this.editRow = function (table, data, id) {
+            if (!id) id = new Date().getTime();
+            var xsrf = {};
+            xsrf[id] = data;
+            // console.log(xsrf);
+            return $http.post(this.rootpath + 'table?action=update&eventGuid=' + $rootScope.vars.event_guid + '&table=' + table + '&key=' + localStorage.webKey,
+                JSON.stringify(xsrf))
+                .then(function (response) {
+                        return response.data;
+                    },
+                    function (error) {
+                        $mdDialog.show(
+                            $mdDialog.alert()
+                                .title('Действие не может быть выполнено!')
+                                .textContent("Пожалуйста, проверьте подключение к интернету.")
+                                .ok('ОК')
+                        );
+                    });
+        };
+
+
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================

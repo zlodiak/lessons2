@@ -1,0 +1,1 @@
+<md-tabs ng-if="!showGiftsList" class="gifts-tabs" md-stretch-tabs="always">

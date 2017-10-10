@@ -1,0 +1,48 @@
+переключатель языка:
+
+=========================
+global ctrl:
+    $rootScope.changeLang = function (lang) {
+        $rootScope.lang = lang;
+        localStorage.lang = $rootScope.lang;
+    };
+
+    // установка языка при первом входе
+    if (!localStorage.lang) {
+      localStorage.lang='ru';
+    }
+
+    // установка языка при входе
+    $rootScope.lang = (localStorage.lang == 'en') ? 'en' : 'ru';
+
+
+=========================
+main ctrl:
+// установка положения переключателя
+$timeout(function () {
+    if(localStorage.lang == 'en') {
+        angular.element('#togglerLangSwitch').triggerHandler('click');
+        $rootScope.lang = 'en';
+    }
+}, 300);
+
+
+=========================
+main tpl:
+ <div class="toogler" id="togglerLang">
+     <div ng-class="{'active': lang === 'ru'}" class="lang">Ru</div>
+     <md-switch ng-model="data.cb2"
+                aria-label="Switch 2"
+                id="togglerLangSwitch"
+                ng-change="changeLang(data.cb2 ? 'en':'ru')">
+     </md-switch>
+     <div ng-class="{'active': lang === 'en'}" class="lang">En</div>
+ </div>
+
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================
+=========================

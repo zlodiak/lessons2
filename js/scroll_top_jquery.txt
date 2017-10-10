@@ -1,0 +1,6 @@
+$scope.topFunction = function() {
+    $("#tab-content-0, #tab-content-1, #tab-content-2").animate({"scrollTop":0},"fast");
+};
+
+
+здесь #tab-content-0 это контейнер с высотой 100%, котороый содержит много элементиков, которые выходят за пределы высоты
