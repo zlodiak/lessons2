@@ -1,0 +1,23 @@
+есть таблица с записями. нужно сделать выборку по периоду даты:
+
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.core import serializers
+import datetime
+
+def days_half(request):
+	first_date = datetime.date(2017, 6, 10)
+	last_date = datetime.date(2017, 6, 20)	
+	days = Day.objects.filter(created_date__range=(first_date, last_date))
+	days_serialized = serializers.serialize('json', days)
+	return JsonResponse(days_serialized, safe=False) 
+
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================

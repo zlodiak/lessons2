@@ -1,0 +1,221 @@
+допустим бекенд отжаёт список статей в формате json и нужно сделать пагинацию. вот json:
+[
+	{
+		"model": "statistic.article", 
+		"pk": 1, 
+		"fields": 
+		{
+			"author": 1, 
+			"title": "qwq3rwr",
+			"text": "qwqfdgdttttgrwr"
+		}
+	},
+	{
+		"model": "statistic.article", 
+		"pk": 2, 
+		"fields": 
+		{
+			"author": 1, 
+			"title": "qwqr4432wr",
+			"text": "qwqfdgd456grwr"
+		}
+	},
+	{
+		"model": "statistic.article", 
+		"pk": 3, 
+		"fields": 
+		{
+			"author": 1, 
+			"title": "qwq5445rwr",
+			"text": "qwqfdg646dgrwr"
+		}
+	},
+	{
+		"model": "statistic.article", 
+		...
+		...
+		...
+
+=============================
+подключаем underscore
+
+=============================
+создаём сервис в services/paginator.service.ts:
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+
+import * as _ from 'underscore';
+
+@Injectable()
+export class PaginatorService {
+    getPager(totalItems: number, currentPage: number = 1, pageSize: number = 10) {
+        // calculate total pages
+        let totalPages = Math.ceil(totalItems / pageSize);
+ 
+        let startPage: number, endPage: number;
+        if (totalPages <= 10) {
+            // less than 10 total pages so show all
+            startPage = 1;
+            endPage = totalPages;
+        } else {
+            // more than 10 total pages so calculate start and end pages
+            if (currentPage <= 6) {
+                startPage = 1;
+                endPage = 10;
+            } else if (currentPage + 4 >= totalPages) {
+                startPage = totalPages - 9;
+                endPage = totalPages;
+            } else {
+                startPage = currentPage - 5;
+                endPage = currentPage + 4;
+            }
+        }
+ 
+        // calculate start and end item indexes
+        let startIndex = (currentPage - 1) * pageSize;
+        let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+ 
+        // create an array of pages to ng-repeat in the pager control
+        let pages = _.range(startPage, endPage + 1);
+ 
+        // return object with all pager properties required by the view
+        return {
+            totalItems: totalItems,
+            currentPage: currentPage,
+            pageSize: pageSize,
+            totalPages: totalPages,
+            startPage: startPage,
+            endPage: endPage,
+            startIndex: startIndex,
+            endIndex: endIndex,
+            pages: pages
+        };
+    }
+}
+
+
+
+
+=============================
+создаём компонент articles.component.ts:
+import { Component, OnInit } from '@angular/core';
+import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map'
+ 
+import * as _ from 'underscore';
+import { RecordsService } from '../records.service';
+import { PaginatorService } from '../services/paginator.service'
+
+
+@Component({
+  selector: 'app-articles',
+  templateUrl: './articles.component.html',
+  styleUrls: ['./articles.component.css']
+})
+export class ArticlesComponent implements OnInit {
+
+  constructor(private http: Http, private paginatorService: PaginatorService) { }
+
+  // array of all items to be paged
+  private allItems: any[];
+
+  // pager object
+  pager: any = {};
+
+  // paged items
+  pagedItems: any[];
+
+  ngOnInit() {
+      this.http.get('http://127.0.0.1:8000/articles')
+          .map((response: Response) => JSON.parse(response.json()))
+          .subscribe(data => {
+          		console.log(data);
+
+              // set items to json response
+              this.allItems = data;
+
+              // initialize to page 1
+              this.setPage(1);
+          });
+  }
+
+  setPage(page: number) {
+      if (page < 1 || page > this.pager.totalPages) {
+          return;
+      }
+
+      // get pager object from service
+      this.pager = this.paginatorService.getPager(this.allItems.length, page);
+
+      // get current page of items
+      this.pagedItems = this.allItems.slice(this.pager.startIndex, this.pager.endIndex + 1);
+  }
+}
+
+
+
+
+=============================
+articles.component.html:
+<div>
+    <div class="container">
+        <div class="text-center">
+            <h1>Angular 2 - Pagination Articles</h1>
+ 
+            <!-- items being paged -->
+            <div *ngFor="let item of pagedItems">{{item.fields.title}}</div>
+ 
+            <!-- pager -->
+            <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                    <a (click)="setPage(1)">First</a>
+                </li>
+                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                </li>
+                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                    <a (click)="setPage(page)">{{page}}</a>
+                </li>
+                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                </li>
+                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                    <a (click)="setPage(pager.totalPages)">Last</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+=============================
+тут больше: http://jasonwatmore.com/post/2016/08/23/angular-2-pagination-example-with-logic-like-google 
+https://github.com/cornflourblue/angular2-pagination-example
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================

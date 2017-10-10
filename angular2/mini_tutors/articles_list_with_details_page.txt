@@ -1,0 +1,186 @@
+типовая задача - организовать список статей с возможностью открытия по клику странички с делатьной информацией
+
+==============================
+используем 3 компонента:
+articles
+	articles-list
+	article-datails
+
+==============================
+articles
+
+html:
+<app-articles-list 	*ngIf="!showArticleDetails" 
+										(onClickArticleTeaser)="handlerClickArticleTeaser($event)"></app-articles-list>
+
+<app-article-details 	*ngIf="showArticleDetails" 
+											(onClickBackBtn)="setVisibilityDetailsPage(false)" 
+											[articleObj]="articleObj"></app-article-details>
+
+
+
+comp:
+import { Component, OnInit } from '@angular/core';
+ 
+import { ArticlesListComponent } from '../articles-list/articles-list.component';
+
+
+@Component({
+  selector: 'app-articles',
+  templateUrl: './articles.component.html',
+  styleUrls: ['./articles.component.css']
+})
+export class ArticlesComponent implements OnInit {
+
+  private showArticleDetails: Boolean = false;
+  private articleObj: Object;
+
+  constructor() { }
+
+  ngOnInit() {
+
+  }
+
+  private setVisibilityDetailsPage(val):void {
+    this.showArticleDetails = val;
+  }  
+
+  private handlerClickArticleTeaser(articleObj) {
+    console.log(articleObj);
+    this.articleObj = articleObj;
+    this.setVisibilityDetailsPage(true);
+  };
+
+}
+
+
+==============================
+articles-list
+
+html:
+<div class="container-fluid">
+	<div class="row teasers">
+		<div 	class="teaser col-md-6" 
+					*ngFor="let article of articles | orderBy:'fields.created_date':true; let i = index" 
+					(click)="openArticleDetails(articles[i])">
+					
+			<h3 class="title" [innerHTML]="article.fields.title"></h3>	
+
+			<div [innerHTML]="article.fields.text | ellipsis:220"></div>	
+
+			<div class="date-outer pull-right">
+				<span class="date">{{ article.fields.created_date.split('T')[0] }}</span>
+				<span class="time">{{ article.fields.created_date.split('T')[1].slice(0, -4) }}</span>
+			</div> 						 		
+		</div>
+	</div>	           
+</div>
+
+
+
+
+
+comp:
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+
+@Component({
+  selector: 'app-articles-list',
+  templateUrl: './articles-list.component.html',
+  styleUrls: ['./articles-list.component.css']
+})
+export class ArticlesListComponent implements OnInit {
+
+	private articles: any[];
+
+  constructor(private http: Http) { }
+
+  ngOnInit() {
+    this.http.get('http://127.0.0.1:8000/articles')
+        .map((response: Response) => JSON.parse(response.json()))
+        .subscribe(data => {
+        		//console.log(data);
+            this.articles = data;
+        });  	
+  }
+
+  @Output() onClickArticleTeaser = new EventEmitter<Object>();
+
+  private openArticleDetails(articleObj) {
+  	console.log(articleObj);
+  	this.onClickArticleTeaser.emit(articleObj);
+  }  
+
+}
+
+
+
+==============================
+article-datails
+
+html:
+<p (click)="back()">
+  article-details works!
+</p>
+
+{{ articleObj.fields.title }}
+{{ articleObj.fields.text }}
+{{ articleObj.fields.created_date }}
+
+
+
+
+comp:
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-article-details',
+  templateUrl: './article-details.component.html',
+  styleUrls: ['./article-details.component.css']
+})
+export class ArticleDetailsComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+	@Input() articleObj: Object;
+  @Output() onClickBackBtn = new EventEmitter<Boolean>();
+
+  private back(): void {
+  	this.onClickBackBtn.emit();
+  };
+
+}
+
+
+
+==============================
+в результате выводится список статей. после клика на одной из них открвается старничка с полной информацией по этой статье.
+при нажатии на кнопку "назад" возвращаемся снова к списку статей
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================

@@ -1,0 +1,6 @@
+>>> import datetime
+>>> datestring = "1277722499.82"
+
+>>> dt = datetime.datetime.fromtimestamp(float(datestring))
+>>> print dt
+2010-06-28 11:54:59.820000

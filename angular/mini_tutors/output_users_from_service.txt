@@ -1,0 +1,94 @@
+можно заставить сервис отдавать масиив пользователей и выводить его в шаблоне:
+
+
+================================
+service:
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class UsersService {
+
+	constructor () { };
+
+	users: string[]  = ['jack', 'bill', 'john'];
+
+	getUsers(): string[] {
+		return this.users;
+	  //return Promise.resolve(this.users);
+	};
+
+}
+
+
+
+================================
+component:
+import { Component, OnInit } from '@angular/core';
+import { AuthComponent } from '../auth/auth.component';
+import { CheckService }	from '../check.service';
+import { UsersService } from '../users.service';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements AuthComponent, OnInit {
+
+    users: string[];
+
+    constructor(private checkService: CheckService, private usersService: UsersService) {
+        this.checkAgree();
+    }
+
+    ngOnInit() {
+    }
+
+    checkAgree(): void {
+        this.checkService.isCheckAgree();
+        this.users = this.usersService.getUsers();
+    }
+
+	/*checkAgree(): void{
+		if(localStorage.iAgree != 'true') {
+			this.router.navigateByUrl("/agree");
+		}	
+	};	*/
+
+    test(): void{
+        console.log('dash test');
+    };
+
+}
+
+
+
+
+================================
+tpl:
+{{users}}
+
+<div class="users">
+	<div class="user" *ngFor="let user of users">
+		{{user}}
+	</div>
+</div>
+
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================

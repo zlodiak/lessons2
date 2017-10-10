@@ -1,0 +1,73 @@
+можно делать редирект из компонента:
+
+
+==============================
+app.component:
+import { Component,  OnInit} from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit{
+	constructor(private router: Router) { }
+
+	ngOnInit() {
+		this.router.navigate(['/auth']);
+	}	  
+}
+
+
+==============================
+rout config:
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { ProfileComponent } from './profile/profile.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { AuthComponent } from './auth/auth.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: 'profile',
+    children: [],
+    component: ProfileComponent
+  }, 
+  {
+    path: 'dashboard',
+    children: [],
+    component: DashboardComponent
+  }, 
+  {
+    path: 'auth',
+    children: [],
+    component: AuthComponent
+  }  
+];
+
+@NgModule({
+  imports: [R
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
