@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/QAPage">
+
+<head>
+
+<title>git - Как вернуться (откатиться) к более раннему коммиту? - Stack Overflow на русском</title>
+    <link rel="shortcut icon" href="https://cdn.sstatic.net/Sites/ru/img/favicon.ico?v=b95a7516ec95">
+    <link rel="apple-touch-icon image_src" href="https://cdn.sstatic.net/Sites/ru/img/apple-touch-icon.png?v=0dd80f442adc">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow на русском" href="/opensearch.xml">
+    <meta property="og:type" content="website"/>
+    <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:site" content="@ruStackOverflow" />
+    <meta name="twitter:domain" content="ru.stackoverflow.com"/>
+
+    <meta property="og:image" itemprop="image primaryImageOfPage" content="https://cdn.sstatic.net/Sites/ru/img/apple-touch-icon@2.png?v=387ab71bdafd" />
+    <meta name="twitter:title" property="og:title" itemprop="title name" content="Как вернуться (откатиться) к более раннему коммиту?" />
+    <meta name="twitter:description" property="og:description" itemprop="description" content="Я хочу вернуться к более раннему коммиту. Как мне это сделать?
+
+Вот что показывает команда git log:
+
+$ git log
+commit dddddd
+Author: Me &amp;lt;me@me.com&amp;gt;
+Date:   Thu Nov 4 18:59:41 2010 -0400
+
+Add ..." />
+    <meta property="og:url" content="https://ru.stackoverflow.com/questions/431520/%D0%9A%D0%B0%D0%BA-%D0%B2%D0%B5%D1%80%D0%BD%D1%83%D1%82%D1%8C%D1%81%D1%8F-%D0%BE%D1%82%D0%BA%D0%B0%D1%82%D0%B8%D1%82%D1%8C%D1%81%D1%8F-%D0%BA-%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5-%D1%80%D0%B0%D0%BD%D0%BD%D0%B5%D0%BC%D1%83-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%83"/>
+    <link rel="canonical" href="https://ru.stackoverflow.com/questions/431520/%D0%9A%D0%B0%D0%BA-%D0%B2%D0%B5%D1%80%D0%BD%D1%83%D1%82%D1%8C%D1%81%D1%8F-%D0%BE%D1%82%D0%BA%D0%B0%D1%82%D0%B8%D1%82%D1%8C%D1%81%D1%8F-%D0%BA-%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5-%D1%80%D0%B0%D0%BD%D0%BD%D0%B5%D0%BC%D1%83-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%83" />
+
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.sstatic.net/Js/stub.ru.js?v=5ea3a8484736"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.sstatic.net/Sites/ru/all.css?v=cc16644a687b">
+
+            <link rel="alternate" type="application/atom+xml" title="Лента для вопроса &#171;Как вернуться (откатиться) к более раннему коммиту?&#187;" href="/feeds/question/431520">
+            <meta name="twitter:app:country" content="US" />
+            <meta name="twitter:app:name:iphone" content="Stack Exchange iOS" />
+            <meta name="twitter:app:id:iphone" content="871299723" />
+            <meta name="twitter:app:url:iphone" content="se-zaphod://ru.stackoverflow.com/questions/431520/%D0%9A%D0%B0%D0%BA-%D0%B2%D0%B5%D1%80%D0%BD%D1%83%D1%82%D1%8C%D1%81%D1%8F-%D0%BE%D1%82%D0%BA%D0%B0%D1%82%D0%B8%D1%82%D1%8C%D1%81%D1%8F-%D0%BA-%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5-%D1%80%D0%B0%D0%BD%D0%BD%D0%B5%D0%BC%D1%83-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%83" />
+            <meta name="twitter:app:name:ipad" content="Stack Exchange iOS" />
+            <meta name="twitter:app:id:ipad" content="871299723" />
+            <meta name="twitter:app:url:ipad" content="se-zaphod://ru.stackoverflow.com/questions/431520/%D0%9A%D0%B0%D0%BA-%D0%B2%D0%B5%D1%80%D0%BD%D1%83%D1%82%D1%8C%D1%81%D1%8F-%D0%BE%D1%82%D0%BA%D0%B0%D1%82%D0%B8%D1%82%D1%8C%D1%81%D1%8F-%D0%BA-%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5-%D1%80%D0%B0%D0%BD%D0%BD%D0%B5%D0%BC%D1%83-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%83" />
+            <meta name="twitter:app:name:googleplay" content="Stack Exchange Android">
+            <meta name="twitter:app:url:googleplay" content="http://ru.stackoverflow.com/questions/431520/%D0%9A%D0%B0%D0%BA-%D0%B2%D0%B5%D1%80%D0%BD%D1%83%D1%82%D1%8C%D1%81%D1%8F-%D0%BE%D1%82%D0%BA%D0%B0%D1%82%D0%B8%D1%82%D1%8C%D1%81%D1%8F-%D0%BA-%D0%B1%D0%BE%D0%BB%D0%B5%D0%B5-%D1%80%D0%B0%D0%BD%D0%BD%D0%B5%D0%BC%D1%83-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D1%82%D1%83">
+            <meta name="twitter:app:id:googleplay" content="com.stackexchange.marvin">
+        <script>
+        
+            StackExchange.ready(function () {
+                                    
+                    StackExchange.using("snippets", function () {
+                        StackExchange.snippets.initSnippetRenderer();
+                    });
+                    
+
+                StackExchange.using("postValidation", function () {
+                    StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+                });
+
+                
+                StackExchange.question.init({canOpenBounty:true,votesCast:[],totalCommentCount:2,shownCommentCount:2,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:431520});
+
+                styleCode();
+
+                    StackExchange.realtime.subscribeToQuestion('609', '431520');
+                                                                    StackExchange.using("gps", function () { StackExchange.gps.trackOutboundClicks('#content', '.post-text', false); });
+
+            });
+        </script>
+
+
+    <script>
+        StackExchange.ready(function () {
+                        StackExchange.realtime.init('wss://qa.sockets.stackexchange.com');
+            StackExchange.realtime.subscribeToReputationNotifications('609');
+                StackExchange.realtime.subscribeToTopBarNotifications('609');
+        });
+    </script>
+    <script>
+        StackExchange.init({"locale":"ru","stackAuthUrl":"https://stackauth.com","networkMetaHostname":"meta.stackexchange.com","serverTime":1505556606,"routeName":"Questions/Show","site":{"name":"Stack Overflow на русском","description":"Вопросы и ответы для программистов","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdsB7sSAAAAAAzjgEF_Hd8vXv-C42sa_KyofaGR","recaptchaAudioLang":"en","enableNewTagCreationWarning":false,"insertSpaceAfterNameTabCompletion":false,"id":609,"enableInsertDocLinkDialog":false,"childUrl":"https://ru.meta.stackoverflow.com","enableSocialMediaInSharePopup":true,"protocol":"https"},"user":{"fkey":"7d7543d49a523d0daa68764de5fbea69","rep":750,"isRegistered":true,"userType":3,"userId":6606,"accountId":3887603,"gravatar":"<div class=\"gravatar-wrapper-32\"><img src=\"https://i.stack.imgur.com/cbuuA.jpg?s=32&amp;g=1\" alt=\"\" width=\"32\" height=\"32\"></div>","profileUrl":"https://ru.stackoverflow.com/users/6606/cyklop77","canSeeDeletedPosts":false,"canSeeNewHeaderDesign":true},"realtime":{"newest":true,"active":true,"tagged":true,"staleDisconnectIntervalInHours":0,"workerIframeDomain":"https://cdn.sstatic.net"},"events":{"postType":{"question":1},"postEditionSection":{"title":1,"body":2,"tags":3}},"story":{"minCompleteBodyLength":75,"likedTagsMaxLength":300,"dislikedTagsMaxLength":300},"jobPreferences":{"maxNumDeveloperRoles":2,"maxNumIndustries":4}}, {"site":{"allowImageUploads":true,"enableUserHovercards":true,"styleCode":true,"enableImgurHttps":true,"forceHttpsImages":true},"comments":{},"userProfile":{},"tags":{"allowNonAsciiTags":true},"accounts":{"currentPasswordRequiredForChangingStackIdPassword":true},"flags":{"allowRetractingFlags":true},"snippets":{"snippetsEnabled":true,"renderDomain":"stacksnippets.net"},"markdown":{"asteriskIntraWordEmphasis":true},"monitoring":{"clientTimingsAbsoluteTimeout":30000,"clientTimingsDebounceTimeout":1000}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.ru.js":"f51021b9ed02","js/moderator.ru.js":"11b418445940","js/full-anon.ru.js":"3e8f142751fa","js/full.ru.js":"c50f2c305af0","js/wmd.ru.js":"41e13856899a","js/third-party/jquery.autocomplete.min.js":"d3b8fa7fdf74","js/third-party/jquery.autocomplete.min.ru.js":"","js/mobile.ru.js":"c71ac1922553","js/help.ru.js":"81894c4f1eba","js/tageditor.ru.js":"bccb68db07ed","js/tageditornew.ru.js":"62edad8fe46c","js/inline-tag-editing.ru.js":"f3f7c36eaafc","js/revisions.ru.js":"d43619a2d024","js/review.ru.js":"d83fc4dc9a35","js/tagsuggestions.ru.js":"3a58d5b0d796","js/post-validation.ru.js":"03865272c8e4","js/explore-qlist.ru.js":"e71f14781288","js/events.ru.js":"16de80c55eac","js/keyboard-shortcuts.ru.js":"3d7b6b17580d","js/external-editor.ru.js":"cc4380612a2c","js/adops.ru.js":"25a6dce41c18","js/external-editor.ru.js":"cc4380612a2c","js/snippet-javascript.ru.js":"65cb33dd906a","js/snippet-javascript-codemirror.ru.js":"66863f68f89f"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+
+    <noscript id="noscript-css"><style type="text/css">body,.so-header{margin-top:1.9em}</style></noscript>
+</head>
+<body class="question-page new-topbar">
+    
+    <div id="notify-container"></div>
+    <div id="custom-header"></div>
+
+
+<header class="so-header js-so-header _fixed">
+    <div class="-container">
+        <div class="-main">            
+            <a href="https://ru.stackoverflow.com" class="-logo js-gps-track _glyph"
+               data-gps-track="top_nav.click({is_current:false, location:2, destination:8})">
+
+                <span class="-img">Stack Overflow на русском</span>
+            </a>
+
+            <nav class="navigation" role="navigation" aria-label="навигация по сайту">
+                <ol class="-list">
+                        <li class="-item _current">
+        <a id="nav-questions" href="/questions" class="-link js-gps-track" 
+            data-gps-track="top_nav.click({is_current:true, location:2, destination:1})">Вопросы</a>
+    </li>
+
+                        <li class="-item">
+        <a id="nav-tags" href="/tags" class="-link js-gps-track" 
+            data-gps-track="top_nav.click({is_current:false, location:2, destination:2})">Метки</a>
+    </li>
+
+                        <li class="-item">
+        <a id="nav-users" href="/users" class="-link js-gps-track" 
+            data-gps-track="top_nav.click({is_current:false, location:2, destination:3})">Участники</a>
+    </li>
+
+                </ol>
+            </nav>
+
+                <form id="search" action="/search" method="get" class="searchbar" autocomplete="off" role="search">
+                    <svg aria-hidden="true" class="svg-icon iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"/></svg>
+                    <input name="q" type="text" placeholder="Поиск…" value="" tabindex="1" autocomplete="off" maxlength="240" class="f-input js-search-field" />
+                    <button type="submit" class="btn js-search-submit">
+                        <svg aria-hidden="true" class="svg-icon iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"/></svg>
+                    </button>
+                </form>
+
+        </div>
+        
+
+
+    
+
+<div class="-actions">
+        <a href="/users/6606/cyklop77" class="my-profile js-gps-track" data-gps-track="profile_summary.click()">
+            <div class="gravatar-wrapper-24" title="cyklop77"><img src="https://i.stack.imgur.com/cbuuA.jpg?s=48&amp;g=1" alt="" width="24" height="24" class="-avatar js-avatar-me"></div>
+            
+
+            <div class="-rep js-header-rep" title="Ваша репутация: 750">750</div>
+
+                <div class="-badges">
+                    <span title="1 золотой знак"><span class="badge1">&#9679;</span><span class="badgecount">1</span></span><span title="12 серебряных знаков"><span class="badge2">&#9679;</span><span class="badgecount">12</span></span><span title="27 бронзовых знаков"><span class="badge3">&#9679;</span><span class="badgecount">27</span></span>
+                </div>
+        </a>
+    <nav class="secondary-nav">
+        <div class="-dialog-container js-topbar-dialog-corral">
+
+
+    <div class="topbar-dialog siteSwitcher-dialog dno">
+        <div class="header">
+            <h3><a href="https://ru.stackoverflow.com">текущее сообщество</a>
+            </h3>
+        </div>
+        <div class="modal-content current-site-container">
+            <ul class="current-site">
+                    <li>
+                            <div class="related-links">
+            <a href="https://ru.stackoverflow.com/help" class="js-gps-track"     data-gps-track="site_switcher.click({ item_type:14 })"
+>справка</a>
+                    <a href="https://chat.stackexchange.com?tab=site&amp;host=ru.stackoverflow.com" class="js-gps-track"     data-gps-track="site_switcher.click({ item_type:6 })"
+>чат</a>
+                    <a href="https://ru.stackoverflow.com/users/logout" class="js-gps-track"     data-gps-track="site_switcher.click({ item_type:8 })"
+>выйти</a>
+    </div>
+
+    <a href="https://ru.stackoverflow.com"
+       class="current-site-link site-link js-gps-track"
+       data-id="609"
+       data-gps-track="site_switcher.click({ item_type:3 })">
+        <div class="site-icon favicon favicon-ru" title="Stack Overflow на русском"></div>
+        Stack Overflow на русском
+    </a>
+
+                    </li>
+                    <li class="related-site">
+                            <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                        
+    <a href="https://ru.meta.stackoverflow.com"
+       class="site-link js-gps-track"
+       data-id="610"
+       data-gps-track="site.switch({ target_site:610, item_type:3 }),site_switcher.click({ item_type:4 })">
+        <div class="site-icon favicon favicon-rumeta" title="Stack Overflow на русском Meta"></div>
+        Stack Overflow на русском Meta
+    </a>
+
+                    </li>
+            </ul>
+        </div>
+
+        <div class="header" id="your-communities-header">
+            <h3>
+                    <a href="https://stackexchange.com/users/3887603/?tab=accounts">Ваши сообщества</a>
+            </h3>
+
+                <a href="#" id="edit-pinned-sites">править</a>
+                <a href="#" id="cancel-pinned-sites" style="display: none;">отмена</a>
+        </div>
+        <div class="modal-content" id="your-communities-section">
+
+                <ul class="my-sites">
+                        <li>
+                            
+    <a href="https://ru.stackoverflow.com"
+       class="site-link js-gps-track"
+       data-id="609"
+       data-gps-track="site.switch({ target_site:609, item_type:3 }),site_switcher.click({ item_type:1 })">
+        <div class="site-icon favicon favicon-ru" title="Stack Overflow на русском"></div>
+        Stack Overflow на русском
+            <span class="rep-score">750</span>
+    </a>
+
+                        </li>
+                        <li>
+                            
+    <a href="https://stackoverflow.com"
+       class="site-link js-gps-track"
+       data-id="1"
+       data-gps-track="site.switch({ target_site:1, item_type:3 }),site_switcher.click({ item_type:1 })">
+        <div class="site-icon favicon favicon-stackoverflow" title="Stack Overflow"></div>
+        Stack Overflow
+            <span class="rep-score">336</span>
+    </a>
+
+                        </li>
+                        <li>
+                            
+    <a href="https://codereview.stackexchange.com"
+       class="site-link js-gps-track"
+       data-id="196"
+       data-gps-track="site.switch({ target_site:196, item_type:3 }),site_switcher.click({ item_type:1 })">
+        <div class="site-icon favicon favicon-codereview" title="Code Review"></div>
+        Code Review
+            <span class="rep-score">116</span>
+    </a>
+
+                        </li>
+                </ul>
+                    <div class="pinned-site-editor-container" style="display: none;">
+                        <input id="js-site-search-txt"
+                                type="text"
+                                class="site-filter-input"
+                                value=""
+                                placeholder="Добавить сообщество Stack Exchange"/>
+                        <input type="submit" id="pin-site-btn" value="+" disabled="disabled"/>
+                        <ul class="js-found-sites found-sites"></ul>
+                        <ul class="pinned-site-list sortable" data-custom-list="False">
+                        </ul>
+                        <input type="submit" value="Сохранить" id="save-pinned-sites-btn" disabled="disabled"/>
+                        <a href="#" id="reset-pinned-sites">сбросить на значения по умолчанию</a>
+                    </div>
+        </div>
+
+        <div class="header">
+            <h3><a href="https://stackexchange.com/sites">другие сообщества stack exchange</a>
+            </h3>
+            <a href="https://stackoverflow.blog" class="fr">блог компании</a>
+        </div>
+        <div class="modal-content">
+                <div class="child-content"></div>
+        </div>        
+    </div>
+                <div class="topbar-dialog help-dialog js-help-dialog dno">
+        <div class="modal-content">
+            <ul>
+                                    <li>
+                        <a href="/tour" class="js-gps-track" data-gps-track="help_popup.click({ item_type:1 })">
+                            Тур
+                            <span class="item-summary">
+                                Начните с этой страницы, чтобы быстро ознакомиться с сайтом
+                            </span>
+                        </a>
+                    </li>
+                <li>
+                    <a href="/help" class="js-gps-track" data-gps-track="help_popup.click({ item_type:4 })">
+                        Справка
+                        <span class="item-summary">
+                            Подробные ответы на любые возможные вопросы
+                        </span>
+                    </a>
+                </li>
+                        <li>
+                            <a href="https://ru.meta.stackoverflow.com" class="js-gps-track" data-gps-track="help_popup.click({ item_type:2 })">
+                                Мета
+                                <span class="item-summary">
+                                    Обсудить принципы работы и политику сайта
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://stackoverflow.com/company/about" class="js-gps-track" data-gps-track="help_popup.click({ item_type:6 })">
+                                О нас
+                                <span class="item-summary">
+                                    Узнать больше о компании Stack Overflow
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.stackoverflowbusiness.com/?ref=topbar_help" class="js-gps-track" data-gps-track="help_popup.click({ item_type:7 })">
+                                Бизнес
+                                <span class="item-summary">
+                                    Узнать больше о поиске разработчиков или рекламе на сайте
+                                </span>
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+
+        </div>
+        <ol class="-list">
+    <li class="-item">
+        <a href="#" class="-link js-inbox-button" title="У вас есть непрочитанные входящие сообщения">
+            <svg aria-hidden="true" class="svg-icon iconInbox" width="20" height="18" viewBox="0 0 20 18"><path d="M15.19 1H4.63c-.85 0-1.6.54-1.85 1.35L0 10.79V15c0 1.1.9 2 2 2h16a2 2 0 0 0 2-2v-4.21l-2.87-8.44A2 2 0 0 0 15.19 1zm-.28 10l-2 2h-6l-2-2H1.96L4.4 3.68A1 1 0 0 1 5.35 3h9.12a1 1 0 0 1 .95.68L17.86 11h-2.95z"/></svg>
+            <span class="indicator-badge js-unread-count _important">18</span>
+        </a>
+    </li>
+    <li class="-item">
+        <a href="#" class="-link js-achievements-button _highlighted-positive" title="У вас есть новые изменения репутации" data-unread-class="_highlighted-positive">
+            <svg aria-hidden="true" class="svg-icon iconAchievements" width="18" height="18" viewBox="0 0 18 18"><path d="M15 2V1H3v1H0v4c0 1.6 1.4 3 3 3v1c.4 1.5 3 2.6 5 3v2H5s-1 1.5-1 2h10c0-.4-1-2-1-2h-3v-2c2-.4 4.6-1.5 5-3V9c1.6-.2 3-1.4 3-3V2h-3zM3 7c-.5 0-1-.5-1-1V4h1v3zm8.4 2.5L9 8 6.6 9.4l1-2.7L5 5h3l1-2.7L10 5h2.8l-2.3 1.8 1 2.7h-.1zM16 6c0 .5-.5 1-1 1V4h1v2z"/></svg>
+            <span class="indicator-badge js-unread-count _positive">+144</span>
+        </a>
+    </li>
+
+
+    <li class="-item">
+        <a href="/review" class="-link js-gps-track js-review-button" title="Очереди проверок — помогите улучшить сайт" data-gps-track="review_popup.click({ in_danger: false })">
+            <svg aria-hidden="true" class="svg-icon iconReviewQueue" width="18" height="18" viewBox="0 0 18 18"><path d="M16 1H2C.8 1 0 1.8 0 3v15l3-3h13c1 0 1.8-.8 2-2V3c0-1.2-.8-2-2-2zM3 12V9.8l6.3-6.3c.2-.2.5-.2.7 0L11.5 5c.2.3.2.6 0 .8L5.2 12H3zm12 0H7.5l2-2H15v2z"/></svg>
+        </a>
+        
+    </li>
+                <li class="-item">
+        <a href="https://stackexchange.com" class="-link js-site-switcher-button js-gps-track" data-gps-track="site_switcher.show" title="Список всех 171 сайтов Stack Exchange">
+            <svg aria-hidden="true" class="svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zM15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 6h16v4H1V6z"/></svg>
+        </a>
+    </li>
+
+
+        </ol>
+    </nav>
+</div>
+    </div>
+</header>
+
+    <script>
+        StackExchange.ready(function () { StackExchange.topbar.init(); });
+            StackExchange.scrollPadding.setPaddingTop(60, 10);     </script>
+
+    <div class="container  ">
+        
+
+
+        <div id="content" class="snippet-hidden">
+
+
+
+
+
+            
+
+<div itemscope itemtype="http://schema.org/Question">
+    <link itemprop="image" href="https://cdn.sstatic.net/Sites/ru/img/apple-touch-icon.png?v=0dd80f442adc">
+    <div class="inner-content">
+        <div id="question-header">
+                <h1 itemprop="name"><a href="/questions/431520/%d0%9a%d0%b0%d0%ba-%d0%b2%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c%d1%81%d1%8f-%d0%be%d1%82%d0%ba%d0%b0%d1%82%d0%b8%d1%82%d1%8c%d1%81%d1%8f-%d0%ba-%d0%b1%d0%be%d0%bb%d0%b5%d0%b5-%d1%80%d0%b0%d0%bd%d0%bd%d0%b5%d0%bc%d1%83-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d1%83" class="question-hyperlink">Как вернуться (откатиться) к более раннему коммиту?</a></h1>
+
+            
+<div class="aside-cta" role="navigation" aria-label="ask new question">
+    <a href="/questions/ask" class="btn">Задать вопрос</a>
+</div>
+        </div>
+            <div id="mainbar" role="main" aria-label="question and answers">
+
+            
+
+<div class="question" data-questionid="431520"  id="question">
+
+        <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+        <input type="hidden" name="_id_" value="431520">
+        <a class="vote-up-off" title="Вопрос отражает стремление разобраться; он понятен и несёт пользу (для отмены нажмите повторно)">голос &#171;за&#187;</a>
+        <span itemprop="upvoteCount" class="vote-count-post ">52</span>
+        <a class="vote-down-off" title="Вопрос не отражает стремления разобраться; он непонятен или не несёт пользы (для отмены нажмите повторно)">голос &#171;против&#187;</a>
+
+        <a class="star-off" href="#">избранное</a>
+        <div class="favoritecount"><b>45</b></div>
+
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="text">
+
+<p>Я хочу вернуться к более раннему коммиту. Как мне это сделать?</p>
+
+<p>Вот что показывает команда <code>git log</code>:</p>
+
+<pre><code>$ git log
+commit dddddd
+Author: Me &lt;me@me.com&gt;
+Date:   Thu Nov 4 18:59:41 2010 -0400
+
+Add buzz
+
+commit cccccc
+Author: Me &lt;me@me.com&gt;
+Date:   Thu Nov 4 05:13:39 2010 -0400
+
+Add fizz
+
+commit bbbbbb
+Author: Me &lt;me@me.com&gt;
+Date:   Thu Nov 4 00:55:06 2010 -0400
+
+Add bar
+
+commit aaaaaa
+Author: Me &lt;me@me.com&gt;
+Date:   Wed Nov 3 23:56:08 2010 -0400
+
+Add foo
+</code></pre>
+    </div>
+    <div class="post-taglist">
+        <a href="/questions/tagged/git" class="post-tag" title="показать вопросы с меткой [git]" rel="tag">git</a> <a href="/questions/tagged/git-commit" class="post-tag" title="показать вопросы с меткой [git-commit]" rel="tag">git-commit</a> <a href="/questions/tagged/git-checkout" class="post-tag" title="показать вопросы с меткой [git-checkout]" rel="tag">git-checkout</a> <a href="/questions/tagged/git-reset" class="post-tag" title="показать вопросы с меткой [git-reset]" rel="tag">git-reset</a> <a href="/questions/tagged/git-revert" class="post-tag" title="показать вопросы с меткой [git-revert]" rel="tag">git-revert</a> 
+    </div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+<div class="post-menu"><a href="/q/431520/6606" title="короткая постоянная ссылка на этот вопрос" class="short-link" id="link-post-431520">поделиться</a><span class="lsep">|</span><a href="/posts/431520/edit" class="suggest-edit-post" title="отредактируйте сообщение, чтобы улучшить его">править</a><span class="lsep">|</span><a href="#"
+       class="flag-post-link"
+       title="отметьте тревогой сообщение с целью обозначить серьёзную проблему или привлечь внимание модератора"
+       data-postid="431520">тревога</a></div>        
+    </td>
+    <td align="right" class="post-signature">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="/posts/431520/revisions" title="показать все правки данного сообщения">изменён <span title="2015-06-23 09:50:34Z" class="relativetime">23 июн '15 в 9:50</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="/users/15146/ixsci"><div class="gravatar-wrapper-32"><img src="https://www.gravatar.com/avatar/a2cb19c975ede804712de8fcc0435f6e?s=32&amp;d=identicon&amp;r=PG" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="/users/15146/ixsci">ixSci</a>
+        <div class="-flair">
+            <span class="reputation-score" title="уровень репутации 17,108" dir="ltr">17.1k</span><span title="2 золотых знака"><span class="badge1"></span><span class="badgecount">2</span></span><span title="23 серебряных знака"><span class="badge2"></span><span class="badgecount">23</span></span><span title="47 бронзовых знаков"><span class="badge3"></span><span class="badgecount">47</span></span>
+        </div>
+    </div>
+</div>    </td>
+    <td class="post-signature owner">
+        <div class="user-info user-hover">
+    <div class="user-action-time">
+        задан <span title="2015-06-23 09:43:48Z" class="relativetime">23 июн '15 в 9:43</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="/users/181472/nick-volynkin"><div class="gravatar-wrapper-32"><img src="https://i.stack.imgur.com/Zt5Ll.jpg?s=32&amp;g=1" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="/users/181472/nick-volynkin">Nick Volynkin</a><span class="mod-flair" title="модератор">&#9830;</span>
+        <div class="-flair">
+            <span class="reputation-score" title="уровень репутации 19,978" dir="ltr">20k</span><span title="9 золотых знаков"><span class="badge1"></span><span class="badgecount">9</span></span><span title="69 серебряных знаков"><span class="badge2"></span><span class="badgecount">69</span></span><span title="133 бронзовых знака"><span class="badge3"></span><span class="badgecount">133</span></span>
+        </div>
+    </div>
+</div>
+    </td>
+    </tr>
+    </table>
+</div>
+</td>
+        </tr>
+                    
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-431520" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="0"
+                       data-canpost="true"
+                       data-cansee="false"
+                       data-comments-unavailable="false"
+                       data-addlink-disabled="false">
+
+
+
+    <tr id="comment-670963" class="comment ">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                <a class="comment-up comment-up-off" title="комментарий добавляет полезную информацию к сообщению">upvote</a>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                                <td>
+                                    <a class="comment-flag" title="Отметьте комментарий тревогой, чтобы обозначить серьёзную проблему или привлечь внимание модератора">тревога</a>
+                                </td>
+                        </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">См. также: <a href="http://ru.stackoverflow.com/a/533115/181472">Убрать последний git-коммит, не меняя файлов проекта</a></span>
+                    &ndash;&nbsp;<a href="/users/181472/nick-volynkin"
+                       title="19,978 баллов репутации"
+                       class="comment-user owner">Nick Volynkin<span class="mod-flair" title="модератор">&#9830;</span></a>
+                <span class="comment-date" dir="ltr"><span title="2016-06-14 19:40:14Z" class="relativetime-clean">14 июн '16 в 19:40</span></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-895131" class="comment ">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                <a class="comment-up comment-up-off" title="комментарий добавляет полезную информацию к сообщению">upvote</a>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                                <td>
+                                    <a class="comment-flag" title="Отметьте комментарий тревогой, чтобы обозначить серьёзную проблему или привлечь внимание модератора">тревога</a>
+                                </td>
+                        </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">ассоциация: <a href="http://stackoverflow.com/questions/927358/how-to-undo-last-commits-in-git" title="how to undo last commits in git">stackoverflow.com/questions/927358/&hellip;</a></span>
+                    &ndash;&nbsp;<a href="/users/6/nicolas-chabanovsky"
+                       title="32,852 балла репутации"
+                       class="comment-user">Nicolas Chabanovsky<span class="mod-flair" title="модератор">&#9830;</span></a>
+                <span class="comment-date" dir="ltr"><span title="2017-03-02 12:59:48Z" class="relativetime-clean">2 мар в 12:59</span></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+				    <tfoot>
+					    <tr>
+						    <td></td>
+						    <td class="comment-form">
+							    <form id="add-comment-431520" 
+							          class="" 
+							          data-placeholdertext="Используйте комментарии для запроса дополнительной информации или предложения улучшений. Избегайте публикации ответа на вопросы в комментариях."></form>
+						    </td>
+					    </tr>
+				    </tfoot>
+		    </table>
+	    </div>
+
+        <div id="comments-link-431520" >
+
+                <a class="js-add-link comments-link "
+                   title="Используйте комментарии для запроса дополнительной информации или предложения улучшений. Избегайте публикации ответа на вопросы в комментариях."
+                   href=#>добавить комментарий</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="разверните, чтобы увидеть все комментарии к сообщению" href=# onclick=""></a>
+        </div>         
+    </td>
+</tr>              <tr class="bounty-notification">
+          <td class="votecell"></td>
+          <td>
+          <div style="margin-top:20px">
+            <a class="bounty-link bounty" title="пожертвовать частью своей репутации, чтобы получить более качественные ответы">
+                начать конкурс
+            </a>
+          </div>
+          </td>
+          </tr>
+    </table>
+</div>
+
+            <div id="answers">
+
+                <a name="tab-top"></a>
+                <div id="answers-header">
+                    <div class="subheader answers-subheader">
+                        <h2>
+                                1 ответ
+                                <span style="display:none;" itemprop="answerCount">1</span>
+                        </h2>
+                        <div>
+                            <div id="tabs">
+        <a href="/questions/431520/%d0%9a%d0%b0%d0%ba-%d0%b2%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c%d1%81%d1%8f-%d0%be%d1%82%d0%ba%d0%b0%d1%82%d0%b8%d1%82%d1%8c%d1%81%d1%8f-%d0%ba-%d0%b1%d0%be%d0%bb%d0%b5%d0%b5-%d1%80%d0%b0%d0%bd%d0%bd%d0%b5%d0%bc%d1%83-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d1%83?answertab=active#tab-top" data-nav-xhref="" title="Сначала недавно обновлённые ответы" data-value="active" data-shortcut="A">
+            текущие</a>
+        <a href="/questions/431520/%d0%9a%d0%b0%d0%ba-%d0%b2%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c%d1%81%d1%8f-%d0%be%d1%82%d0%ba%d0%b0%d1%82%d0%b8%d1%82%d1%8c%d1%81%d1%8f-%d0%ba-%d0%b1%d0%be%d0%bb%d0%b5%d0%b5-%d1%80%d0%b0%d0%bd%d0%bd%d0%b5%d0%bc%d1%83-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d1%83?answertab=oldest#tab-top" data-nav-xhref="" title="Ответы отображаются в порядке их публикации" data-value="oldest" data-shortcut="O">
+            старые</a>
+        <a class="youarehere" href="/questions/431520/%d0%9a%d0%b0%d0%ba-%d0%b2%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c%d1%81%d1%8f-%d0%be%d1%82%d0%ba%d0%b0%d1%82%d0%b8%d1%82%d1%8c%d1%81%d1%8f-%d0%ba-%d0%b1%d0%be%d0%bb%d0%b5%d0%b5-%d1%80%d0%b0%d0%bd%d0%bd%d0%b5%d0%bc%d1%83-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d1%83?answertab=votes#tab-top" data-nav-xhref="" title="Сначала ответы с наивысшим рейтингом" data-value="votes" data-shortcut="V">
+            голоса</a>
+</div>
+                        </div>
+                    </div>    
+                </div>    
+
+
+
+
+  
+<a name="431521"></a>
+<div id="answer-431521" class="answer accepted-answer" data-answerid="431521"  itemscope itemtype="http://schema.org/Answer" itemprop="acceptedAnswer">
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+        <input type="hidden" name="_id_" value="431521">
+        <a class="vote-up-off" title="Ответ полезен (для отмены нажмите повторно)">голос &#171;за&#187;</a>
+        <span itemprop="upvoteCount" class="vote-count-post ">120</span>
+        <a class="vote-down-off" title="Ответ не является полезным (для отмены нажмите повторно)">голос &#171;против&#187;</a>
+
+
+
+        <span class="vote-accepted-on load-accepted-answer-date" title="загружается, когда ответ был принят…">принят</span>
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>Этот вопрос можно понять по-разному:</p>
+
+<ol>
+<li>Что значит вернуться или откатиться: просто посмотреть, изменить содержимое рабочей области, изменить историю Git?</li>
+<li>Что именно откатить: рабочую область (worktree), индекс (область подготовки коммита, staging area), текущую ветку, удаленную ветку?</li>
+<li>К какой позиции откатить: к индексу, к последнему коммиту, к произвольному коммиту?</li>
+</ol>
+
+<p>Обозначим начальную ситуацию на следующей схеме:</p>
+
+<pre><code>               (i) (wt)
+A - B - C - D - ? - ?
+            ↑
+          master
+          (HEAD)
+</code></pre>
+
+<p><code>A</code>, <code>B</code>, <code>C</code>, <code>D</code> — коммиты в ветке <code>master</code>.<br>
+<code>(HEAD)</code> — местоположение указателя HEAD.<br>
+<code>(i)</code> — состояние индекса Git. Если совпадает c <code>(HEAD)</code> - пуст. Если нет - содержит изменения, подготовленные к следующему коммиту.<br>
+<code>(wt)</code> — состояние рабочей области проекта (working tree). Если совпадает с <code>(i)</code> — нет неиндексированных изменений, если не совпадает — есть изменения.<br>
+<code>↑</code> обозначает коммит, на который указывает определенная ветка или указатель.</p>
+
+<p>Вот решения, в зависимости от задачи:</p>
+
+<h1>1. Временно переключиться на другой коммит</h1>
+
+<p>Если вам нужно просто переключиться на другой коммит, чтобы, например, посмотреть на его содержимое, достаточно команды <a href="https://ru.stackoverflow.com/tags/git-checkout/info"><code>git checkout</code></a>:</p>
+
+<pre><code>git checkout aaaaaa
+
+ (wt)
+ (i)
+  A - B - C - D
+  ↑           ↑
+(HEAD)    master
+</code></pre>
+
+<p>Сейчас репозиторий находится в состоянии «detached HEAD». Чтобы переключиться обратно, используйте имя ветки (например, <code>master</code>):</p>
+
+<pre><code>git checkout master
+</code></pre>
+
+<h1>2. Переключиться на коммит и продолжить работу с него</h1>
+
+<p>Если вы хотите продолжить работу с другого коммита, вам понадобится новая ветка. Можно переключиться и создать ее одной командой:</p>
+
+<pre><code>git checkout -b имя-новой-ветки aaaaaa
+
+ (wt)
+ (i)
+  A - B - C - D
+  ↑           ↑
+ new       master
+(HEAD)
+</code></pre>
+
+<h1>3. Удалить изменения в рабочей области и вернуть ее к состоянию как при последнем коммите.</h1>
+
+<p>Начальное состояние:</p>
+
+<pre><code>               (i) (wt)
+A - B - C - D - ? - ?
+            ↑
+          master
+          (HEAD)
+</code></pre>
+
+<h2>3.1 Безопасно — с помощью кармана (stash)</h2>
+
+<h3>3.1.1 Только неиндексированные</h3>
+
+<p>Можно <s>удалить</s> прикарманить только те изменения, которые еще не были индексированы (командой <code>add</code>):</p>
+
+<pre><code>git stash save --keep-index
+</code></pre>
+
+<p>Конечное состояние:</p>
+
+<pre><code>               (wt)
+               (i)       
+A - B - C - D - ?         ?
+            ↑             ↑
+          master      stash{0}
+          (HEAD)
+</code></pre>
+
+<h3>3.1.2 Индексированные и нет</h3>
+
+<p>Эта команда отменяет все индексированные и неиндексированные изменения в рабочей области, сохраняя их в карман (stash). </p>
+
+<pre><code>git stash save
+</code></pre>
+
+<p>Конечное состояние:</p>
+
+<pre><code>           (wt)
+           (i)           
+A - B - C - D             ?
+            ↑             ↑
+          master      stash{0}
+          (HEAD)
+</code></pre>
+
+<blockquote>
+  <p><strong>Восстановление несохраненных изменений</strong>: легко и просто.</p>
+</blockquote>
+
+<pre><code>git stash apply
+</code></pre>
+
+<p>Если stash совсем не нужен, его можно удалить.</p>
+
+<pre><code># удалить последнюю запись кармана
+git stash drop
+</code></pre>
+
+<p><a href="https://ru.stackoverflow.com/a/153503/181472">Подробнее про использование stash</a>.</p>
+
+<p>После этого восстановить изменения всё ещё можно, но сложнее: <a href="https://stackoverflow.com/q/89332/2790048">How to recover a dropped stash in Git?</a> </p>
+
+<h2>3.2 Опасный способ</h2>
+
+<blockquote>
+  <p><strong>Осторожно!</strong> Эта команда <strong>безвозвратно удаляет несохраненные текущие изменения из рабочей области и из индекса</strong> Если они вам все-таки нужны, воспользуйтесь <a href="https://ru.stackoverflow.com/tags/git-stash/info"><code>git stash</code></a>. </p>
+  
+  <p><strong>Восстановление несохраненных изменений</strong>: неиндексированные потеряны полностью, но <a href="https://ru.stackoverflow.com/a/424384/181472">вы можете восстановить то, что было проиндексировано</a>.</p>
+</blockquote>
+
+<p>Здесь мы будем использовать <a href="https://ru.stackoverflow.com/tags/git-reset/info"><code>git reset --hard</code></a></p>
+
+<p>Выполняем:</p>
+
+<pre><code>git reset --hard HEAD
+</code></pre>
+
+<p>Конечное состояние:</p>
+
+<pre><code>           (wt)
+           (i)
+A - B - C - D - х - х
+            ↑
+          master
+          (HEAD)
+</code></pre>
+
+<h1>4. Перейти к более раннему коммиту в текущей ветке и удалить из нее все последующие (неопубликованные)</h1>
+
+<blockquote>
+  <p><strong>Осторожно!</strong> Эта команда переписывает историю Git-репозитория. <strong>Если вы уже опубликовали (<a href="https://ru.stackoverflow.com/tags/git-push/info"><code>git push</code></a>) свои изменения, то этот способ использовать нельзя (см. <a href="https://ru.stackoverflow.com/questions/429512/">почему</a>)</strong>. Используйте вариант дальше с <a href="https://ru.stackoverflow.com/tags/git-revert/info"><code>git revert</code></a>.</p>
+</blockquote>
+
+<h2>4.1 При этом сохранить изменения в индекс репозитория:</h2>
+
+<pre><code>git reset --soft bbbbbb
+</code></pre>
+
+<p>После этого индекс репозитория будет содержать все изменения от <code>cccccc</code> до <code>dddddd</code>. Теперь вы можете сделать новый коммит (или несколько) на основе этих изменений.</p>
+
+<pre><code>           (wt)
+           (i)
+A - B - C - D 
+    ↑
+  master
+  (HEAD)
+</code></pre>
+
+<h2>4.2 Сохранить изменения в рабочей области, но не в индексе.</h2>
+
+<pre><code>git reset bbbbbb
+</code></pre>
+
+<p>Эта команда просто перемещает указатель ветки, но не отражает изменения в индексе (он будет пустым).</p>
+
+<pre><code>   (i)     (wt)
+A - B - C - D 
+    ↑
+  master
+  (HEAD)
+</code></pre>
+
+<h2>4.3 Просто выбросить изменения.</h2>
+
+<blockquote>
+  <p><strong>Осторожно!</strong> Эта команда <strong>безвозвратно удаляет несохраненные текущие изменения</strong>. Если удаляемые коммиты не принадлежат никакой другой ветке, то они тоже будут потеряны.</p>
+  
+  <p><strong>Восстановление коммитов</strong>: Используйте <a href="https://ru.stackoverflow.com/tags/git-reflog/info"><code>git reflog</code></a> и <a href="https://ru.stackoverflow.com/questions/232455/">этот вопрос</a> чтобы найти и восстановить коммиты; иначе сборщик мусора удалит их безвозвратно через некоторое время.</p>
+  
+  <p><strong>Восстановление несохраненных изменений</strong>: неиндексированные потеряны полностью, но <a href="https://ru.stackoverflow.com/a/424384/181472">вы можете восстановить то, что было проиндексировано</a>.</p>
+</blockquote>
+
+<p>Начальное состояние:</p>
+
+<pre><code>               (i) (wt)
+A - B - C - D - ? -  ?
+            ↑
+          master
+          (HEAD)
+</code></pre>
+
+<p>Выполняем:</p>
+
+<pre><code>git reset --hard bbbbbb
+</code></pre>
+
+<p>Конечное состояние:</p>
+
+<pre><code>   (wt)
+   (i)
+A - B - C - D - х - х
+    ↑
+  master
+  (HEAD)
+</code></pre>
+
+<h1>5. Отменить уже опубликованные коммиты с помощью новых коммитов</h1>
+
+<p>Воспользуйтесь командой <a href="https://ru.stackoverflow.com/tags/git-revert/info"><code>git revert</code></a>. Она создает новые коммиты, по одному на каждый отменяемый коммит. Таким образом, если нужно отменить все коммиты после <code>aaaaaa</code>:</p>
+
+<pre><code># можно перечислить отменяемые коммиты
+git revert bbbbbb cccccc dddddd
+
+# можно задать диапазон от более раннего к более позднему (новому)
+git revert bbbbbb..dddddd
+
+# либо в относительных ссылках
+git revert HEAD~2..HEAD
+
+# можно отменить коммит слияния, указывая явным образом номер предка (в нашем примере таких нет):
+git revert -m 1 abcdef
+
+# после этого подтвердите изменения:
+git commit -m'детальное описание, что и почему сделано'
+</code></pre>
+
+<blockquote>
+  <p><strong>Восстановление</strong>: Если revert-коммит оказался ошибочным, <a href="https://ru.stackoverflow.com/a/433111/181472">используйте этот ответ</a>.</p>
+</blockquote>
+    </div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+<div class="post-menu"><a href="/a/431521/6606" title="короткая постоянная ссылка на этот ответ" class="short-link" id="link-post-431521">поделиться</a><span class="lsep">|</span><a href="/posts/431521/edit" class="suggest-edit-post" title="отредактируйте сообщение, чтобы улучшить его">править</a><span class="lsep">|</span><a href="#"
+       class="flag-post-link"
+       title="отметьте тревогой сообщение с целью обозначить серьёзную проблему или привлечь внимание модератора"
+       data-postid="431521">тревога</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="/posts/431521/revisions" title="показать все правки данного сообщения">изменён <span title="2017-05-23 12:39:15Z" class="relativetime">23 май в 12:39</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="/users/-1/%d0%94%d1%83%d1%85-%d1%81%d0%be%d0%be%d0%b1%d1%89%d0%b5%d1%81%d1%82%d0%b2%d0%b0"><div class="gravatar-wrapper-32"><img src="https://www.gravatar.com/avatar/a007be5a61f6aa8f3e85ae2fc18dd66e?s=32&amp;d=identicon&amp;r=PG" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="/users/-1/%d0%94%d1%83%d1%85-%d1%81%d0%be%d0%be%d0%b1%d1%89%d0%b5%d1%81%d1%82%d0%b2%d0%b0">Дух сообщества</a><span class="mod-flair" title="модератор">&#9830;</span>
+        <div class="-flair">
+            <span class="reputation-score" title="уровень репутации " dir="ltr">1</span>
+        </div>
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature owner">   
+       
+
+    <div class="user-info user-hover">
+    <div class="user-action-time">
+        ответ дан <span title="2015-06-23 09:43:48Z" class="relativetime">23 июн '15 в 9:43</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="/users/181472/nick-volynkin"><div class="gravatar-wrapper-32"><img src="https://i.stack.imgur.com/Zt5Ll.jpg?s=32&amp;g=1" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="/users/181472/nick-volynkin">Nick Volynkin</a><span class="mod-flair" title="модератор">&#9830;</span>
+        <div class="-flair">
+            <span class="reputation-score" title="уровень репутации 19,978" dir="ltr">20k</span><span title="9 золотых знаков"><span class="badge1"></span><span class="badgecount">9</span></span><span title="69 серебряных знаков"><span class="badge2"></span><span class="badgecount">69</span></span><span title="133 бронзовых знака"><span class="badge3"></span><span class="badgecount">133</span></span>
+        </div>
+    </div>
+</div>
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-431521" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="0"
+                       data-canpost="true"
+                       data-cansee="false"
+                       data-comments-unavailable="false"
+                       data-addlink-disabled="false">
+
+
+
+    <tr id="comment-1045485" class="comment ">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                <span title="количество голосов &#171;полезный комментарий&#187;"
+                                      class="cool">4</span>
+                        </td>
+                        <td>
+                                <a class="comment-up comment-up-off" title="комментарий добавляет полезную информацию к сообщению">upvote</a>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                                <td>
+                                    <a class="comment-flag" title="Отметьте комментарий тревогой, чтобы обозначить серьёзную проблему или привлечь внимание модератора">тревога</a>
+                                </td>
+                        </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Крутой ответ! Ещё бывает полезно использовать <i>git worktree</i> вместо <i>stash</i>.</span>
+                    &ndash;&nbsp;<a href="/users/180002/0andriy"
+                       title="363 балла репутации"
+                       class="comment-user">0andriy</a>
+                <span class="comment-date" dir="ltr"><span title="2017-08-08 06:17:11Z" class="relativetime-clean">8 авг в 6:17</span></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+				    <tfoot>
+					    <tr>
+						    <td></td>
+						    <td class="comment-form">
+							    <form id="add-comment-431521" 
+							          class="" 
+							          data-placeholdertext="Используйте комментарии для запроса дополнительной информации или предложения улучшений. Избегайте комментариев в стиле &#171;+1&#187; или &#171;Спасибо&#187;."></form>
+						    </td>
+					    </tr>
+				    </tfoot>
+		    </table>
+	    </div>
+
+        <div id="comments-link-431521" >
+
+                <a class="js-add-link comments-link "
+                   title="Используйте комментарии для запроса дополнительной информации или предложения улучшений. Избегайте комментариев в стиле &#171;+1&#187; или &#171;Спасибо&#187;."
+                   href=#>добавить комментарий</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="разверните, чтобы увидеть все комментарии к сообщению" href=# onclick=""></a>
+        </div>         
+    </td>
+</tr>    </table>
+</div>
+                                    <a name='new-answer'></a>
+                        <form id="post-form" action="/questions/431520/answer/submit" method="post"  class="post-form">
+                            <input type="hidden" id="post-id" value="431520" />
+                            <input type="hidden" id="qualityBanWarningShown" name="qualityBanWarningShown" value="false" />
+                            <input type="hidden" name="referrer" value=""/>
+                            <h2 class="space">Ваш ответ</h2>
+
+
+            <script>
+            StackExchange.ifUsing("editor", function () {
+                StackExchange.using("externalEditor", function () {
+                    StackExchange.using("snippets", function () {
+                        StackExchange.snippets.init();
+                    });
+                });
+            }, "code-snippets");
+        </script>
+    
+
+<script>
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+       
+        StackExchange.using("externalEditor", function() {
+                // Have to fire editor after snippets, if snippets enabled
+                if (StackExchange.settings.snippets.snippetsEnabled) {
+                    StackExchange.using("snippets", function() {
+                        createEditor();
+                    });
+                }
+                else {
+                    createEditor();
+                }
+            });
+
+            function createEditor() {
+                StackExchange.prepareEditor({
+                    heartbeatType: 'answer',
+                convertImagesToLinks: false,
+                reputationToPostImages: null,
+                bindNavPrevention: true,
+                postfix: "",
+                    onDemand: false,
+                    discardSelector: ".discard-answer"
+                    
+                    });
+                
+
+        }
+    });
+</script>
+
+
+<div id="post-editor" class="post-editor js-post-editor">
+
+    <div style="position: relative;"> 
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"></div>
+            <textarea id="wmd-input" class="wmd-input" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        </div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">черновик сохранён</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">черновик удалён</div>
+
+    <div class="community-option g-row ai-center f-checkbox">
+        <div class="g-col -input">
+            <input id="communitymode" name="communitymode" type="checkbox" >
+        </div>
+        <div class="g-col">
+            <label for="communitymode" class="f-label _small" title="Если вы отметите этот ответ как &#171;общий&#187;, порог репутации, необходимый для редактирования, будет понижен, и его сможет редактировать больше участников. Однако голосование за него не принесёт вам баллов репутации. Это действие невозможно отменить.">общий</label>
+        </div>
+    </div>
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" type="hidden" value="7d7543d49a523d0daa68764de5fbea69">
+        <input id="author" name="author" type="text">
+    </div>
+
+
+
+</div>
+
+                            <div style="position: relative;">
+                                
+                                
+                            </div>
+           
+                                                            <div class="form-submit cbt">
+                                    <input id="submit-button" type="submit" value="Отправить ответ" tabindex="110">
+                                    <a href="#" class="btn-clear discard-answer dno">отменить</a>
+                                </div>
+                        </form>
+
+
+
+                        <h2 class="bottom-notice" data-loc="1">
+Всё ещё ищете ответ?                            Ознакомьтесь с другими вопросами, отмеченными <a href="/questions/tagged/git" class="post-tag" title="показать вопросы с меткой [git]" rel="tag">git</a> <a href="/questions/tagged/git-commit" class="post-tag" title="показать вопросы с меткой [git-commit]" rel="tag">git-commit</a> <a href="/questions/tagged/git-checkout" class="post-tag" title="показать вопросы с меткой [git-checkout]" rel="tag">git-checkout</a> <a href="/questions/tagged/git-reset" class="post-tag" title="показать вопросы с меткой [git-reset]" rel="tag">git-reset</a> <a href="/questions/tagged/git-revert" class="post-tag" title="показать вопросы с меткой [git-revert]" rel="tag">git-revert</a> , или <a href="/questions/ask">задайте свой вопрос</a>.                        </h2>
+            </div>
+        </div>
+                <div id="sidebar" class="show-votes" role="complementary" aria-label="sidebar">
+                            <div class="module question-stats">
+                    <table id="qinfo">
+                        <tr>
+                            <td>
+                                <p class="label-key">задан</p>
+                            </td>
+                            <td style="padding-left: 10px">
+                                <p class="label-key" title="2015-06-23 09:43:48Z"><b>2 года, 2 месяца назад</b></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="label-key">просмотрен</p>
+                            </td>
+
+                            <td style="padding-left: 10px">
+                                <p class="label-key">
+                                    <b>91,771 раз</b>
+                                </p>
+                            </td>
+                        </tr>
+                            <tr>
+                                <td>
+                                    <p class="label-key">обновлён</p>
+                                </td>
+                                <td style="padding-left: 10px">
+                                    <p class="label-key"><b><a href="?lastactivity" class="lastactivity-link" title="2016-11-24 15:14:15Z">9 месяцев назад</a></b></p>
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            <div class="module community-bulletin" data-tracker="cb=1">
+    <div class="related">
+                <div class="bulletin-title">
+                    Важное на Мете
+                </div>
+                <hr />
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <a href="https://meta.stackexchange.com/questions/300829/new-top-bar-is-coming-to-the-stack-exchange-network" class="question-hyperlink">
+<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="https://meta.stackexchange.com/questions/300829/new-top-bar-is-coming-to-the-stack-exchange-network" class="question-hyperlink">New top bar is coming to the Stack Exchange network</a>
+                </div>
+                <br class="cbt" />
+            </div>
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <a href="https://ru.meta.stackoverflow.com/questions/5899/%d0%a3%d0%b4%d0%b0%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%ba%d0%be%d0%bc%d0%bc%d0%b5%d0%bd%d1%82%d0%b0%d1%80%d0%b8%d0%b5%d0%b2-%d1%81-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%bd%d1%8b%d0%bc%d0%b8-%d1%81%d0%bb%d0%be%d0%b2%d0%b0%d0%bc%d0%b8-%d0%bf%d0%be-%d0%bf%d0%b5%d1%80%d0%b2%d0%be%d0%b9-%d1%82%d1%80%d0%b5%d0%b2%d0%be%d0%b3%d0%b5" class="question-hyperlink">
+<div class="favicon favicon-rumeta" title="Stack Overflow на русском Meta"></div>                </a>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="https://ru.meta.stackoverflow.com/questions/5899/%d0%a3%d0%b4%d0%b0%d0%bb%d0%b5%d0%bd%d0%b8%d0%b5-%d0%ba%d0%be%d0%bc%d0%bc%d0%b5%d0%bd%d1%82%d0%b0%d1%80%d0%b8%d0%b5%d0%b2-%d1%81-%d0%b7%d0%b0%d0%b4%d0%b0%d0%bd%d0%bd%d1%8b%d0%bc%d0%b8-%d1%81%d0%bb%d0%be%d0%b2%d0%b0%d0%bc%d0%b8-%d0%bf%d0%be-%d0%bf%d0%b5%d1%80%d0%b2%d0%be%d0%b9-%d1%82%d1%80%d0%b5%d0%b2%d0%be%d0%b3%d0%b5" class="question-hyperlink">Удаление комментариев с заданными словами по первой тревоге</a>
+                </div>
+                <br class="cbt" />
+            </div>
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <a href="https://ru.meta.stackoverflow.com/questions/5902/%d0%92%d1%8b%d0%bf%d1%83%d1%81%d0%ba-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be%d1%87%d0%b0%d1%82%d0%b0-4-%d1%81-pavel-%d0%b8-rakzin-roman-18-09-2017-%d0%b2-1956-%d0%9f%d1%80%d0%b8%d1%81%d0%be%d0%b5%d0%b4%d0%b8%d0%bd%d1%8f%d0%b9%d1%82%d0%b5%d1%81%d1%8c" class="question-hyperlink">
+<div class="favicon favicon-rumeta" title="Stack Overflow на русском Meta"></div>                </a>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="https://ru.meta.stackoverflow.com/questions/5902/%d0%92%d1%8b%d0%bf%d1%83%d1%81%d0%ba-%d0%b2%d0%b8%d0%b4%d0%b5%d0%be%d1%87%d0%b0%d1%82%d0%b0-4-%d1%81-pavel-%d0%b8-rakzin-roman-18-09-2017-%d0%b2-1956-%d0%9f%d1%80%d0%b8%d1%81%d0%be%d0%b5%d0%b4%d0%b8%d0%bd%d1%8f%d0%b9%d1%82%d0%b5%d1%81%d1%8c" title="Выпуск видеочата №4 с @Pavel и @Rakzin Roman 18.09.2017 в 19:56. Присоединяйтесь!" class="question-hyperlink">Выпуск видеочата №4 с @Pavel и @Rakzin Roman 18.09.2017 в 19:56&hellip;</a>
+                </div>
+                <br class="cbt" />
+            </div>
+                <div class="bulletin-title">
+                    Обсуждаемое на Мете
+                </div>
+                <hr />
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <span title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">6</span>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="https://ru.meta.stackoverflow.com/questions/5870/%d0%92%d0%be%d0%bf%d1%80%d0%be%d1%81-%d0%b4%d0%bb%d1%8f-%d0%bd%d0%b0%d1%87%d0%b8%d0%bd%d0%b0%d1%8e%d1%89%d0%b8%d1%85-%d1%81%d0%be%d0%b4%d0%b5%d1%80%d0%b6%d0%b8%d1%82-%d0%b2%d0%be%d0%b7%d0%bc%d0%be%d0%b6%d0%bd%d0%be-%d0%b2%d1%80%d0%b5%d0%b4%d0%be%d0%bd%d0%be%d1%81%d0%bd%d1%83%d1%8e-%d1%81%d1%81%d1%8b%d0%bb%d0%ba%d1%83-%d0%a1%d0%bb%d0%b5%d0%b4%d1%83%d0%b5%d1%82-%d0%bb%d0%b8-%d0%bf%d1%80%d0%b0%d0%b2%d0%b8%d1%82%d1%8c" title="Вопрос для начинающих содержит возможно вредоносную ссылку. Следует ли править, если не уверен?" class="question-hyperlink">Вопрос для начинающих содержит возможно вредоносную ссылку. Следует ли&hellip;</a>
+                </div>
+                <br class="cbt" />
+            </div>
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <span title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">3</span>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="https://ru.meta.stackoverflow.com/questions/5830/%d0%9f%d0%be%d0%bb%d0%b5%d0%b7%d0%bd%d0%be-%d0%bb%d0%b8-%d0%b4%d0%b0%d0%b2%d0%b0%d1%82%d1%8c-%d0%be%d1%82%d0%b2%d0%b5%d1%82%d1%8b-%d1%81-%d0%ba%d0%be%d0%b4%d0%be%d0%bc-%d0%bd%d0%b0-c-%d0%ba%d0%be%d0%b3%d0%b4%d0%b0-%d0%bf%d1%80%d0%be%d1%81%d1%8f%d1%82-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-%d1%87%d1%82%d0%be-%d1%82%d0%be-%d0%b1%d0%be%d0%bb%d0%b5%d0%b5-%d0%bc%d0%b5%d0%bd%d0%b5%d0%b5-%d1%83" title="Полезно ли давать ответы с кодом на C, когда просят сделать что-то более-менее универсальное на C-подобном языке?" class="question-hyperlink">Полезно ли давать ответы с кодом на C, когда просят сделать что-то&hellip;</a>
+                </div>
+                <br class="cbt" />
+            </div>
+    </div>
+</div>            
+            <script>
+                    var ados = ados || {}; ados.run = ados.run || [];
+                    ados.run.push(function () { ados_add_placement(22, 0, "adzerk1880008108", [5,17]).enableDynamicSiteSelection().setZone(56016); });
+                </script>
+                <div class="everyonelovesstackoverflow" id="adzerk1880008108"></div>
+            <script>try{;window.clc=window.clc||{},window.clc.init=window.clc.init||function(a){var b=window,c=b.document;try{if('function'!=typeof[].indexOf||!window.addEventListener||!a.allowed)return;var d=new RegExp(a.allowed);if(!d.test(location.hostname))return;if(b.clc.options)for(var e in b.clc.options)a[e]=b.clc.options[e];b.clc.cmd='undefined'==typeof b.clc.cmd?[]:b.clc.cmd,b.clc.autoload=b.clc.autoload||function(){'function'==typeof b.clc.load?b.clc.load():b.clc.cmd.push(function(a){a.load()})};var f=a.wv;if(c.hidden&&f)return void c.addEventListener('visibilitychange',function b(){c.hidden||(window.clc.init(a),c.removeEventListener('visibilitychange',b))});b.clc.options=a,a.al&&b.clc.autoload();var g=c.createElement('script');g.async=!0,g.src=a.lib,c.body.appendChild(g)}catch(a){}},window.clc.loadDisplayAds=window.clc.loadDisplayAds||function(){var a=window,b={slots:{lb:[[728,90]],mlb:[[728,90]],sb:[[300,250],[300,600]],"tag-sponsorship":[[730,135],'fluid']},ids:{"dfp-tlb":'lb',"dfp-mlb":'mlb',"dfp-tsb":'sb',"dfp-tag":'tag-sponsorship',"clc-tlb":'lb',"clc-mlb":'mlb',"clc-tsb":'sb'}},c=/^\/tags\//.test(location.pathname)||/^\/questions\/tagged\//.test(location.pathname)?'tag-pages':'question-pages',d=/^dev\./.test(location.hostname)?'test/'+location.hostname:location.hostname;return function(e){var f=(e&&0<e.length?e:Object.keys(b.ids)).map(function(a){return document.getElementById(a)}).filter(function(a){return!!a&&/^\s*$/.test(a.innerHTML)}).map(function(a){return a.id});if(0!==f.length){a.googletag=a.googletag||{},a.googletag.cmd=a.googletag.cmd||[],a.googletag.cmd.push(function(){var e=a.googletag,g=e.pubads();g.enableSingleRequest();var h=a.dfp_targeting||{};h&&Object.keys(h).forEach(function(a){e.pubads().setTargeting(a,h[a])});for(var i=0,j=f;i<j.length;i++){var k=j[i],l=b.ids[k],m=b.slots[l];e.defineSlot('/'+'248424177'+'/'+d+'/'+l+'/'+c,m,k).addService(e.pubads()).setCollapseEmptyDiv('tag-sponsorship'===l,!0)}e.enableServices();for(var k,n=0,o=f;n<o.length;n++)k=o[n],e.display(k)});var g=document.createElement('script');g.async=!0,g.src='https://www.googletagservices.com/tag/js/gpt.js',document.body.appendChild(g)}}}(),window.clc.loadDfp=window.clc.loadDisplayAds,window.clc.init.call(null, {"lib":"https://cdn.sstatic.net/clc/clc.min.js?v=d76f676ad858","u":"https://clc.stackoverflow.com/markup.js","wa":true,"kt":2000,"tto":true,"h":"clc.stackoverflow.com","allowed":"^(((talent\\.)?stackoverflow)|(blog\\.codinghorror)|(serverfault|askubuntu)|([^\\.]+\\.stackexchange))\\.com$","wv":true,"al":false,"fb":null});}catch(e){typeof console!=='undefined'&&typeof console.error==='function'&&console.error(e);}</script>
+            <script>
+                var dfp_targeting={Registered:['true'],Reputation:['200'],'ru.so-tag':['git','git-commit','git-checkout','git-reset','git-revert'],'X-Site':['stackoverflow.com','askubuntu.com'],Persona:['FrontEnd']};
+            </script>
+            <div id="dfp-tsb" class="dfpad"></div>
+                <style>.dfpad{position:absolute;height:1px;width:1px;opacity:0;top:0;left:0;pointer-events:none;}</style>
+<script>try{typeof clc!=='undefined'&&typeof clc.loadDisplayAds==='function'&&clc.loadDisplayAds();}catch(e){typeof console!=='undefined'&&typeof console.error==='function'&&console.error(e);}</script>
+            
+
+            <div class="module sidebar-linked">
+	<h4 id="h-linked">Связанные</h4>
+	<div class="linked" data-tracker="lq=1">
+
+<div class="spacer">
+	<a href="/q/216804" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes answered-accepted default">3</div>
+	</a>
+	<a href="/questions/216804/%d0%a3%d0%b4%d0%b0%d0%bb%d0%b8%d1%82%d1%8c-%d0%bf%d0%be%d1%81%d0%bb%d0%b5%d0%b4%d0%bd%d0%b8%d0%b9-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82?noredirect=1" class="question-hyperlink">Удалить последний коммит</a>
+</div>
+<div class="spacer">
+	<a href="/q/433910" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes answered-accepted default">3</div>
+	</a>
+	<a href="/questions/433910/%d0%9a%d0%b0%d0%ba-%d0%be%d1%82%d0%bc%d0%b5%d0%bd%d0%b8%d1%82%d1%8c-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82-%d1%82%d0%b0%d0%ba-%d1%87%d1%82%d0%be%d0%b1%d1%8b-%d1%81-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%be%d0%bc-%d0%bd%d0%b8%d0%ba%d0%b0%d0%ba%d0%b8%d1%85-%d0%b8%d0%b7%d0%bc%d0%b5%d0%bd%d0%b5%d0%bd%d0%b8%d0%b9-%d0%bd%d0%b5-%d0%bf%d1%80%d0%be%d0%b8%d0%b7%d0%be%d1%88%d0%bb%d0%be?noredirect=1" class="question-hyperlink">Как отменить коммит так, чтобы с проектом никаких изменений не произошло?</a>
+</div>
+<div class="spacer">
+	<a href="/q/703087" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes  default">5</div>
+	</a>
+	<a href="/questions/703087/%d0%9a%d0%b0%d0%ba-%d0%be%d1%82%d0%ba%d0%b0%d1%82%d0%b8%d1%82%d1%8c-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82?noredirect=1" class="question-hyperlink">Как откатить коммит?</a>
+</div>
+<div class="spacer">
+	<a href="/q/566872" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes  default">0</div>
+	</a>
+	<a href="/questions/566872/%d0%92%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c%d1%81%d1%8f-%d0%bd%d0%b0-%d0%bd%d1%83%d0%b6%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82?noredirect=1" class="question-hyperlink">Вернуться на нужный коммит</a>
+</div>
+<div class="spacer">
+	<a href="/q/451559" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes  default">-1</div>
+	</a>
+	<a href="/questions/451559/%d0%9e%d1%88%d0%b8%d0%b1%d0%ba%d0%b0-unable-to-revert-commit-resolve-the-conflicts-in-your-working-directory?noredirect=1" class="question-hyperlink">Ошибка &ldquo;Unable to revert commit. Resolve the conflicts in your working directory&hellip;&rdquo;</a>
+</div>
+<div class="spacer">
+	<a href="/q/468455" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes answered-accepted default">0</div>
+	</a>
+	<a href="/questions/468455/%d0%9a%d0%b0%d0%ba%d0%b8%d0%bc-%d0%bb%d1%83%d1%87%d1%88%d0%b8%d0%bc-%d1%81%d0%bf%d0%be%d1%81%d0%be%d0%b1%d0%be%d0%bc-%d0%be%d1%82%d0%ba%d0%b0%d1%82%d0%b8%d1%82%d1%8c%d1%81%d1%8f-%d0%b4%d0%be-%d1%80%d0%b0%d0%bd%d0%bd%d0%b5%d0%b3%d0%be-%d0%ba%d0%be%d0%bc%d0%b8%d1%82%d0%b0?noredirect=1" class="question-hyperlink">Каким лучшим способом откатиться до раннего комита</a>
+</div>
+<div class="spacer">
+	<a href="/q/592035" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes  default">0</div>
+	</a>
+	<a href="/questions/592035/git-%d0%be%d1%82%d0%ba%d0%b0%d1%82-%d0%b2%d0%b5%d1%82%d0%be%d0%ba-%d0%bd%d0%b0-%d1%81%d0%b5%d1%80%d0%b2%d0%b5%d1%80%d0%b5?noredirect=1" class="question-hyperlink">Git откат веток на сервере</a>
+</div>
+<div class="spacer">
+	<a href="/q/482511" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes  default">0</div>
+	</a>
+	<a href="/questions/482511/%d0%9a%d0%b0%d0%ba-%d0%b7%d0%b0%d0%ba%d0%b0%d1%87%d0%b0%d1%82%d1%8c-%d0%b2%d0%b5%d1%80%d1%81%d0%b8%d1%8e-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b0-%d0%be%d0%bf%d1%80%d0%b5%d0%b4%d0%b5%d0%bb%d0%b5%d0%bd%d0%bd%d0%be%d0%b3%d0%be-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d0%b0-%d0%b2-source-tree?noredirect=1" class="question-hyperlink">Как закачать версию проекта определенного коммита в Source Tree?</a>
+</div>
+<div class="spacer">
+	<a href="/q/153502" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes  default">5</div>
+	</a>
+	<a href="/questions/153502/%d0%9a%d0%b0%d0%ba-%d0%bf%d0%b5%d1%80%d0%b5%d0%ba%d0%bb%d1%8e%d1%87%d0%b0%d1%82%d1%8c%d1%81%d1%8f-%d0%bc%d0%b5%d0%b6%d0%b4%d1%83-%d0%b2%d0%b5%d1%82%d0%ba%d0%b0%d0%bc%d0%b8-%d0%b2-git-%d0%ba%d0%be%d0%b3%d0%b4%d0%b0-%d0%b2-%d1%82%d0%b5%d0%ba%d1%83%d1%89%d0%b5%d0%b9-%d0%b2%d0%b5%d1%82%d0%ba%d0%b5-%d0%b5%d1%81%d1%82%d1%8c-%d0%bd%d0%b5%d1%81%d0%be%d1%85%d1%80%d0%b0%d0%bd%d0%b5%d0%bd%d0%bd%d1%8b%d0%b5?noredirect=1" class="question-hyperlink">Как переключаться между ветками в git, когда в текущей ветке есть несохраненные изменения?</a>
+</div>
+<div class="spacer">
+	<a href="/q/533097" title="Количество голосов (&#171;за&#187; − &#171;против&#187;)">
+		<div class="answer-votes answered-accepted default">16</div>
+	</a>
+	<a href="/questions/533097/%d0%a3%d0%b1%d1%80%d0%b0%d1%82%d1%8c-%d0%bf%d0%be%d1%81%d0%bb%d0%b5%d0%b4%d0%bd%d0%b8%d0%b9-git-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82-%d0%bd%d0%b5-%d0%bc%d0%b5%d0%bd%d1%8f%d1%8f-%d1%84%d0%b0%d0%b9%d0%bb%d0%be%d0%b2-%d0%bf%d1%80%d0%be%d0%b5%d0%ba%d1%82%d0%b0?noredirect=1" class="question-hyperlink">Убрать последний git-коммит, не меняя файлов проекта</a>
+</div>					<div class="spacer more">
+				<a href="/questions/linked/431520">посмотреть другие связанные вопросы…</a>
+			</div>
+	</div>
+</div>
+
+                <div class="module sidebar-related">
+                    <h4 id="h-related">Похожие</h4>
+                    <div class="related js-gps-related-questions" data-tracker="rq=1">
+                        <div class="spacer"><a href="/q/213023" title="Количество голосов («за» − «против»)"><div class="answer-votes answered-accepted default">2</div></a><a href="/questions/213023/%d0%9a%d0%b0%d0%ba-%d1%81%d0%b4%d0%b5%d0%bb%d0%b0%d1%82%d1%8c-checkout-%d0%b4%d0%b8%d1%80%d0%b5%d0%ba%d1%82%d0%be%d1%80%d0%b8%d0%b8" class="question-hyperlink">Как сделать checkout директории?</a></div><div class="spacer"><a href="/q/232455" title="Количество голосов («за» − «против»)"><div class="answer-votes default">2</div></a><a href="/questions/232455/%d0%9a%d0%b0%d0%ba-%d0%be%d1%82%d0%bc%d0%b5%d0%bd%d0%b8%d1%82%d1%8c-%d0%be%d1%82%d0%ba%d0%b0%d1%82-%d0%b8%d0%b7%d0%bc%d0%b5%d0%bd%d0%b5%d0%bd%d0%b8%d0%b9-%d0%b2%d0%be%d1%81%d1%81%d1%82%d0%b0%d0%bd%d0%be%d0%b2%d0%b8%d1%82%d1%8c-%d0%bf%d0%be%d1%82%d0%b5%d1%80%d1%8f%d0%bd%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82" class="question-hyperlink">Как отменить откат изменений (восстановить потерянный коммит)?</a></div><div class="spacer"><a href="/q/299809" title="Количество голосов («за» − «против»)"><div class="answer-votes default">2</div></a><a href="/questions/299809/%d0%9e%d1%82%d0%bc%d0%b5%d1%82%d0%b8%d1%82%d1%8c-%d1%84%d0%b0%d0%b9%d0%bb%d1%8b-%d0%ba%d0%b0%d0%ba-%d0%b1%d0%b5%d0%b7-%d0%b8%d0%b7%d0%bc%d0%b5%d0%bd%d0%b5%d0%bd%d0%b8%d0%b9" class="question-hyperlink">Отметить файлы как  без изменений</a></div><div class="spacer"><a href="/q/364443" title="Количество голосов («за» − «против»)"><div class="answer-votes answered-accepted default">2</div></a><a href="/questions/364443/%d0%a3%d0%b4%d0%b0%d0%bb%d0%b8%d0%bb-%d1%84%d0%b0%d0%b9%d0%bb%d1%8b-%d1%87%d0%b5%d1%80%d0%b5%d0%b7-revert-git-%d0%9a%d0%b0%d0%ba-%d0%b2%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c" class="question-hyperlink">Удалил файлы через revert git. Как вернуть?</a></div><div class="spacer"><a href="/q/420995" title="Количество голосов («за» − «против»)"><div class="answer-votes answered-accepted default">1</div></a><a href="/questions/420995/%d0%9a%d0%b0%d0%ba-%d1%80%d0%b0%d0%b1%d0%be%d1%82%d0%b0%d0%b5%d1%82-git-reset-soft" class="question-hyperlink">Как работает git reset --soft?</a></div><div class="spacer"><a href="/q/462018" title="Количество голосов («за» − «против»)"><div class="answer-votes default">1</div></a><a href="/questions/462018/%d0%9a%d0%b0%d0%ba-%d0%b2%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c-%d1%84%d0%b0%d0%b9%d0%bb%d1%8b-%d0%b7%d0%b0%d1%82%d1%91%d1%80%d1%82%d1%8b%d0%b5-%d0%bc%d0%b0%d0%bd%d0%b8%d0%bf%d1%83%d0%bb%d1%8f%d1%86%d0%b8%d1%8f%d0%bc%d0%b8-%d0%b2-git" class="question-hyperlink">Как вернуть файлы, затёртые манипуляциями в git?</a></div><div class="spacer"><a href="/q/471010" title="Количество голосов («за» − «против»)"><div class="answer-votes default">0</div></a><a href="/questions/471010/%d0%9e%d1%82%d0%ba%d0%b0%d1%82-%d0%ba-%d0%bf%d1%80%d0%b5%d0%b4%d1%8b%d0%b4%d1%83%d1%89%d0%b5%d0%bc%d1%83-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d1%83-%d0%b2-git" class="question-hyperlink">Откат к предыдущему коммиту в git</a></div><div class="spacer"><a href="/q/566872" title="Количество голосов («за» − «против»)"><div class="answer-votes default">0</div></a><a href="/questions/566872/%d0%92%d0%b5%d1%80%d0%bd%d1%83%d1%82%d1%8c%d1%81%d1%8f-%d0%bd%d0%b0-%d0%bd%d1%83%d0%b6%d0%bd%d1%8b%d0%b9-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82" class="question-hyperlink">Вернуться на нужный коммит</a></div><div class="spacer"><a href="/q/600621" title="Количество голосов («за» − «против»)"><div class="answer-votes default">3</div></a><a href="/questions/600621/git-%d0%9a%d0%b0%d0%ba-%d1%83%d0%b4%d0%b0%d0%bb%d0%b8%d1%82%d1%8c-%d0%bd%d0%b5%d0%bd%d1%83%d0%b6%d0%bd%d1%8b%d0%b5-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d1%8b-%d0%b1%d0%b5%d0%b7-%d1%81%d0%be%d0%b7%d0%b4%d0%b0%d0%bd%d0%b8%d1%8f-%d0%bf%d1%80%d0%be%d0%bc%d0%b5%d0%b6%d1%83%d1%82%d0%be%d1%87%d0%bd%d0%be%d0%b3%d0%be-branch-a" class="question-hyperlink">GIT Как удалить ненужные коммиты без создания промежуточного `branch` a?</a></div><div class="spacer"><a href="/q/702725" title="Количество голосов («за» − «против»)"><div class="answer-votes answered-accepted default">3</div></a><a href="/questions/702725/%d0%9a%d0%b0%d0%ba-%d0%b8%d0%b7%d0%bc%d0%b5%d0%bd%d0%b8%d1%82%d1%8c-%d0%b4%d0%b0%d1%82%d1%83-%d0%bf%d0%be%d1%81%d0%bb%d0%b5%d0%b4%d0%bd%d0%b5%d0%b3%d0%be-%d0%ba%d0%be%d0%bc%d0%bc%d0%b8%d1%82%d0%b0-github" class="question-hyperlink">Как изменить дату последнего коммита Github?</a></div>
+                    </div>
+                </div>
+
+
+        </div>
+    
+<div id="feed-link">
+    <div id="feed-link-text">
+        <a href="/feeds/question/431520" title="лента для данного вопроса и его ответов">
+            <span class="feed-icon"></span>лента вопроса
+        </a>
+    </div>
+</div>    </div>
+<script>
+StackExchange.ready(function(){$.get('/posts/431520/ivc/1075');});
+</script>
+<noscript>
+    <div><img src="/posts/431520/ivc/1075" class="dno" alt="" width="0" height="0"></div>
+</noscript><div style="display:none" id="prettify-lang">default</div></div>
+
+    <script>
+        $('#wmd-input').one("keypress", function() {
+            $.ajax({
+                url: '/accounts/email-settings-form',
+                cache: false,
+                success: function(data) {
+                    $('#submit-button').parent().prepend(data);
+                }
+            });
+        });
+
+    </script>
+
+        </div>
+    </div>
+
+    <footer id="footer" class="s-footer js-footer" role="contentinfo">
+        <div class="-container">
+            <div class="g-row js-sp-between">
+                
+                    <nav class="-nav js-category _visible" data-name="default">
+                        <h5 class="-title"><a href="/">Stack Overflow на русском</a></h5>
+                        <ul class="-list">
+                                    <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 2 })" href="/tour">Тур</a></li>
+                                <li class="-item"><a href="/help" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 3 })">Справка</a></li>
+                                    <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 5 })" href="https://chat.stackexchange.com?tab=site&host=ru.stackoverflow.com">Чат</a></li>
+                            <li class="-item g-col"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 13 })" href="/contact">Связаться с нами</a></li>
+                                <li class="-item g-col"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 14 })" href="https://ru.meta.stackoverflow.com">Оставить отзыв</a></li>
+                                                            <li class="-item"><a onclick='StackExchange.switchMobile("on")' class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 12 })">Мобильная версия</a></li>
+                        </ul>
+                    </nav>
+                <nav class="-nav js-category _visible" data-name="default">
+                    <h5 class="-title"><a class="js-gps-track" data-gps-track="footer.click({ location: 2, link: 1 })" href="https://stackoverflow.com/company/about">Компания</a></h5>
+                    <ul class="-list">
+                                                    <li class="-item"><a href="https://stackoverflow.com" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 15})">Stack Overflow</a></li>
+                            <li class="-item"><a href="https://www.stackoverflowbusiness.com/?utm_source=so-footer&utm_medium=referral&utm_campaign=brand-activation" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 19 })">Stack Overflow Business</a></li>
+                            <li class="-item"><a href="https://stackoverflow.com/jobs" class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 17})">Вакансии для разработчиков</a></li>
+                                <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 1 })" href="https://stackoverflow.com/company/about">О компании</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 27 })" href="https://stackoverflow.com/company/press">Упоминания в СМИ</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 7 })" href="https://stackexchange.com/legal">Соглашение</a></li>
+                        <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link: 8 })" href="https://stackexchange.com/legal/privacy-policy">Политика конфиденциальности</a></li>
+                    </ul>
+                </nav>
+                <div class="-network g-row">
+                    <a href="#" class="-back-trigger js-back"><svg aria-hidden="true" class="svg-icon iconArrowLeftAlt" width="18" height="18" viewBox="0 0 18 18"><path d="M10.58 16L12 14.59 6.4 9 12 3.41 10.57 2l-7 7z"/></svg></a>
+                    <div>
+                        <h5 class="-title"><a href="https://stackexchange.com">Stack Exchange<br> Network</a></h5>
+                        <ul class="-list">
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Technology">Technology</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Life / Arts">Life / Arts</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Culture / Recreation">Culture / Recreation</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Science">Science</a></li>
+                            <li class="-item"><a href="#" class="-link _expandable js-category-trigger js-gps-track" data-gps-track="footer.click({ location: 2, link: 24 })" data-target="Other">Other</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+                <nav class="-nav js-category" data-name="Technology">
+        <ul class="-list">
+                <li class="-item"><a href="//stackoverflow.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                <li class="-item"><a href="//serverfault.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="system and network administrators">Server Fault</a></li>
+                <li class="-item"><a href="//superuser.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="computer enthusiasts and power users">Super User</a></li>
+                <li class="-item"><a href="//webapps.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="power users of web applications">Web Applications</a></li>
+                <li class="-item"><a href="//askubuntu.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                <li class="-item"><a href="//webmasters.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="pro webmasters">Webmasters</a></li>
+                <li class="-item"><a href="//gamedev.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="professional and independent game developers">Game Development</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="//tex.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                <li class="-item"><a href="//softwareengineering.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="professionals, academics, and students working within the systems development life cycle">Software Engineering</a></li>
+                <li class="-item"><a href="//unix.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="users of Linux, FreeBSD and other Un*x-like operating systems">Unix &amp; Linux</a></li>
+                <li class="-item"><a href="//apple.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                <li class="-item"><a href="//wordpress.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="WordPress developers and administrators">WordPress Development</a></li>
+                <li class="-item"><a href="//gis.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                <li class="-item"><a href="//electronics.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="//android.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                <li class="-item"><a href="//security.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="information security professionals">Information Security</a></li>
+                <li class="-item"><a href="//dba.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                <li class="-item"><a href="//drupal.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="Drupal developers and administrators">Drupal Answers</a></li>
+                <li class="-item"><a href="//sharepoint.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="SharePoint enthusiasts">SharePoint</a></li>
+                <li class="-item"><a href="//ux.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="user experience researchers and experts">User Experience</a></li>
+                <li class="-item"><a href="//mathematica.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="users of Wolfram Mathematica">Mathematica</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="//salesforce.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="Salesforce administrators, implementation experts, developers and anybody in-between">Salesforce</a></li>
+                <li class="-item"><a href="//expressionengine.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="administrators, end users, developers and designers for ExpressionEngine&#174; CMS">ExpressionEngine&#174; Answers</a></li>
+                <li class="-item"><a href="//blender.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="people who use Blender to create 3D graphics, animations, or games">Blender</a></li>
+                <li class="-item"><a href="//networkengineering.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="network engineers">Network Engineering</a></li>
+                <li class="-item"><a href="//crypto.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="software developers, mathematicians and others interested in cryptography">Cryptography</a></li>
+                <li class="-item"><a href="//codereview.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="peer programmer code reviews">Code Review</a></li>
+                <li class="-item"><a href="//magento.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="users of the Magento e-Commerce platform">Magento</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="//softwarerecs.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="people seeking specific software recommendations">Software Recommendations</a></li>
+                <li class="-item"><a href="//dsp.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="practitioners of the art and science of signal, image and video processing">Signal Processing</a></li>
+                <li class="-item"><a href="//emacs.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="those using, extending or developing Emacs">Emacs</a></li>
+                <li class="-item"><a href="//raspberrypi.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="users and developers of hardware and software for Raspberry Pi">Raspberry Pi</a></li>
+                <li class="-item"><a href="//codegolf.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="programming puzzle enthusiasts and code golfers">Programming Puzzles &amp; Code Golf</a></li>
+                <li class="-item"><a href="//ethereum.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="users of Ethereum, the decentralized application platform and smart contract enabled blockchain">Ethereum</a></li>
+                <li class="-item"><a href="//datascience.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="Data science professionals, Machine Learning specialists, and those interested in learning more about the field">Data Science</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Technology"><ul class="-list">
+                <li class="-item"><a href="//arduino.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="developers of open-source hardware and software that is compatible with Arduino">Arduino</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#technology" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 26 })">
+                        <strong>
+                            more (27)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Life / Arts">
+        <ul class="-list">
+                <li class="-item"><a href="//photo.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                <li class="-item"><a href="//scifi.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                <li class="-item"><a href="//graphicdesign.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="Graphic Design professionals, students, and enthusiasts">Graphic Design</a></li>
+                <li class="-item"><a href="//movies.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="movie and tv enthusiasts">Movies &amp; TV</a></li>
+                <li class="-item"><a href="//music.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="musicians, students, and enthusiasts">Music: Practice &amp; Theory</a></li>
+                <li class="-item"><a href="//worldbuilding.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="writers/artists using science, geography and culture to construct imaginary worlds and settings">Worldbuilding</a></li>
+                <li class="-item"><a href="//cooking.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Life / Arts"><ul class="-list">
+                <li class="-item"><a href="//diy.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="contractors and serious DIYers">Home Improvement</a></li>
+                <li class="-item"><a href="//money.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="people who want to be financially literate">Personal Finance &amp; Money</a></li>
+                <li class="-item"><a href="//academia.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="academics and those enrolled in higher education">Academia</a></li>
+                <li class="-item"><a href="//law.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="legal professionals, students, and others with experience or interest in law">Law</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#lifearts" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 26 })">
+                        <strong>
+                            more (17)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Culture / Recreation">
+        <ul class="-list">
+                <li class="-item"><a href="//english.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                <li class="-item"><a href="//skeptics.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="scientific skepticism">Skeptics</a></li>
+                <li class="-item"><a href="//judaism.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                <li class="-item"><a href="//travel.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="road warriors and seasoned travelers">Travel</a></li>
+                <li class="-item"><a href="//christianity.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                <li class="-item"><a href="//ell.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="speakers of other languages learning English">English Language Learners</a></li>
+                <li class="-item"><a href="//japanese.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="students, teachers, and linguists wanting to discuss the finer points of the Japanese language">Japanese Language</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Culture / Recreation"><ul class="-list">
+                <li class="-item"><a href="//gaming.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                <li class="-item"><a href="//bicycles.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                <li class="-item"><a href="//rpg.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                <li class="-item"><a href="//anime.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="anime and manga fans">Anime &amp; Manga</a></li>
+                <li class="-item"><a href="//puzzling.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="those who create, solve, and study puzzles">Puzzling</a></li>
+                <li class="-item"><a href="//mechanics.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="mechanics and DIY enthusiast owners of cars, trucks, and motorcycles">Motor Vehicle Maintenance &amp; Repair</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#culturerecreation" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 26 })">
+                        <strong>
+                            more (32)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Science">
+        <ul class="-list">
+                <li class="-item"><a href="//mathoverflow.net" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="professional mathematicians">MathOverflow</a></li>
+                <li class="-item"><a href="//math.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                <li class="-item"><a href="//stats.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="people interested in statistics, machine learning, data analysis, data mining, and data visualization">Cross Validated (stats)</a></li>
+                <li class="-item"><a href="//cstheory.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                <li class="-item"><a href="//physics.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="active researchers, academics and students of physics">Physics</a></li>
+                <li class="-item"><a href="//chemistry.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="scientists, academics, teachers and students">Chemistry</a></li>
+                <li class="-item"><a href="//biology.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="biology researchers, academics, and students">Biology</a></li>
+                    </ul></nav><nav class="-nav js-category" data-name="Science"><ul class="-list">
+                <li class="-item"><a href="//cs.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="students, researchers and practitioners of computer science">Computer Science</a></li>
+                <li class="-item"><a href="//philosophy.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="those interested in the study of the fundamental nature of knowledge, reality, and existence">Philosophy</a></li>
+                            <li class="-item">
+                    <a href="https://stackexchange.com/sites#science" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 26 })">
+                        <strong>
+                            more (10)
+                        </strong>
+                    </a>
+                </li>
+        </ul>
+    </nav>
+    <nav class="-nav js-category" data-name="Other">
+        <ul class="-list">
+                <li class="-item"><a href="//meta.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Exchange</a></li>
+                <li class="-item"><a href="//stackapps.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                <li class="-item"><a href="https://api.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="programmatic interaction with Stack Exchange sites">API</a></li>
+                <li class="-item"><a href="https://data.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="querying Stack Exchange data using SQL">Data</a></li>
+                <li class="-item"><a href="//area51.stackexchange.com" class="-link js-gps-track" data-gps-track="footer.click({ location: 1, link: 25 })" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                    </ul>
+    </nav>
+                <div class="-copyright text-right">
+                    <div class="g-column jc-sp-between">
+                        <ul class="-list">
+                            <li class="-item"><a class="js-gps-track -link" data-gps-track="footer.click({ location: 2, link:4 })" href="https://stackoverflow.blog?blb=1">Блог</a></li>
+                            <li class="-item"><a href="https://www.facebook.com/officialstackoverflow/" class="-link">Facebook</a></li>
+                            <li class="-item"><a href="https://twitter.com/stackoverflow" class="-link">Твиттер</a></li>
+                            <li class="-item"><a href="https://linkedin.com/company/stack-overflow" class="-link">LinkedIn</a></li>
+                        </ul>
+
+                        <div>
+                            <p>
+                                дизайн сайта / логотип &#169; 2017 Stack Exchange Inc; пользовательское содержимое попадает под действие лицензии <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="license" class="-link">cc by-sa 3.0</a>
+с <a href="https://stackoverflow.blog/2009/06/25/attribution-required/" rel="license" class="-link">указанием ссылки на источник</a>.
+                                <span id="svnrev">rev 2017.9.15.27039</span>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    </div>
+    </footer>
+
+    <noscript>
+        <div id="noscript-warning">Stack Overflow на русском лучше работает с включенным JavaScript
+            <img src="https://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno">
+        </div>
+    </noscript>
+<script>var z=document.createElement("script");z.type="text/javascript",z.async=!0,z.src="https://static.adzerk.net/ados.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(z,s);</script>
+<script>
+var ados = ados || {};
+ados.run = ados.run || [];
+
+
+ados.run.push(function () {
+    ados_setKeywords('git,git-commit,git-checkout,git-reset,git-revert,x-user-registered,x-200plus-rep,x-host-ru.stackoverflow.com,x-cross-site-stackoverflow.com,x-cross-site-askubuntu.com,x-persona-frontend');; ados_load();
+});   
+
+</script>
+
+    <script>
+            (function(i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+                ga('create', 'UA-5620270-49', {'userId': '3887603' });
+                ga('set', 'dimension1', '3887603');
+                ga('set', 'dimension2', '|git|git-commit|git-checkout|git-reset|git-revert|');
+                ga('send', 'pageview');
+        var _qevents = _qevents || [],
+            _comscore = _comscore || [];
+        (function () {
+            var ssl='https:'==document.location.protocol,
+                s=document.getElementsByTagName('script')[0],
+                qc=document.createElement('script');
+                qc.async = true;
+                qc.src = (ssl ? 'https://secure' : 'http://edge') + '.quantserve.com/quant.js';
+                s.parentNode.insertBefore(qc, s);
+                _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+                            var sc=document.createElement('script');
+                sc.async=true;
+                sc.src=(ssl?'https://sb':'http://b') + '.scorecardresearch.com/beacon.js';
+                s.parentNode.insertBefore(sc, s);
+                _comscore.push({ c1: "2", c2: "17440561" });
+        })();
+
+    </script>
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter31923236 = new Ya.Metrika({
+                        id:31923236,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/31923236" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+        
+    
+            <script type="text/javascript">
+                
+                (function(appendChild) {
+                    Node.prototype.appendChild = function() {
+                        var parent = this;
+                        var newNode = arguments[0];
+                        if (parent.nodeName === 'HEAD'
+                            && newNode
+                            && newNode.nodeName === 'SCRIPT'
+                            && newNode.src) {
+                            
+                            window.setTimeout(function() {
+                                var result = newNode.src.match(/^https:\/\/maps\.googleapis\.com\/maps\/api\/place\/js\/(\w+)Service\./i) || [];
+                                var service = result[1];
+                                if (service) {
+                                    if (service === 'Autocompletion') service =  2;
+                                    else if (service === 'Place') service = 1;
+                                    else service = 0;
+                                    StackExchange.using('gps', function() {
+                                        StackExchange.gps.track('google_maps_places_api.call', { service: service });
+                                    });
+                                }
+                            }, 0);
+                        }
+                        return appendChild.apply(this, arguments);
+                    };
+                })(Node.prototype.appendChild);
+            </script>
+    </body>
+</html>

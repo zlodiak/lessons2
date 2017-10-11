@@ -1,0 +1,82 @@
+пример материал диалога
+
+module:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MdButtonModule, MdDialogModule } from '@angular/material';
+
+import { AppComponent } from './app.component';
+import { ConvDialogComponent } from './conv-dialog/conv-dialog.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    ConvDialogComponent
+  ],
+  imports: [
+    MdDialogModule,
+    BrowserAnimationsModule,
+    MdButtonModule,
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+  entryComponents: [ConvDialogComponent]
+})
+export class AppModule { }
+
+
+
+
+app.component.ts:
+import { Component } from '@angular/core';
+
+import { MdDialog } from '@angular/material';
+
+import { ConvDialogComponent } from './conv-dialog/conv-dialog.component';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  selectedOption: string;
+
+  constructor(public dialog: MdDialog) {};
+  
+	private openMoneyConverter(): void {
+		console.log(111);
+		this.dialog.open(ConvDialogComponent);
+	};
+
+}
+
+
+
+
+
+
+
+
+conv-dialog.coponent.ts:
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-conv-dialog',
+  templateUrl: './conv-dialog.component.html',
+  styleUrls: ['./conv-dialog.component.css']
+})
+export class ConvDialogComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

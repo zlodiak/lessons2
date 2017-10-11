@@ -1,0 +1,91 @@
+пример простой директивы:
+ng g d directives/scrollArrow
+
+import { ScrollArrowDirective } from './directives/scroll-arrow.directive';
+
+  declarations: [
+    AppComponent,
+    ScrollArrowDirective,
+
+===========================
+directive:
+import {Directive, HostListener} from '@angular/core';
+
+@Directive({
+  selector: '[appScrollArrow]'
+})
+export class ScrollArrowDirective {
+
+  constructor() { };
+
+  @HostListener('click', ['$event']) 
+  onClick() {
+  	document.getElementById('content').scrollTop = 0;
+  };
+
+}
+
+
+===========================
+comp:
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+
+
+import { ScrollService } from '../services/scroll.service';
+import { ArticlesService } from '../services/articles.service';
+
+
+@Component({
+  selector: 'app-articles-list',
+  templateUrl: './articles-list.component.html',
+  styleUrls: ['./articles-list.component.css']
+})
+export class ArticlesListComponent implements OnInit {
+
+  private scrollTopPosition: number = 0;
+
+  constructor(private http: Http, 
+              private scrollService: ScrollService, 
+              private articlesService: ArticlesService) 
+  { 
+    this.setEventListenerForContent();
+  }
+
+
+  private setEventListenerForContent(): void {
+    let el = document.getElementById('content'), 
+        that = this;   
+
+    el.addEventListener('scroll', function() {
+      that.scrollTopPosition = el.scrollTop;
+    });    
+  };
+
+
+
+
+
+}
+
+
+===========================
+comp html:
+<div class="scroll-arrow material-icons md-48 md-colored" [ngClass]="{'hide-element': scrollTopPosition < 300}" id="scrollArrow" appScrollArrow>arrow_upward</div>
+
+
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================

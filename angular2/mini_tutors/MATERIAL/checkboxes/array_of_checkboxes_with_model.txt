@@ -1,0 +1,122 @@
+допустим, есть массив значений. нужно вывести их с чекбоксом для каждого и реализовать отправку состояний чекбоксов
+
+=================================
+сервис:
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { Response, Headers, URLSearchParams } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+
+
+@Injectable()
+export class MoneyService {
+
+  constructor(private http: Http) {};
+
+  getMoney(): Observable<any> {
+  	let result = this.http.get('https://www.cbr-xml-daily.ru/daily_json.js');
+  	return result;
+  };
+
+
+}
+
+
+=================================
+компонент:
+import { Component, OnInit } from '@angular/core';
+
+import { MoneyService } from '../services/money.service';
+
+@Component({
+  selector: 'app-select',
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.css']
+})
+export class SelectComponent implements OnInit {
+
+	private checkboxes: Object = {};
+	private money: Object = {};
+	private moneyLabels: string[] = [];
+
+  constructor(private moneyService: MoneyService) {  }
+
+  ngOnInit() {
+  	let moneyObj = this.getMoney();
+
+  	console.log(this.checkboxes);
+
+
+  }
+
+  private getMoney(): void {
+    this.moneyService
+        .getMoney()
+        .subscribe(data => {        						
+        						this.money = JSON.parse(data._body);
+                    console.log(typeof this.money, this.money['Valute']);    
+
+										for(let key in this.money['Valute']) {
+											if (!this.money['Valute'].hasOwnProperty(key)) continue;
+											this.moneyLabels.push(key);
+											this.checkboxes[key] = false;
+										}
+
+										console.log('this.moneyLabels', this.moneyLabels);
+                  }, 
+                  err => {
+                    console.log('err')         
+                  });    
+  };   
+
+  private send(checkboxes): void {
+  	console.log(checkboxes);
+  };
+
+}
+
+
+=================================
+шаблон:
+
+<div class="wrap">
+	<div class="label" *ngFor="let label of moneyLabels">
+		<md-checkbox [(ngModel)]="checkboxes[label]"><span>{{ label }}</span></md-checkbox>	
+	</div>
+
+	<button class="btn send-btn" (click)="send(checkboxes)" md-button>Отправить</button>
+</div>
+
+{{ checkboxes | json }}
+
+
+
+
+
+
+=================================
+в результате чекнутые чекбоксы будут помечены ка true
+
+=================================
+не забыть при этом подключить материал стандартным способом
+
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================

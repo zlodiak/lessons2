@@ -1,0 +1,48 @@
+пример view, который возвращает json:
+from django.shortcuts import render
+from django.utils import timezone
+from django.http import JsonResponse
+import json
+
+from .models import Message
+
+
+def message_create(request):
+		print(request.POST)
+		print('-----1111---------')
+		print(request.POST['name'])
+		print(request.POST['message'])
+		m = Message(name=request.POST['name'], text=request.POST['message'], published_date=timezone.now(), created_date=timezone.now(),)
+		m.save();
+		print('OK')
+		data = json.dumps({ 'participant_specific_donation' : 1 , 'participant_specific_milestone' : 22 })
+		print(data)
+		return JsonResponse(data, safe=False)     		
+
+
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================

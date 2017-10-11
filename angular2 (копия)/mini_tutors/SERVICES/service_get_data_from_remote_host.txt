@@ -1,0 +1,136 @@
+получаем данные через промис с другого хоста. другой хост по определённому адресу выдаёт:
+"[{\"model\": \"app_messages.message\", \"pk\": 1, \"fields\": {\"name\": \"qeqe\", \"text\": \"dsfgfddfgdfgdfgdfg\", \"created_date\": \"2017-08-06T08:25:36Z\", \"published_date\": \"2017-08-06T08:25:43Z\"}}, {\"model\": \"app_messages.message\", \"pk\": 2, \"fields\": {\"name\": \"fgdfgdgf\", \"text\": \"bcvnbvnvbnbvbnn\", \"created_date\": \"2017-08-06T08:25:48Z\", \"published_date\": \"2017-08-06T08:25:55Z\"}}, {\"model\": \"app_messages.message\", \"pk\": 3, \"fields\": {\"name\": \"zxczxz\", \"text\": \"bvvcvnbbvnvbnvbn\", \"created_date\": \"2017-08-06T08:25:57Z\", \"published_date\": \"2017-08-06T08:26:03Z\"}}]"
+
+то есть:
+[
+	{},
+	{},
+	{},
+	{}
+]
+
+=============================
+service:
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { Response, Headers, URLSearchParams } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+
+
+@Injectable()
+export class MessagesService {
+
+	private messagesArr: any[];
+
+  constructor(private http: Http){
+  	this.messagesArr = localStorage.messages ? localStorage.messages : [];
+  };
+
+  private messages: any[] = [];
+
+  getMessages(): Observable<any> {
+    let result = this.http.get('http://localhost:8000/messages/index_');
+    console.log(result);
+    return result;
+  }   
+
+  addMessage = function(messageObj: Object): boolean {
+  	console.log(messageObj);
+  	console.log(localStorage.messages || []);
+
+  	let messagesStr_ = localStorage.messages ? localStorage.messages : '[]';
+
+  	let messagesArr  = JSON.parse(messagesStr_);
+
+  	console.log(typeof messagesArr);
+
+  	messagesArr.push(messageObj);
+
+  	let messagesStr = JSON.stringify(messagesArr);
+  	localStorage.messages = messagesStr;
+
+  	return true;
+  };  
+
+}
+
+
+=============================
+app.module.ts:
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule }   from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+import { AppComponent } from './app.component';
+import { MessagesService } from './services/messages.service';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+  	HttpModule,
+  	FormsModule,
+    BrowserModule
+  ],
+  providers: [MessagesService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+
+, здесь важно импортировать HttpModule
+
+=============================
+компонент:
+import { Component, OnInit } from '@angular/core';
+import { Response } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+
+import { MessagesService } from './services/messages.service';
+
+import 'rxjs/Rx';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  private name:string = '';
+  private message: string = '';
+  private messages: any[] = [];
+
+  constructor(private messagesService: MessagesService) { }
+
+  ngOnInit() {
+    this.messagesService
+        .getMessages()
+        .map((response: Response) => JSON.parse(response.json()))
+        .subscribe(data => {
+                    console.log(data);
+                  }, 
+                  err => {
+                    console.log('err')         
+                  }); 
+  }  
+
+    
+}
+
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================

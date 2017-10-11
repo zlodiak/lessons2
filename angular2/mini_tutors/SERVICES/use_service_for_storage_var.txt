@@ -1,0 +1,93 @@
+можно использовать сервис для хранения глобальнодоступной переменной. например заголовка хэдера
+
+=============================
+service:
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class HeaderService {
+
+	private title: string;
+
+  constructor() { }
+
+	getTitle(): string {
+		return this.title
+	};  
+
+	setTitle(title): void {
+		this.title = title;
+	};  	 
+
+}
+
+
+
+
+=============================
+module:
+import { HeaderService } from './services/header.service';
+
+  providers: [
+    HeaderService,
+
+=============================
+корневой компонент:
+import { Component } from '@angular/core';
+import { HeaderService } from './services/header.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  private headerTitle: string;
+
+  constructor(private headerService: HeaderService) { }
+
+  private handlerClickMenu(sidenav: any, headerTitle: string) {
+		sidenav.close();
+  };
+}
+
+
+html:
+<h1 class="title" [innerHTML]="headerService.getTitle()"></h1>
+
+=============================
+
+дочерний компонент:
+import { Component, OnInit } from '@angular/core';
+import { HeaderService } from '../services/header.service';
+
+
+@Component({
+  selector: 'app-events',
+  templateUrl: './events.component.html',
+  styleUrls: ['./events.component.css']
+})
+export class EventsComponent implements OnInit {
+
+  constructor(private eventsService: EventsService, private headerService: HeaderService) { }
+
+  ngOnInit() {
+ 		this.fillEvents();
+ 		this.fillDates();
+    this.headerService.setTitle('События');
+  }
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================

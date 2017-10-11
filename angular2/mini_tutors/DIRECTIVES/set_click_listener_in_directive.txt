@@ -1,0 +1,57 @@
+можно на директиве отлавливать событие клика:
+
+
+<h1 appTest bg="red">навигация:</h1>
+<div class="nav">
+  <a [routerLink]="['/select']">select</a>
+  <a [routerLink]="['/output']">output</a>
+</div>
+
+
+<router-outlet></router-outlet>
+
+<div class="spinner-backdrop" *ngIf="isVisibleSpinner"></div>
+<div class="spinner-area" *ngIf="isVisibleSpinner">
+    <span class="spinner">loading...</span>
+</div>
+
+
+
+==============+
+import { Directive, ElementRef, Input, OnInit, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appTest]'
+})
+export class TestDirective implements OnInit {
+
+	@Input() bg: string;
+
+	@HostListener('click')
+	click() {
+		console.log(this.bg);
+	};
+
+  constructor(private el: ElementRef) { 
+  	
+  }
+
+	ngOnInit() {		
+	  this.el.nativeElement.style.background = this.bg;
+	}  
+
+}
+
+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+
+==============+

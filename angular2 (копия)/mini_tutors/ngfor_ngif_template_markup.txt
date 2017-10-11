@@ -1,0 +1,18 @@
+иногда невозможно в одном теге использовать ngif и ngfor. тогда нужно использовать тег template:
+
+<div class="tile row" *ngIf="!isTableMode">
+	<ng-container *ngFor="let task of tasks" (click)="openDetails(task)">
+		<div class="col-sm-3"  *ngIf="task.login == 'kalinin'">
+			<div class=" panel panel-default">
+				<div class="title" [innerHTML]="task.title"></div>
+				<div class="date" [innerHTML]="dateFormatter(task.date)"></div>
+				<div class="info">
+					<div class="status" [innerHTML]="task.status"></div>					
+					<div class="priority" [innerHTML]="task.priority"></div>				
+					<div class="planned-time" [innerHTML]="secondsFormatter(task.planned_time_sec)"></div>
+					<div class="elapsed-time" [innerHTML]="secondsFormatter(task.elapsed_time_sec)"></div>					
+				</div>	
+			</div>  	
+	  </div>
+  </ng-container>
+</div>

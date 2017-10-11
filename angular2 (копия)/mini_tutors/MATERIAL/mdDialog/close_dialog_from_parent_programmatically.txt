@@ -1,0 +1,58 @@
+допустим родительский компонент открыл диалог и хочет его закрыть программно по таймауту:
+
+
+js:
+import { Component, OnInit } from '@angular/core';
+import { Response } from '@angular/http';
+
+import { MdDialog } from '@angular/material';
+
+import { RateService } from '../services/rate.service';
+import { OkDialogComponent } from '../ok-dialog/ok-dialog.component';
+
+
+@Component({
+  selector: 'app-conv-dialog',
+  templateUrl: './conv-dialog.component.html',
+  styleUrls: ['./conv-dialog.component.css']
+})
+export class ConvDialogComponent implements OnInit {
+
+	private rate: Object = {};
+	private targetRates: Object = {};
+	private fieldsValues: Object = {
+		rur: '',
+		usd: '',
+		eur: '',
+		gbp: '',
+		chf: ''
+	};
+
+  constructor(private rateService: RateService, public dialog: MdDialog) { }
+
+  ngOnInit() {
+
+  }  
+
+  private handlerClickCalcBtn(): void {
+    if( isNaN(this.fieldsValues['rur']) == true ||
+        isNaN(this.fieldsValues['usd']) == true ||
+        isNaN(this.fieldsValues['eur']) == true ||
+        isNaN(this.fieldsValues['gbp']) == true ||
+        isNaN(this.fieldsValues['chf']) == true) { 
+                                                    let dialogRef = this.dialog.open(OkDialogComponent);
+                                                    setTimeout(function() {
+                                                      dialogRef.close();
+                                                    }, 2000);                                           
+                                                    return; 
+    }
+
+===========+
+===========+
+===========+
+===========+
+===========+
+===========+
+===========+
+===========+
+===========+

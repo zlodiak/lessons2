@@ -1,0 +1,182 @@
+....HttpClient
+
+часто разработчики взаимодействуют с бэкенд-сервисами через http протокол. современные браузеры поддерживают 2 различных API, совершающих http-запросы: XMLHttpRequest и fetch() API.
+
+через HttpClient предоставляется простое API для http, которое можно использовать в angular-приложениях. оно является надстройкой над XMLHttpRequest и отображается браузером. дополнительными плюсами HttpClient являются: встроенная поддержка тестирования, строгая типизация запросов и ответов сервера, поддержка перехвата запоса/ответа, возможность обработки ошибок запросов.
+
+
+....настройка: установка модуля
+
+перед использованием HttpClient необходимо установить HttpClientModule, который предоставляет его функциональность. подключить его нужно в главном модуле вашего приложения, это необходимое сделать только один раз:
+
+
+// app.module.ts:
+
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+
+// Import HttpClientModule from @angular/common/http
+import {HttpClientModule} from '@angular/common/http';
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    // Include it under 'imports' in your application module
+    // after BrowserModule.
+    HttpClientModule,
+  ],
+})
+export class MyAppModule {}
+
+
+после импорта HttpClientModule в главном модуле приложения, необходимо подключить HttpClient в целевые компоненты и сервисы.
+
+
+....делаем запрос JSON-данных.
+
+наиболее часто делаемые запросы данных к бэкенду - это запросы JSON-данных. для примера предположим, определённый адрес возвращает JSON-данные такого вида:
+
+{
+  "results": [
+    "Item 1",
+    "Item 2",
+  ]
+}
+
+,здесь get() это метод HttpClient, предоставляющий простой доступ к данным. 
+
+@Component(...)
+export class MyComponent implements OnInit {
+
+  results: string[];
+
+  // Inject HttpClient into your component or service.
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    // Make the HTTP request:
+    this.http.get('/api/items').subscribe(data => {
+      // Read the result field from the JSON response.
+      this.results = data['results'];
+    });
+  }
+}
+
+
+....проверка тип запроса.
+
+в примере выше используется скобочная нотация для доступа к конкретному полю. если вы попробуете использовать точечную нотацию data.results, то typescript не разрешит извлечь данные. это произойдёт потому что HttpClient парсит данные ка объект. при этом он не знает форму этого объекта.
+
+вы всегда можете указать HttpClient каким должен быть тип ответа. для этого первым делом определите интерфейс ответа:
+
+interface ItemsResponse {
+  results: string[];
+}
+
+в этом случае при запросе HttpClient.get необходимо указывать параметр-тип:
+
+http.get<ItemsResponse>('/api/items').subscribe(data => {
+  // data is now an instance of type ItemsResponse, so you can do this:
+  this.results = data.results;
+});
+
+
+....получение полного ответа.
+
+запрос не возвращает все данные, которые вам могут потребоваться. иногда сервер возвращает особенные заголовки и коды статусов для обозначения определённых условий. проверка их может быть необходима. чтобы сделать её, вы должны сказать HttpClient, что вы хотите получить полный ответ сервера при помощи опции observe:
+
+http
+  .get<MyJsonData>('/data.json', {observe: 'response'})
+  .subscribe(resp => {
+    // Here, resp is of type HttpResponse<MyJsonData>.
+    // You can inspect its headers:
+    console.log(resp.headers.get('X-Custom-Header'));
+    // And access the body directly, which is typed as MyJsonData as requested.
+    console.log(resp.body.someField);
+  });
+
+  как вы видите, результирующий объект имеет свойство body корректного типа.
+
+
+....обработка ошибок
+
+  что произойдёт если запрос упадёт на сервере или слабое интернет-соединение не позволит вернуть результат запроса? HttpClient вернёт огибку вместо результата.
+
+  чтобы отловить её необходимо добавить обработчик ошибок в ваш .subscribe() следующим образом:
+
+  http
+  .get<ItemsResponse>('/api/items')
+  .subscribe(
+    // Successful responses call the first callback.
+    data => {...},
+    // Errors will call this callback instead:
+    err => {
+      console.log('Something went wrong!');
+    }
+  );
+
+
+....получение детальной информации об ошибке:
+
+обнаружение того, что произошла ошибка это первая задача. но важнее знать какая именно ошибка произошла. параметр err из кода выше содержит полезную информацию об ошибке.
+
+могут произойти как минимум 2 вида ошибок: 
+1. бэкенд возвращает код неуспешного запроса (404, 500 и т.д.).
+2. ошибка произошла на клиенте. исключение попадает в RxJS 
+
+в обоих случаях чтобы понять что произошло нужно смотреть в HttpErrorResponse.
+
+http
+  .get<ItemsResponse>('/api/items')
+  .subscribe(
+    data => {...},
+    (err: HttpErrorResponse) => {
+      if (err.error instanceof Error) {
+        // A client-side or network error occurred. Handle it accordingly.
+        console.log('An error occurred:', err.error.message);
+      } else {
+        // The backend returned an unsuccessful response code.
+        // The response body may contain clues as to what went wrong,
+        console.log(`Backend returned code ${err.status}, body was: ${err.error}`);
+      }
+    }
+  );
+
+один из способов устранения ошибки - повторить запрос. этот способ может быть полезен когда ошибки не повторяются систематически.
+
+RxJS имеет полезный оператор .retry() ,который автоматически подписывает заново наблюдателя таким образом повторяя запрос.
+
+для этого необходимо в первую очередь импортировать следующее:
+
+import 'rxjs/add/operator/retry';
+
+после этого вы сможете использовать HTTP-наблюдателя так:
+
+http
+.get<ItemsResponse>('/api/items')
+// Retry this request up to 3 times.
+.retry(3)
+// Any errors after the 3rd retry will fall through to the app.
+.subscribe(...);
+
+этот код возвращает неуспешный запрос 3 раза. после этого приложение упадёт.
+
+
+....запрос данных формата неJSON
+
+не все API возвращают данные в формате JSON. предположим, вы хотите прочитать текстовый файл на сервере. вы должны сказать HttpClient, что вы ожидаете ответ в текстовом формате:
+
+http
+.get('/textfile.txt', {responseType: 'text'})
+// The Observable returned by get() is of type Observable<string>
+// because a text response was specified. There's no need to pass
+// a <string> type parameter to get().
+.subscribe(data => console.log(data));
+
+
+....отправка данных на сервер
+
+
+
+
+

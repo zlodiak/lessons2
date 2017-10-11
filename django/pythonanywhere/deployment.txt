@@ -1,0 +1,75 @@
+деплой на pythonanywhere:
+сначала пушим на гит
+потом заходим на сервер, активируем вирт окружение и клонируем или пуллим репозиторий с гита
+
+=================================
+собирем стат файлы:
+(myvenv) $ python manage.py collectstatic
+
+при этом в конфиге:
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+=================================
+разрешённые хосты в конфиге:
+ALLOWED_HOSTS = ['zlodiak.pythonanywhere.com', '127.0.0.1
+
+=================================
+пути к шаблонам в конфиге:
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            'rurun/templates',
+            'rurun/login/templates',
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+=================================
+если есть кроссдоменные запросы, то:
+pip3 install django-cors-headers
+
+
+в конфиге:
+CORS_ORIGIN_ALLOW_ALL = True
+
+=================================
+отключить режим отладки:
+DEBUG = False
+
+=================================
+из dashboard рефрешить
+
+=================================
+=================================
+тут остальное:
+https://tutorial.djangogirls.org/ru/deploy/
+
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
