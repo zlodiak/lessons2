@@ -95,6 +95,155 @@ angular.module('app.directives', [])
 
 ========================
 ========================
+новый вариант:
+в factories.scroll:
+    scroll.scrollTopTabs = function() {
+        console.log('scroll.scrollTopTabs');
+        var container = angular.element(document.querySelector("md-tab-content.md-active"));
+        container.scrollTo(0);
+        $rootScope.isScroller = false;
+        $rootScope.$applyAsync();
+    };
+
+
+в шаблоне вкладок:
+<div ng-click="Scroll.scrollTopTabs()" class="scroll-to-app-button tab-scroll"  ng-class="{show:scrolled}"></div>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            var skroll = $(".tab-scroll");
+            $('md-tab-content').scroll(function () {
+                if(this.scrollTop > window.innerHeight){
+                    if(!skroll.hasClass('show')){
+                        skroll.addClass("show");
+                    }
+                }
+                else{
+                    if(skroll.hasClass('show')){
+                        skroll.removeClass("show");
+                    }
+                }
+            });
+        },300)
+    });
+</script>
+
+
+========================
+========================
+ещё пример новго скролла:
+js:
+angular.module('participants', [])
+    .controller('participantsCtrl', ['communication', '$rootScope', '$scope', '$state', '$timeout','$stateParams','db','$mdDialog','scroll', 'api', 'Scroll',
+        function (communication, $rootScope, $scope, $state, $timeout,$stateParams,db,$mdDialog,scroll, api, Scroll) {
+            $rootScope.isScroller = false;
+            $scope.Scroll = Scroll;
+
+
+            $scope.setTab = function (id) {
+                //console.log(id);
+                $scope.tab = +id;
+                $rootScope.isScroller = false;
+                $scope.Scroll.setElement('md-tab-content.md-active');
+            };
+
+========================
+html:
+<md-content class="page-participants">
+    <md-tabs md-selected="tab" md-border-bottom ng-swipe-left="swipe($event,'right')"
+             ng-swipe-right="swipe($event, 'left')">
+        <md-tab label="Эксперты" md-on-select="setTab(0)">
+            <div class="experts">
+                <md-card ng-repeat="expert in participants | orderBy:'order'" ng-if="expert.type == 1">
+                    <div class="photo"
+                         style="background: url({{(expert.photo | file : '':'':true) || '../img/avatar.svg'}}) center center no-repeat; background-size: cover;"></div>
+                    <div class="fio">{{expert.lname+' '+expert.name}}</div>
+                    <div class="position">{{expert.position?expert.position:''}}</div>
+                </md-card>
+            </div>
+        </md-tab>
+        <md-tab label="Организаторы" md-on-select="setTab(1)">
+            <div class="orgs">
+                <md-card ng-repeat="org in participants | orderBy:'order' " ng-if="org.type == 0">
+                    <div class="photo"
+                         style="background: url({{(org.photo | file : '':'':true) || '../img/avatar.svg'}}) center center no-repeat; background-size: cover;"></div>
+                    <div class="fio">{{org.lname+' '+org.name}}</div>
+                    <div class="position">{{org.position?org.position:''}}</div>
+                    <div class="email" ng-bind-html="org.email"></div>
+                    <div class="tel" ng-bind-html="org.tel | cutPhone"></div>
+                    <div class="city">{{org.city?org.city:''}}</div>
+                </md-card>
+            </div>
+        </md-tab>
+    </md-tabs>
+</md-content>
+
+<style>
+    .ios md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
+        min-height: calc(100vh - 77px);
+    }
+
+    #main {
+        overflow: hidden;
+    }
+
+    .pagecontent, .quest-page{
+        height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    header{
+        background: #00abdc;
+    }
+</style>
+
+========================
+css:
+.page-participants{
+  font-size:1.4em;
+  @media screen and (max-width: 470px) {
+    font-size:1.2em;
+  }
+  @media screen and (max-width: 320px) {
+    font-size:1.1em;
+  }
+  md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
+    //min-height: calc(100vh - 78px);
+  }
+
+  md-pagination-wrapper {
+    min-width:100%!important;
+    width:100%!important;
+  }
+
+  md-tabs .md-tab.md-active{
+    color: #00abdc;
+  }
+
+
+========================
+global ctrl:
+.controller('globalCtrl', ['$rootScope', 'Scroll', '$timeout','$scope','communication',
+    function($rootScope, Scroll, $timeout,$scope,communication) {
+
+    $scope.Scroll = Scroll;
+    $scope.Scroll.setElement('main');
+    $scope.animateTimeout = function(callback) {
+        if (!callback) return;
+        $timeout(function(){
+            callback();
+        }.bind(this),500);
+    };
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
 ========================
 ========================
 ========================

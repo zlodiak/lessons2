@@ -17,7 +17,18 @@ angular.module('app.filters', [])
 
 
 в БД:
-<a href='tel:+79279724833/?epadvisorIgnoreRequest=true'></a>
+<a href='tel:+79279724833/?epadvisorIgnoreRequest=true'>79279724833</a>
+
+
+html:
+<div class="mobile" ng-if="participant.mobile" ng-bind-html="participant.mobile | cutPhone"></div>
+
+
+
+===========
+
+
+
 
 
 

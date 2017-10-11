@@ -1,0 +1,28 @@
+автоматическая полная высота главной странички для андроидов и иос. в main.html:
+
+<style>
+    /*main, .pagecontent {
+        height: 100%;
+    }
+    main.ios {
+     height: 100vh;
+    }*/
+
+    main, .pagecontent, md-content {
+     height: 100% !important;
+    }
+
+    main.ios {
+     padding-top: 20px;
+    }
+
+    md-content {
+      height: 100%;
+    }
+    main.ios {
+        padding-top: 20px;
+    }
+    header,.search_block {
+        display: none;
+    }
+</style>

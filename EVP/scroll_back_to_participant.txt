@@ -1,0 +1,304 @@
+реализация скролла, который автоматически срабатывает при возвращении со старнииуы детальной информации к старнице со списка
+
+
+
+                    if ($scope.participant_guid_memorized) {
+                        $timeout(function () {
+                            //console.log(333, "#user-" + $scope.participant_guid_memorized);
+                            $("#main").animate({
+                                scrollTop: $("#user-" + $scope.participant_guid_memorized).offset().top - 118
+                            }, 500);
+                        }, 400);
+                    }
+
+                    это находится в back
+
+=================
+html:
+         infinite-scroll-container="'main'">
+        <md-card ng-repeat="participant in users.list | search_: search | limitTo: users.step" id="user-{{participant.guid ? participant.guid : ''}}">
+            <div class="participant" ng-click="openParticipant(participant)">
+                <div class="avatar"
+                     ng-if="participant.photo"
+                     style="background: url('http://epadvisor/ondemand/{{participant.photo ? participant.photo : participant.photo}}') center center no-repeat; background-size: cover;"></div>
+
+=================
+            $scope.openParticipant = function (f_user) {
+                console.log($('#user-' + f_user.guid).pageYOffset);
+                console.log(f_user.guid);
+
+
+
+=================
+=================
+
+angular.module('module_participants_device', [])
+    .controller('module_participants_deviceCtrl', ['$rootScope', '$scope', 'Users', '$timeout', 'Scroll', 'api', 'db',
+        function($rootScope, $scope, Users, $timeout, Scroll, api, db) {
+            $rootScope.isScroller = false;
+            $rootScope.header.title = 'Участники';
+
+            $rootScope.header.simpleSearch = true;
+            if ($rootScope.search) $rootScope.search = '';
+
+
+
+
+
+
+            $rootScope.loading = true;
+            $scope.showParticipant = false;
+            $scope.users = new Users();
+
+            $rootScope.header.search_reset = function() {
+                $rootScope.search = '';
+                $scope.users.step = $scope.users.save_step;
+            };
+
+            $scope.openParticipant = function (f_user) {
+                console.log($('#user-' + f_user.guid).pageYOffset);
+                console.log(f_user.guid);
+                $scope.participant_guid_memorized = f_user.guid;
+
+                $rootScope.header.simpleSearch = false;
+                $scope.showParticipant = true;
+
+                $scope.loading = true;
+
+                $scope._participant = f_user;
+                console.log('$scope._participant');
+                console.log($scope._participant);
+
+                $timeout(function(){
+                    $scope.loading = false;
+                }, 1000);
+
+                $rootScope.header.back = function() {
+                    $scope.showParticipant = false;
+                    $rootScope.header.simpleSearch = true;
+                    $rootScope.header.back = function() {
+                        location.hash = '#/main';
+                    };
+
+                    if ($scope.participant_guid_memorized) {
+                        $timeout(function () {
+                            //console.log(333, "#user-" + $scope.participant_guid_memorized);
+                            $("#main").animate({
+                                scrollTop: $("#user-" + $scope.participant_guid_memorized).offset().top - 118
+                            }, 500);
+                        }, 400);
+                    }
+                };
+
+                users = null;
+            }
+        }
+    ])
+    .factory('Users',['$http', '$rootScope', '$timeout', function($http, $rootScope, $timeout){
+        var Users = function() {
+            this.items = [];
+            this.list = [];
+            this.step = 40;
+            this.save_step = 40;
+            this.busy = false;
+        };
+
+        Users.prototype.Init = function () {
+            //для веб------> return  $http.get( 'https://moscow.eventplatform.ru/remote/api/table?action=table&eventGuid=vdp3ceuz&table=participants')
+            //console.log('INIT');
+            var reference = 'participants';
+
+            var link = $rootScope.vars.dev ? ('../files/' + reference + '.json'):('http://epadvisor/ondemand/' + reference + '.json?unique=' + new Date().getTime());
+            //console.log(link);
+            return $http.get(link);
+        };
+
+        Users.prototype.nextPage = function () {
+            console.log('nextPage');
+
+            if (this.busy) {
+                return;
+            }
+
+            //console.log('nextPage 2');
+            this.busy = true;
+            console.log(this.step);
+
+            if ($rootScope.search) {
+                this.step = this.list.length;
+                this.busy = false;
+                return;
+            } else {
+                this.step = this.save_step;
+            }
+
+            if (this.items.length < 1) {
+                //console.log('111');
+
+                this.Init().then(function (data) {
+                    //console.log(data);
+
+                    var _data = data.data.values, filter = [], length = _data.length;
+
+                    //console.log(_data);
+                    var data_arr = [];
+                    for (var v in _data) {
+                        var obj = _data[v];
+                        obj['guid'] = v;
+                        obj['order'] = +obj['order'];
+
+                        //console.log(obj);
+                        data_arr.push(obj);
+                    }
+                    this.list = data_arr;
+
+                    //console.log('data_arr');
+                    //console.log(data_arr);
+                    console.log(data_arr.length);
+
+                    this.items = data_arr.slice(0, 40);
+                    $rootScope.loading = false;
+
+                }.bind(this));
+            } else {
+                var _list = this.items.length + 40;
+                this.items = this.list.slice(0, _list);
+                this.step += 20;
+                this.save_step = this.step;
+            }
+
+            if (this.step == 40) {
+                $timeout(function () {
+                    this.busy = false;
+                }.bind(this), 1000)
+            } else {
+                this.busy = false;
+            }
+
+        };
+
+        return Users;
+    }])
+    .filter('search_', function() {
+        return function(data, text) {
+            //console.log(text);
+            text = text || '';
+            text = text.toLowerCase();
+
+            var out = [];
+            if (text.length < 3) return data;
+
+            if(Object.keys(data)) {
+                console.log(Object.keys(data).length, data);
+            } else {
+                console.log('fail', data);
+            }
+
+            for(var prop in data) {
+                //if (!object.hasOwnProperty(prop)) continue;
+
+                console.log(prop);
+
+                var fname = (data[prop].hasOwnProperty("fname")) ? data[prop]["fname"].toLowerCase() : "";
+                var lname = (data[prop].hasOwnProperty("lname")) ? data[prop]["lname"].toLowerCase() : "";
+                var flname = fname + " " + lname;
+
+                if (fname.indexOf(text) > -1 ||
+                    lname.indexOf(text) > -1 ||
+                    flname.indexOf(text) > -1) {
+                    out.push(data[prop])
+                }
+            }
+
+            return out;
+        };
+    });
+
+
+
+
+=================
+<loading></loading>
+
+<md-content class="participants-list" ng-show="!showParticipant && !loading">
+    <div class="participants"
+         id="participants"
+         infinite-scroll="users.nextPage()"
+         infinite-scroll-disabled="users.busy"
+         infinite-scroll-distance="0"
+         infinite-scroll-container="'main'">
+        <md-card ng-repeat="participant in users.list | search_: search | limitTo: users.step" id="user-{{participant.guid ? participant.guid : ''}}">
+            <div class="participant" ng-click="openParticipant(participant)">
+                <div class="avatar"
+                     ng-if="participant.photo"
+                     style="background: url('http://epadvisor/ondemand/{{participant.photo ? participant.photo : participant.photo}}') center center no-repeat; background-size: cover;"></div>
+                <div class="no-avatar"
+                     ng-if="!participant.photo">{{participant.fname ? participant.fname.slice(0, 1) : ''}}{{participant.lname ? participant.lname.slice(0, 1) : ''}}</div>
+
+                <div class="info">
+                    <h3 class="names">{{participant.fname ? participant.fname : ''}} {{participant.lname ? participant.lname : ''}}</h3>
+                    <div class="organization-position"
+                         ng-if="participant.position"
+                         ng-bind-html="participant.position"></div>
+
+                    <div class="organization-team"
+                         ng-if="participant.team"
+                         ng-bind-html="participant.team"></div>
+
+                    <div class="organization-city"
+                         ng-if="participant.city"
+                         ng-bind-html="participant.city"></div>
+                </div>
+            </div>
+        </md-card>
+    </div>
+</md-content>
+
+<md-content class="participants_info" ng-if="showParticipant">
+    <div class="profile">
+        <div class="avatar-outer">
+            <div class="avatar"
+                 ng-if="_participant.photo"
+                 style="background: #127cad url('http://epadvisor/ondemand/{{_participant.photo ? _participant.photo : ''}}') center center no-repeat; background-size: cover;"></div>
+            <div class="no-avatar"
+                 ng-if="!_participant.photo">
+                {{_participant.fname ? _participant.fname.slice(0, 1) : ''}}{{_participant.lname ? _participant.lname.slice(0, 1) : ''}}
+            </div>
+        </div>
+
+        <div class="info-outer">
+            <div class="line names" ng-if="_participant.fname || _participant.lname">
+                {{_participant.fname ? _participant.fname : ''}} {{_participant.lname ? _participant.lname : ''}}
+            </div>
+
+            <div class="line position" ng-if="_participant.position">
+                <div class="label">Должность</div>
+                <div class="body" ng-bind-html="_participant.position"></div>
+            </div>
+
+            <div class="line company" ng-if="_participant.team">
+                <div class="label">Отдел</div>
+                <div class="body" ng-bind-html="_participant.team"></div>
+            </div>
+
+            <div class="line city" ng-if="_participant.city">
+                <div class="label">Город</div>
+                <div class="body" ng-bind-html="_participant.city"></div>
+            </div>
+        </div>
+    </div>
+</md-content>
+
+<style>
+    body{ background: #fff }
+
+    .search_block {
+        display: flex;
+    }
+</style>
+
+
+=================
+=================
+=================
+=================

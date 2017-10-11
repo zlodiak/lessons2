@@ -1,0 +1,18 @@
+создать статик таблицу: ar
+
+импортировать в неё
+
+html:
+
+
+  <div class="wrapper">
+   <p>Наведите камеру вашего устройства на ролл-апы, посвященные мероприятию МЭС5<br></p>
+   <button ng-click="wow()">Начать</button>
+  </div>
+
+
+
+js:
+            $scope.wow = function () {
+                communication.send('augmented', {});
+            };  

@@ -1,0 +1,6 @@
+если нужно через css скрыть кноппку Плэй, то:
+
+      video::-webkit-media-controls-start-playback-button,
+      video::-webkit-media-controls-play-button {
+        display: none !important;
+      }

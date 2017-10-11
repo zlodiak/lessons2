@@ -1,0 +1,12 @@
+this.update = function (params) {
+    $rootScope.vars = defaultVariables; // раскомментировать
+    $http({
+        method: 'GET',
+        url: 'http://epadvisor/vars?keys=' + params + '&raw',
+        dataType: "json",
+        cache: false
+    }).then(function (response) {
+        $rootScope.vars = response.data;
+        $rootScope.$apply();
+    });
+};

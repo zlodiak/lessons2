@@ -1,0 +1,17 @@
+пример кнопки, которая не имеет проблем с цветом после нажатия:
+
+
+.common-btn{
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0;
+  background: $primary-color;
+  color: #fff !important;
+}
+
+
+        <md-button ng-click="pinLogout()" class="md-primary pin-logout-btn common-btn md-raised md-ink-ripple">
+            Сменить пин
+        </md-button>
+
+        
