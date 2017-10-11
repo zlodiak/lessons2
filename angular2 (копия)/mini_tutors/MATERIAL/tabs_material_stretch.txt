@@ -1,4 +1,0 @@
-растянуть заголовки вкладок по всей ширине экрана можно так:
-			<md-tab-group md-stretch-tabs="yes">
-			  <md-tab label="{{ date.fields.title }}" *ngFor="let date of dates;">
-			  	<div class="events">
