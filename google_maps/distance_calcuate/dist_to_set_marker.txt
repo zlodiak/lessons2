@@ -1,0 +1,85 @@
+можно измерять растояние до установленного маркера от текущего местоположения:
+
+function initMap() {
+	if(!navigator.geolocation) { alert("Geolocation API не поддерживается в вашем браузере"); }
+
+  navigator.geolocation.getCurrentPosition(function(position){
+	  var originLat = position.coords.latitude;
+	  var originLng = position.coords.longitude;
+	  var accuracy = position.coords.accuracy;
+	  var coords = {lat: originLat, lng: originLng}
+
+		var xhr = new XMLHttpRequest();
+		var req = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+originLat+','+originLng+'&key=AIzaSyDT2NO8RgOBPpi3Hph-sjfyE1zyRPAoMnQ';
+		xhr.open('GET', req, false);
+		xhr.send();
+
+		if (xhr.status != 200) {
+		  console.log( xhr.status + ': ' + xhr.statusText ); 
+		} else {
+		  var mapOptions = {
+		    zoom: 15,
+		    center: coords
+		  };
+
+		  var map = new google.maps.Map(
+		  	document.getElementById("map"), mapOptions
+		  );
+
+		  var marker = new google.maps.Marker({
+		    position: coords,
+		    map: map,
+		    title: "Your current location!"
+		  });		
+
+		  var addrStr = JSON.parse(xhr.responseText).results[1].formatted_address	;
+			var infowindow = new google.maps.InfoWindow({				
+			  content: addrStr
+			});		
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });				   
+
+			map.addListener('click', function(e) {
+		    var lat = e.latLng.lat();
+		    var lng = e.latLng.lng();  
+
+			  var marker2 = new google.maps.Marker({
+			    position: {lat: lat, lng: lng},
+			    map: map
+			  }); 	
+
+	      var dist = calcDistance(originLat, originLng, lat, lng);			  	 
+
+				var infowindow2 = new google.maps.InfoWindow({				
+				  content: dist
+				});		
+	      marker2.addListener('click', function() {
+	        infowindow2.open(map, marker2);
+	      });   
+			});			
+		}	
+	});
+
+
+  function calcDistance(originLat, originLng, lat, lng) {
+    var origins = originLat + ',' + originLng;
+    var destinations = lat + ',' + lng;
+    var xhr2 = new XMLHttpRequest();
+		var req2 = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&language=ru&origins='+origins+'&destinations='+destinations+'&key=AIzaSyDT2NO8RgOBPpi3Hph-sjfyE1zyRPAoMnQ';
+		xhr2.open('GET', req2, false);
+		xhr2.send();
+
+		if (xhr2.status != 200) {
+		  console.log( xhr2.status + ': ' + xhr2.statusText ); 
+		} else {
+			//console.log( xhr2.responseText ); 
+			var dist = JSON.parse(xhr2.responseText).rows[0].elements[0].distance.text;
+			console.log(dist); 
+			return dist;
+		}  	
+  };
+
+
+
+}

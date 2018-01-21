@@ -1,0 +1,146 @@
+простейший случай для вложенный шаблонов. в первой уровне хэдер, и футер. во втором уровне содержание странички
+
+===============================
+
+
+app.module:
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { SystemModule } from './system/system.module';
+
+import { AppComponent } from './app.component';
+
+
+@NgModule({
+  declarations: [  
+    AppComponent
+  ],
+  imports: [
+    SystemModule,
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+===============================
+app-routing:
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+const routes: Routes = [
+	{path: '', redirectTo: '/questions', pathMatch: 'full'}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+===============================
+app.component.html:
+<div class="wrap">
+  <header class="header">
+    hhh
+  </header>
+
+  <main class="main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    fff
+  </footer>
+</div>
+
+
+
+
+===============================
+system-module:
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+
+import { SystemRoutingModule } from './system-routing.module';
+
+import { SystemComponent } from './system.component';
+import { QuestionsComponent } from './questions/questions.component';
+import { TagsComponent } from './tags/tags.component';
+import { UsersComponent } from './users/users.component';
+
+
+@NgModule({
+	imports: [
+		CommonModule, 
+		SystemRoutingModule
+	],
+	declarations: [
+		SystemComponent,
+    QuestionsComponent,
+    TagsComponent,
+    UsersComponent	
+	],
+	providers: [
+
+	]
+})
+export class SystemModule{}
+
+
+===============================
+system routing:
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { QuestionsComponent } from './questions/questions.component';
+import { TagsComponent } from './tags/tags.component';
+import { UsersComponent } from './users/users.component';
+
+
+const routes: Routes = [
+	{path: 'questions', component: QuestionsComponent},
+	{path: 'tags', component: TagsComponent},
+	{path: 'users', component: UsersComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class SystemRoutingModule { }
+
+
+
+
+===============================
+system.html:
+empty
+
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================

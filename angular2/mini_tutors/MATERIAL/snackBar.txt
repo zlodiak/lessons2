@@ -1,0 +1,37 @@
+matSnackBar использовать так:
+
+Module:
+import {  MatDialogModule,
+          MatButtonModule,
+          MatInputModule,
+          MatCheckboxModule,
+          MatSnackBarModule} from '@angular/material';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    RegistrationComponent,
+    LoginComponent
+  ],
+  imports: [
+    MatSnackBarModule,
+
+
+comp:
+import { MatSnackBar } from '@angular/material';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit, OnDestroy {
+
+  constructor(private globalVarsService: GlobalVarsService,
+              private usersService: UsersService,
+              public snackBar: MatSnackBar,
+              private dialog: MatDialog) {
+    let q = this.snackBar.open('hello', 'OK', {
+      duration: 4000
+    });
+  }

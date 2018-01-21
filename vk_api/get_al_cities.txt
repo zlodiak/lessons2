@@ -1,0 +1,35 @@
+можно получить массив всех городов даже если их более 1000
+
+$( document ).ready(function() {
+	getCities();
+
+	var cities = []
+
+	function getCities( offset, limit ) {
+    if( ! limit || limit > 1000 ) limit = 1000; //число запрашиваемых городов, максимально 1000, по умолчанию 1000
+    if( ! offset ) offset = 0; //по умолчанию 0
+
+    $.ajax({
+	    url: "http://api.vk.com/method/database.getCities?v=5.69&need_all=0&count="+limit+"&country_id=1&region_id=1052052&offset="+(offset*limit),
+	    dataType: "jsonp",
+	    success: function( data ) {
+        console.log('data', data);
+        var allCities = data.response.count;
+        console.log('allCities', allCities);
+        var citiesRaw = data['response']['items'];
+        //с помощью concat можно объеденить 2 массива.
+        cities = cities.concat(citiesRaw.map(function(city) {
+          return city.title;
+        }));
+        //если в текущем ответе не все города то делаем ещё запрос с новым offset
+        if( allCities > offset*limit + limit)
+           getCities(offset+1, limit);        
+	    }           
+	  });
+	};	
+
+	setTimeout(() => {
+		console.log('cities', cities);
+	}, 1000);
+	
+});

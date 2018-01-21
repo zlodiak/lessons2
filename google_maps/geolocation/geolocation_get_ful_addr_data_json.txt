@@ -1,0 +1,21 @@
+Геокодирование – процесс преобразования адресов (например, "1600 Amphitheatre Parkway, Mountain View, CA") в географические координаты (например, широта 37,423021 и долгота -122,083739), которые можно использовать для размещения маркеров на карте или ее позиционирования.
+
+Обратное геокодирование – это процесс преобразования географических координат в адреса, понятные для пользователя. Представленная в Google Maps Geocoding API служба обратного геокодирования также позволяет найти адрес по указанному идентификатору места.
+
+Google Maps Geocoding API обеспечивает непосредственный доступ к этим службам через запрос HTTP. В следующем примере служба Geocoding используется через Google Maps JavaScript API для демонстрации основных возможностей.
+
+Запрос Google Maps Geocoding API имеет следующий вид:
+
+https://maps.googleapis.com/maps/api/geocode/outputFormat?parameters
+где outputFormat может принимать одно из следующих значений:
+
+json (рекомендуется) – задает вывод в формате JavaScript Object Notation (JSON); либо xml – задает вывод в формате XML. Для доступа к Google Maps Geocoding API через HTTP используйте следующий формат:
+
+http://maps.googleapis.com/maps/api/geocode/outputFormat?parameters
+Пример для Вас:
+
+https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
+Боле подробную информацию можно узнать здесь: https://developers.google.com/maps/documentation/geocoding/intro?hl=ru#ReverseGeocoding
+
+
+https://ru.stackoverflow.com/questions/653957/%D0%9F%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C-%D0%BD%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D1%81%D1%82%D1%80%D0%B0%D0%BD%D1%8B-%D0%B8-%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%B0-%D0%BF%D0%BE-%D1%88%D0%B8%D1%80%D0%BE%D1%82%D0%B5-%D0%B8-%D0%B4%D0%BE%D0%BB%D0%B3%D0%BE%D1%82%D0%B5-google-maps-api

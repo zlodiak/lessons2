@@ -1,0 +1,89 @@
+подключить нативные карты можно так:
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ymap1</title>
+  <base href="/">
+
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+
+
+=================
+<div class="map" id="map" (click)="createMarker($event)"></div>    
+
+=================
+
+
+.map{
+	width: 100vw;
+	height: 100vh;
+}
+
+
+
+=================
+import { Component } from '@angular/core';
+
+declare var ymaps: any;
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+
+	private map: any;
+	private collectionMarkers: any;
+	private mapEl: any = document.getElementById('map');
+
+	ngOnInit() {
+		ymaps.ready().then(() => {
+			this.initMap();		
+		}		
+	};
+
+	private createMarker(e): void {
+		console.log(e.get('coords'));
+	};
+
+	private initMap(): void {
+    this.map = new ymaps.Map("map", {
+        center: [55.76, 37.64],
+        controls: [],
+        zoom: 7
+    });  
+
+    this.collectionMarkers = new ymaps.GeoObjectCollection({}, {
+        preset: "islands#redIcon"
+    }); 
+
+    this.map.geoObjects.add(this.collectionMarkers);    
+
+
+
+	};
+
+}
+
+
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================

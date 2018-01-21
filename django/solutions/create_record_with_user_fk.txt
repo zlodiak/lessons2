@@ -1,0 +1,95 @@
+допусти есть записи и пользователи. каждая запись относится к определенному пользователю через fk. создадим в view новую запись на основе полученных параметров из адресной строки:
+
+
+фронт:
+return this.http.get('http://127.0.0.1:8000/app_todo2/create_todo2?title=' + title + '&user_id=' + userId).map(data => JSON.parse(data));
+
+
+===============
+бэкенд:
+
+моель:
+from django.db import models
+from django.utils import timezone
+
+class User(models.Model):
+  login = models.CharField(max_length=20)
+  password = models.CharField(max_length=20)
+  created_date = models.DateTimeField(default=timezone.now)
+  published_date = models.DateTimeField(blank=True, null=True)
+
+  def __str__(self):
+    return self.login
+
+
+class Todo(models.Model):
+  user_id = models.ForeignKey(User, verbose_name=u"Пользователь", blank=True, null=True,)
+  title = models.CharField(max_length=100)
+  isCompleted = models.BooleanField(default=False)
+  created_date = models.DateTimeField(default=timezone.now)
+  published_date = models.DateTimeField(blank=True, null=True)
+
+  def __str__(self):
+    return self.title      
+
+
+===============
+view:
+from django.shortcuts import render
+from django.utils import timezone
+from django.http import JsonResponse
+from django.core import serializers
+import json
+
+from .models import User, Todo
+    
+
+def create_todo2(request):
+	print(request.GET['title'])
+	print(request.GET['user_id'])
+
+	if (len(request.GET['title']) > 100) or (len(request.GET['title']) < 0):
+		request_status = '0'
+		error_id = '0'
+		error_message = 'error length'
+	else:
+		request_status = '1'
+		error_id = ''
+		error_message = ''
+		user = User.objects.get(id=request.GET['user_id'])
+		print('user: ')
+		print(user)
+		m = Todo(title=request.GET['title'], user_id=user, published_date=timezone.now(), created_date=timezone.now(),)
+		m.save();
+		print(request_status);
+
+	data = json.dumps({ 'request_status': request_status , 'error_id': error_id, 'error_message': error_message })
+
+	print('data: ');
+	print(data);
+
+	return JsonResponse(data, safe=False)        	
+
+===============
+то же самое через shell:
+from app_todo2.models import User, Todo
+
+user = User.objects.get(id=5)
+
+m = Todo(title='ttt', user_id=user)
+m.save();
+
+
+===============
+
+
+===============
+===============
+===============
+===============
+===============
+===============
+===============
+===============
+===============
+===============

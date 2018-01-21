@@ -1,0 +1,5 @@
+angular-cli.ts:
+      "styles": [
+        "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+        "styles.scss"
+      ],

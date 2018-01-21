@@ -1,0 +1,32 @@
+можно загружать картинки  в base64
+
+=============
+tpl:
+<input type="file" class="icon" placeholder="Аватар" (change)="uploadFile($event)">
+
+=============
+comp:
+  private uploadFile(ev): void {
+    console.log(ev.target.files);
+
+    const file:File = ev.target.files[0];
+    const myReader:FileReader = new FileReader();
+
+    myReader.onloadend = (e) => {
+      this.iconBase64 = myReader.result;
+      // console.log(this.iconBase64);
+    };
+
+    myReader.readAsDataURL(file);
+  }
+
+=============
+display:
+<img [src]="user?.icon" alt="" class="icon">
+
+=============
+=============
+=============
+=============
+=============
+=============

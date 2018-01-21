@@ -1,0 +1,66 @@
+оператор json() берёт из ответа асинхронной функции блок resp._body
+
+==========
+было:
+Response
+_body
+:
+""[{\"model\": \"users.user\", \"fields\": {\"position\": \"general\", \"published_date\": \"2017-11-29T10:37:16Z\", \"created_date\": \"2017-11-29T10:37:01Z\", \"name\": \"sergey\"}, \"pk\": 1}, {\"model\": \"users.user\", \"fields\": {\"position\": \"manager\", \"published_date\": \"2017-11-29T10:37:32Z\", \"created_date\": \"2017-11-29T10:37:20Z\", \"name\": \"michael\"}, \"pk\": 2}, {\"model\": \"users.user\", \"fields\": {\"position\": \"coffee maker\", \"published_date\": \"2017-11-29T10:37:55Z\", \"created_date\": \"2017-11-29T10:37:34Z\", \"name\": \"vanessa\"}, \"pk\": 3}, {\"model\": \"users.user\", \"fields\": {\"position\": \"security\", \"published_date\": \"2017-11-29T10:38:48Z\", \"created_date\": \"2017-11-29T10:37:57Z\", \"name\": \"obama\"}, \"pk\": 4}, {\"model\": \"users.user\", \"fields\": {\"position\": \"manager\", \"published_date\": \"2017-11-29T14:54:18Z\", \"created_date\": \"2017-11-29T14:54:04Z\", \"name\": \"john\"}, \"pk\": 5}, {\"model\": \"users.user\", \"fields\": {\"position\": \"namager\", \"published_date\": \"2017-11-29T15:33:10Z\", \"created_date\": \"2017-11-29T15:33:01Z\", \"name\": \"lena\"}, \"pk\": 6}]""
+headers
+:
+Headers
+ok
+:
+true
+status
+:
+200
+statusText
+:
+"OK"
+type
+:
+2
+url
+:
+"http://127.0.0.1:8000/users/users_list"
+__proto__
+:
+Body
+
+
+стало:
+[{"model": "users.user", "fields": {"position": "general", "published_date": "2017-11-29T10:37:16Z", "created_date": "2017-11-29T10:37:01Z", "name": "sergey"}, "pk": 1}, {"model": "users.user", "fields": {"position": "manager", "published_date": "2017-11-29T10:37:32Z", "created_date": "2017-11-29T10:37:20Z", "name": "michael"}, "pk": 2}, {"model": "users.user", "fields": {"position": "coffee maker", "published_date": "2017-11-29T10:37:55Z", "created_date": "2017-11-29T10:37:34Z", "name": "vanessa"}, "pk": 3}, {"model": "users.user", "fields": {"position": "security", "published_date": "2017-11-29T10:38:48Z", "created_date": "2017-11-29T10:37:57Z", "name": "obama"}, "pk": 4}, {"model": "users.user", "fields": {"position": "manager", "published_date": "2017-11-29T14:54:18Z", "created_date": "2017-11-29T14:54:04Z", "name": "john"}, "pk": 5}, {"model": "users.user", "fields": {"position": "namager", "published_date": "2017-11-29T15:33:10Z", "created_date": "2017-11-29T15:33:01Z", "name": "lena"}, "pk": 6}]
+==========
+==========
+ещё пример компонента:
+  private getUsers(): void {
+    this.usersService.getUsers().subscribe(
+      data => {   
+        console.log(data);  
+        let usersRaw = data.json(); 
+        let users: any[] = [];
+
+        usersRaw = JSON.parse(usersRaw);
+
+        for(var prop in usersRaw) {
+          if (!usersRaw.hasOwnProperty(prop)) continue;
+          users.push(usersRaw[prop]);
+        }
+        
+        this.users = users;                                                                                                                                  
+        console.log(this.users); 
+      }, 
+      err => {
+        console.log('err')         
+      });    
+  }; 
+
+==========
+==========
+==========
+==========
+==========
+==========
+==========
+==========

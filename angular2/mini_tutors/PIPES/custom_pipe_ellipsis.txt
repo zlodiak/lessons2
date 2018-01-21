@@ -32,6 +32,12 @@ export class EllipsisPipe implements PipeTransform {
 <td>{{ record.fields.desc | ellipsis:20 }}</td>
 
 =====================
+объявлять нужно тольок в ngModule. а в шаблоне использовать имя, которое в 
+
+@Pipe({
+  name: 'ellipsis'
+})
+
 =====================
 =====================
 =====================

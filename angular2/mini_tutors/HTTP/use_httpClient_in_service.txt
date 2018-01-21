@@ -1,0 +1,89 @@
+http устарел, вместо него нужно использовать httpClient. получим из сервиса данные. сначала поключим
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+//import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    ListComponent,
+    DetailsComponent,
+    PageNotFoundComponent,
+    LoginComponent
+  ],
+  imports: [
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [
+    GlobalVarsService,
+    TodosService,
+    UsersService
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+================+
+сервис:
+import { Injectable } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs/Observable';
+import "rxjs/add/operator/map";
+
+@Injectable()
+export class UsersService {
+
+  constructor(private http: HttpClient) { };
+
+  getUsers(): Observable<any> {
+  	return this.http.get('http://127.0.0.1:8000/app_todo2/users_list').map(data => JSON.parse(data));
+  };
+
+}
+
+
+================+
+компонент:
+  ngOnInit() {
+  	this.getAllUsersData();
+  }
+
+  private getAllUsersData(): void {
+  	this.usersService.getUsers().subscribe(
+      data => {   
+        this.allUsersData = data;                 
+        console.log(this.allUsersData);
+      }, 
+      err => {
+        console.log('err')         
+      })
+  };   
+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+
+================+

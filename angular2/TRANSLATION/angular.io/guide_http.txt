@@ -177,6 +177,176 @@ http
 ....отправка данных на сервер
 
 
+В дополнение к получению данных HttpClient поддерживает мутирующие запросы, которые отправляют на сервер данных в различных видах.
+
+
+....отправка POST-запроса.
+
+одна из типичных операций это отправка данных не сервер, например при сабмите формы. Код для отправки POST-запроса очень поход на код для отправки GET-запроса:
+
+const body = {name: 'Brad'};
+
+http
+  .post('/api/developers/add', body)
+  // See below - subscribe() is still necessary when using post().
+  .subscribe(...);
+
+
+заметка о методе subscribe(). все наблюдаемые объекты возвращают сырые данные, точнее - метаданные. ничего не случится пока вы не выполните subscribe(). каждый такой вызов будет делать отдельный запрос. например этот код отправляет POST-запрос с некоторыми данными дважды:
+
+const req = http.post('/api/items/add', body);
+// 0 requests made - .subscribe() not called.
+req.subscribe();
+// 1 request made.
+req.subscribe();
+// 2 requests made.
+
+
+....конфигурирование других частей запроса
+
+кроме URL-адреса в запросе есть другие параметры, которые вы можете настраивать. все они находятся в объекте options.
+
+....заголовки
+
+одна из частых задач - добавление заголовка авторизации к исходящему запросу. в этом случае вы делаете следующее:
+
+http
+  .post('/api/items/add', body, {
+    headers: new HttpHeaders().set('Authorization', 'my-auth-token'),
+  })
+  .subscribe();
+
+HttpHeaders это неизменяемый класс. его метод set() возвращает новый экземпляр класса и инициализирует его.
+
+....URL-параметры
+
+чтобы отправить запрос с параметром id, равным 3 нудно сделать так:
+
+http
+  .post('/api/items/add', body, {
+    params: new HttpParams().set('id', '3'),
+  })
+  .subscribe();
+
+в это случае на сервер уходит такой запрос: /api/items/add?id=3.
+
+....расширенное использование.
+
+выше было рассказано как использовать основную функциональность, но иногда требуется делать нечто большее чем просто отсылать запросы и получать обратно ответ.
+
+....перехват всех запросов и ответов
+
+главная особенность @angular/common/http это возможность перехвата. то есть возможность объявить перехватчиков, которые будут работать между вашим приложением и бэкендом. когда ваше приложение делает запрос, то перехватчик трансформирует его перед отправкой на сервер. так же перехватчик может трансформировать ответ, которой поступит с сервера. это бывает полезно, например, при аутентификации и логировании.
+
+
+....написание перехватчика.
+
+чтобы реализовать перехватчик нужно создать класс, который наследуется от HttpInterceptor. он будет иметь единственный метод intercept(). вот простой перехватчик, который ничего не делает и возвращает запрос без изменений:
+
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
+
+@Injectable()
+export class NoopInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(req);
+  }
+}
+
+
+здесть intercept это метод, который трансформирует запрос в наблюдаемы объект, а этот объект в свою очередь возвращает ответ. В этом смысле каждый перехватчик несет полную ответственность за обработку запроса самостоятельно.
+
+часто через перехватчики делают небольшие изменения в запросе и результат возвращается таким образом чтобы можно было использовать chaining. это возможно благодаря next(). в итоге запрос может быть обработан несколькими перехватчиками. 
+
+но мы не можем просто вызвать next.handle в перехватчике потому что изменится оригинальный запрос.
+
+этот паттерн похож на middleware, который используется например в Express.js и в других подобных средах.
+
+
+....подключение перехватчика.
+
+просто объявите NoopInterceptor в главном модуле вашего приложения. 
+
+import {NgModule} from '@angular/core';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+
+@NgModule({
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: NoopInterceptor,
+    multi: true,
+  }],
+})
+export class AppModule {}
+
+
+обратите вниманиена опцию multi: true. она необходима. она говорит angular, что HTTP_INTERCEPTORS это не одно значение, а массив значений.
+
+
+....события.
+
+вы можете заметить, что наблюдаемый объект возвращает intercept и HttpHandler.handle не как Observable<HttpResponse<any>> и  Observable<HttpEvent<any>>. это происходит потому что перехватчик работает на низшем уровне интерфейса HttpClient. одиночный запрос может генерировать много событий. 
+
+перехватчик должен взаимодействовать со всеми событиями, которые происходят. но должен не обрабатывать события, на которые не настроен. многие перехватчики работают только с исходящим запросом. 
+
+
+....порядок.
+
+когда вы добавляете перехватчики в ваше приложение, то angular подключает их в определённом порядке.
+
+
+....неизменяемость.
+
+перехватчики существуют для проверки и изменения исходящих запросов и возвращаемых запросов. поэтому HttpRequest и HttpResponse не изменяемы. причина этого в том, что приложене может неодноратно отправлять один и тот же запрос. если приэтом оригинальный запрос будет изменён, то пезультат будет некорректный. 
+
+недопустим оредактировать body запроса. система такие изменение никак не отслеживает, поэтому оно может привести к трудноуловимой ошибке. 
+
+если всё же вы хотите изменить body запроса, то необходимо создать копию объекта при помощи clone(). 
+
+intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  // This is a duplicate. It is exactly the same as the original.
+  const dupReq = req.clone();
+
+  // Change the URL and replace 'http://' with 'https://'
+  const secureReq = req.clone({url: req.url.replace('http://', 'https://')});
+}
+
+
+....установка новых заголовков.
+
+обычно используют перехватчики, устанавливая заголовки по умолчанию для исходящих запросов. для пример рассмотрим случай когда вы имеете встраиваемый сервис AuthService, который предоставляет токен аутентификации. в этом случае вы должны написать перехватчик, который добавляет этот токен ко всем исходящим запросам. 
+
+
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  constructor(private auth: AuthService) {}
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Get the auth header from the service.
+    const authHeader = this.auth.getAuthorizationHeader();
+    // Clone the request to add the new header.
+    const authReq = req.clone({headers: req.headers.set('Authorization', authHeader)});
+    // Pass on the cloned request instead of the original request.
+    return next.handle(authReq);
+  }
+}
+
+
+здесь мы клонируем объект так: 
+
+const authReq = req.clone({setHeaders: {Authorization: authHeader}});
+
+перехватчик, котрый клонирует заголовки может использоваться для:
+1. аутентификацмм
+2. кеша
+3. XSRF-защиты
+
+
+...логирование.
+
 
 
 

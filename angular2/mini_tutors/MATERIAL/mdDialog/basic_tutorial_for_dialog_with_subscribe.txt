@@ -1,0 +1,107 @@
+подключим простейшее диалоговое окно.
+
+ng g c dialogs/FileNameDialog
+
+=======================
+в appModules:
+import { FileNameDialogComponent } from './file-name-dialog/file-name-dialog.component';
+
+declarations: [
+  FileNameDialogComponent
+],
+
+
+// все динамически создаваемые компоненты прописываются так:
+entryComponents: [
+  FileNameDialogComponent
+], 
+
+=======================
+из компонента при вызове окна отправляем параметры так:
+import { Component } from '@angular/core';
+
+import { MatDialog, MatDialogRef } from '@angular/material';
+
+import { FileNameDialogComponent } from './file-name-dialog/file-name-dialog.component';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+
+  fileNameDialogRef: MatDialogRef<FileNameDialogComponent>;
+
+  constructor(private dialog: MatDialog) {}
+
+  openAddFileDialog() {
+    this.fileNameDialogRef = this.dialog.open(FileNameDialogComponent, {
+      hasBackdrop: true,
+      data: { title: 'Ошибка!', message: 'messagee' }
+    });
+
+    // ВНИМАНИЕ! ПОСЛЕ ЗАКРЫТИЯ ОКНА ПОТОК ВЕРНЁТ НЕКОТРОЕ ЗНАЧЕНИЕ, КОТОРОЕ ФОРМИРУЕТСЯ В КОМПОНЕНТЕ ДИВЛОГОВОГО ОКНА
+    this.fileNameDialogRef.afterClosed().subscribe(val => {
+      console.log('returned val is :', val);
+    });    
+  };
+
+}
+
+
+=======================
+принимаем их в компоненте окна так:
+import { Component, OnInit, Inject } from '@angular/core';
+
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+
+@Component({
+  selector: 'app-file-name-dialog',
+  templateUrl: './file-name-dialog.component.html',
+  styleUrls: ['./file-name-dialog.component.scss']
+})
+export class FileNameDialogComponent implements OnInit {
+
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<FileNameDialogComponent>
+  ) {}
+
+  ngOnInit() {
+
+  }
+
+  submit(val) {
+    this.dialogRef.close(val);
+  }
+
+}
+
+
+=======================
+и в шаблоне окна выводим так(обратите внимание на кнопку, после клика на котрой окно закроется):
+<h1 mat-dialog-title>{{ data.title }}</h1>
+
+<mat-dialog-content>
+  {{ data.message }}
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button>Add</button>
+  <button mat-button (click)="submit('test_val')">Cancel</button>
+</mat-dialog-actions>
+
+
+
+
+
+
+=======================
+=======================
+https://material.angular.io/components/dialog/api
+
+=======================

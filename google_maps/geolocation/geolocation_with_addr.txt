@@ -1,0 +1,41 @@
+document.addEventListener("DOMContentLoaded", ready);
+
+function ready() {
+	if(!navigator.geolocation) { alert("Geolocation API не поддерживается в вашем браузере"); }
+
+  navigator.geolocation.getCurrentPosition(function(position){
+	  var latitude = position.coords.latitude;
+	  var longitude = position.coords.longitude;
+	  //var coords = new google.maps.LatLng(latitude, longitude);
+	  var coords = {lat: latitude, lng: longitude}
+
+	  var mapOptions = {
+	    zoom: 15,
+	    center: coords
+	  };
+
+	  var map = new google.maps.Map(
+	  	document.getElementById("mapContainer"), mapOptions
+	  );
+
+	  var marker = new google.maps.Marker({
+	    position: coords,
+	    map: map,
+	    title: "Your current location!"
+	  });
+
+
+		var xhr = new XMLHttpRequest();
+		var req = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&key=AIzaSyDT2NO8RgOBPpi3Hph-sjfyE1zyRPAoMnQ';
+		xhr.open('GET', req, false);
+		xhr.send();
+
+		if (xhr.status != 200) {
+		  console.log( xhr.status + ': ' + xhr.statusText ); 
+		} else {
+		  console.log( xhr.responseText ); 
+		}	  
+	});
+
+
+}

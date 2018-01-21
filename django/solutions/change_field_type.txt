@@ -1,0 +1,17 @@
+https://stackoverflow.com/questions/27385118/change-column-type-with-django-migrations
+
+Django 1.7 You can use the AlterField operation to change the column. First, create an empty migration:
+
+>>> python manage.py makemigrations --empty my_app
+Then, add the following operation:
+
+class Migration(migrations.Migration):
+    operations = [
+        migrations.AlterField('some_model', 'id', models.CharField(max_length=255))
+    ]
+Now run the migration, and Django will alter the field to match the new CharField.
+
+
+AND RENAME IN MODEL FILE
+
+

@@ -1,0 +1,60 @@
+For new projects we can set the options --style=sass or --style=scss according to the desired flavor SASS/SCSS
+
+//Use SASS syntax
+//ng new project --style=sass 
+Use SCSS syntax
+ng new project --style=scss 
+//then install node-sass,
+
+//npm install node-scss --save-dev
+
+
+
+
+=================
+
+
+Updating existing projects
+
+To make angular-cli to compile sass files with node-sass, I had to run,
+
+npm install node-sass --save-dev 
+which installs node-sass. Then
+
+for SASS syntax
+ng set defaults.styleExt sass
+for SCSS syntax
+ng set defaults.styleExt scss
+to set the default styleExt to sass
+
+(or)
+
+change styleExt to sass or scss for desired syntax in .angular-cli.json,
+
+for SASS syntax
+"defaults": {
+     "styleExt": "sass",
+}
+for SCSS syntax
+"defaults": {
+     "styleExt": "scss",
+}
+
+
+
+==========================
+чтобы подключить глобальные переменные нужно создать рядом с styles.scss файл переменных variables.scss:
+$color: #foo
+
+и затем в каждом файле стилей компонента подключать его:
+@import "~variables.scss";
+
+.question-text{
+	display: block;
+	min-height: 70px;
+	border: 2px solid $blue;
+}
+
+.btn{
+	
+}

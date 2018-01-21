@@ -1,0 +1,7 @@
+import { Router } from '@angular/router'
+
+  constructor(private usersService: UsersService, 
+              private globalVarsService: GlobalVarsService,
+              private router: Router) { }
+
+this.router.navigate(['/list']);              

@@ -1,0 +1,123 @@
+для использования реактивных форм их нужно подключить в модуле:
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+@NgModule({
+  imports: [
+    ReactiveFormsModule,
+    FormsModule
+  ],
+
+=====================  
+идея в том, что в компоненте создаётся переменная, которая относится к форме. и свойства этой переменной, которые относятся к полям:
+	private form: FormGroup;
+
+  constructor() { }
+
+  ngOnInit() {
+  	this.form = new FormGroup({
+  		'email': new FormControl(null, [Validators.required, Validators.email]),
+  		'password': new FormControl(null, [Validators.required, Validators.minLength(6)])
+  	});
+  }  
+
+далее в шаблоне форма связывается с этой переменной через атрибут <form [formGroup]="form" 
+
+а в элементах формы происходит обращение к свойствам полей так:
+<span *ngIf="form.get('email')['errors']['required']">email не может быть пустым</span>
+
+=====================
+=====================
+всё вместе:
+компонент:
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'wfm-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
+})
+export class LoginComponent implements OnInit {
+
+	private form: FormGroup;
+
+  constructor() { }
+
+  ngOnInit() {
+  	this.form = new FormGroup({
+  		'email': new FormControl(null, [Validators.required, Validators.email]),
+  		'password': new FormControl(null, [Validators.required, Validators.minLength(6)])
+  	});
+  }
+
+  onSubmit() {
+  	console.log(this.form);
+  }
+
+}
+
+
+
+шаблон:
+<p>Войдите</p>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+	<div class="line" [ngClass]="{'has-error': form.get('email').invalid && form.get('email').touched}">
+		<input class="email" id="email" placeholder="email" type="text" formControlName="email">
+		<span 
+			class="form-help-text" 
+			*ngIf="form.get('email').invalid && form.get('email').touched"
+		>
+			<span *ngIf="form.get('email')['errors']['required']">email не может быть пустым</span>
+			<span *ngIf="form.get('email')['errors']['email']">введите корректный email</span>
+		</span>
+	</div>
+
+	<div class="line" [ngClass]="{'has-error': form.get('password').invalid && form.get('password').touched}">
+		<input class="password" id="password" placeholder="password" type="password" formControlName="password">
+		<span 
+			class="form-help-text" 
+			*ngIf="form.get('password').invalid && form.get('password').touched"
+		>
+			<span *ngIf="form.get('password')['errors']['required']">пароль не может быть пустым</span>
+			<span *ngIf="form.get('password')['errors']['minlength']">
+				пароль должен быть больше 
+				{{ form.get('password')['errors']['minlength']['requiredLength'] }}
+				символов. сейчас 
+				{{ form.get('password')['errors']['minlength']['actualLength'] }}
+			</span>
+		</span>		
+	</div>	
+
+	<div class="line">
+		<button class="submit" id="submit" type="submit" [disabled]="form.invalid">Войти</button>
+	</div>	
+
+	<p>или</p>
+
+	<div class="line">
+		<a class="reg" id="reg" href="#">зарегистрироваться</a>
+	</div>			
+</form>
+
+=====================
+=====================
+тут больше: http://ang.overfix.ru/videokurs/part2/part2_6.html
+
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================

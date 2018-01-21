@@ -1,0 +1,34 @@
+можно установить бутстрап не через index.html
+npm install bootstrap --save-dev
+npm install --save jquery
+
+=============
+angular-cli.json 
+
+"styles": [
+  "../node_modules/bootstrap/dist/css/bootstrap.css",
+  "styles.css"
+],
+"scripts": [
+  "../node_modules/jquery/dist/jquery.js",
+  "../node_modules/bootstrap/dist/js/bootstrap.js"
+],
+
+по умолчанию используется версия 3 почему-то. 
+#чтобы установить 4 версию нужно:
+# version 4.x
+npm install bootstrap@next --save
+
+=============
+https://blog.dmbcllc.com/adding-css-and-javascript-to-an-angular-2-cli-project/
+
+
+=============
+=============
+=============
+=============
+=============
+=============
+=============
+=============n
+=============

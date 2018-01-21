@@ -1,0 +1,23 @@
+иногда нужно очистить только одно поле ввода. это делается так:
+  private addTag(tag): void{
+    console.log(this.form);
+    console.log(tag);
+    this.form.patchValue({
+      tag: ''
+    });
+  }
+
+=======
+установить значения для всех полей можно так:
+this.myFormGroup.setValue({
+  formControlName1: myValue1, 
+  formControlName2: myValue2
+});
+
+=======
+сбросить все поля так:
+myFormGroup.reset()
+
+=======
+=======
+=======

@@ -1,0 +1,171 @@
+при запуске функции создаётся объект lexical enviroment
+
+так же создаётся свойство scope. оно недоступно для изменения. оно указывает на внешний lexical enviroment.
+
+таким образом функция навсегда привязана к месту своего рождения. то есть помнит внутри какой функции она была создана
+
+при поиске переменных: если переменная не найдена в своей функции, то она ищется во внешнем lexical enviroment. и так далее
+
+==============================
+в js функции существуют сами по себе. то есть не привязаня к контексту. следовательно может происходить потеря контекста. например:
+var obj1 = {
+  x: 3,
+
+  f: function() {
+    return (this.x);
+  }
+};
+
+alert(obj1.f());
+var f = obj1.f;
+alert(f());
+
+во втором алерт выведется undefined. потому что в первом случае функция вызывается в контексте obj1. а во-втором случает она просто извлекается и затем вызывается БЕЗ контекста
+
+в следующем примере происходит то же самое:
+var user = {
+  firstName: "Вася",
+  sayHi: function() {
+    alert( this.firstName );
+  }
+};
+setTimeout(user.sayHi, 1000); // undefined (не Вася!)
+
+==============================
+инкапсуляция это сокрытие внутренней реализации объекта:
+
+var Obj = function() {
+	var value = 12;
+
+	this.getValue = function() {
+		return value;
+	};
+
+	this.setValue = function(v) {
+		value = v;
+	};
+};
+
+var obj = new Obj();
+
+console.log(obj.getValue());
+
+==============================
+наследование на уровне объектов может осуществляться двумя способами:
+1. call
+2. prototype
+
+
+1:
+function Machine() {
+  var enabled = false;
+  this.enable = function() {
+    enabled = true;
+  };
+  this.disable = function() {
+    enabled = false;
+  };
+}
+
+function CoffeeMachine(power) {
+  Machine.call(this); // отнаследовать
+  var waterAmount = 0;
+  this.setWaterAmount = function(amount) {
+    waterAmount = amount;
+  };
+}
+
+var coffeeMachine = new CoffeeMachine(10000);
+coffeeMachine.enable();
+coffeeMachine.setWaterAmount(100);
+coffeeMachine.disable();
+
+
+2:
+var animal = {
+  eats: true
+};
+
+function Rabbit(name) {
+  this.name = name;
+}
+
+Rabbit.prototype = animal;
+var rabbit = new Rabbit("Кроль"); //  rabbit.__proto__ == animal
+alert( rabbit.eats ); // true
+
+
+наследование на уровне классов:
+class Machine {
+  constructor(enabled) {
+    this.enabled = enabled;
+  }
+
+  enable() {
+    this.enabled = true;
+  };
+
+  disable() {
+    this.enabled = false;
+  };
+}
+
+class CoffeeMachine extends Machine {
+	//constructor() {}
+}
+
+var cm = new CoffeeMachine(true);
+console.log(cm.enabled);
+cm.disable();
+console.log(cm.enabled);
+
+==============================
+==============================
+ES6
+
+в обычной функции есть свой this:
+function Person() {
+    var self = this;
+    self.age = 0;
+
+    setInterval(function growUp() {
+        // Коллбэк относится к переменной `self`,
+        // значением которой является ожидаемый объект.
+        self.age++;
+    }, 1000);
+}
+
+в стрелочной функции нет своего this:
+function Person() {
+    this.age = 0;
+
+    setInterval(() => {
+        this.age++; // `this` относится к объекту person
+    }, 1000);
+}
+var p = new Person();
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================

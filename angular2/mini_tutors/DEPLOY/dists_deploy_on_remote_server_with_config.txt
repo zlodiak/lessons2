@@ -1,0 +1,81 @@
+https://zlodiak.github.io/ng2/votes/0/
+
+========================
+
+в app создаём config.ts:
+export class Config {
+	//static host = 'https://zlodiak.github.io/ng2/votes/0/';
+	static host = '../';
+	static author = 'Sergey Kalinin';
+	static createdDate = '2017';
+}
+
+
+========================
+сервис:
+import { Injectable } from '@angular/core';
+
+import { Http } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+
+import { Config } from '../config';
+
+
+@Injectable()
+export class VoteService {
+
+  constructor(private http: Http) { };
+
+  getVotes(): Observable<any> {
+  	return this.http.get(Config.host + 'assets/json/feedback_0.json');
+  };   
+
+}
+
+
+========================
+index.html:
+<!doctype html>
+
+<html lang="ru">
+	<head>
+	  <meta charset="utf-8">
+	  <title>Votes</title>
+	  <base href="https://zlodiak.github.io/ng2/votes/0/">
+
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="icon" type="image/x-icon" href="favicon.ico">
+	</head>
+
+	<body>
+	  <app-root></app-root>
+	<script type="text/javascript" src="https://zlodiak.github.io/ng2/votes/0/inline.bundle.js"></script>
+	<script type="text/javascript" src="https://zlodiak.github.io/ng2/votes/0/polyfills.bundle.js"></script>
+	<script type="text/javascript" src="https://zlodiak.github.io/ng2/votes/0/styles.bundle.js"></script>
+	<script type="text/javascript" src="https://zlodiak.github.io/ng2/votes/0/vendor.bundle.js"></script>
+	<script type="text/javascript" src="https://zlodiak.github.io/ng2/votes/0/main.bundle.js"></script>
+	</body>
+</html>
+
+
+========================
+json filesystem:
+src/
+assets/
+json/
+feedback_0.json
+
+========================
+github path: https://zlodiak.github.io/ng2/votes/0/
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================

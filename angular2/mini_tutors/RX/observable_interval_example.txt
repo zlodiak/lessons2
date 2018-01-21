@@ -1,0 +1,186 @@
+можно получать от наблюдаемого объекта данные через определенные временные отрезки:
+
+далее 2 сервиса. оин с интервалом, другой - без:
+import { Injectable } from '@angular/core';
+
+import { Http } from '@angular/http';
+
+import { Observable } from 'rxjs/Observable';
+import "rxjs/add/observable/interval";
+import "rxjs/add/operator/take";
+import "rxjs/add/operator/map";
+import 'rxjs/add/operator/mergeMap';
+
+
+
+@Injectable()
+export class UsersService {
+
+  constructor(private http: Http) { };
+
+  getUsers(): Observable<any> {
+  	return this.http.get('http://127.0.0.1:8000/users/users_list');
+  };  
+
+  getUsers2() {
+    return Observable 
+      .interval(1000)
+      .flatMap((i) => this.http.get('http://127.0.0.1:8000/users/users_list')
+  };      
+
+
+
+}
+
+
+==================
+компонент:
+import { Component, OnInit } from '@angular/core';
+
+import { UsersService } from './services/users.service';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+  private users: any[] = [];
+	private users2: any[] = [];
+  
+	constructor(private usersService: UsersService) { };
+
+	ngOnInit() {
+    this.getUsers();
+		this.getUsers2();
+	};
+
+  private getUsers(): void {
+    this.usersService.getUsers().subscribe(
+      data => {   
+        //console.log(data);  
+        let _body = data._body;  
+        let usersRaw = JSON.parse(_body);  
+        let users: any[] = [];
+
+        usersRaw = JSON.parse(usersRaw);
+
+        for(var prop in usersRaw) {
+          if (!usersRaw.hasOwnProperty(prop)) continue;
+          users.push(usersRaw[prop]);
+        }
+        
+        this.users = users;                                                                                                                                  
+        console.log(this.users); 
+      }, 
+      err => {
+        console.log('err')         
+      });    
+  }; 
+
+  private getUsers2(): void {
+    this.usersService.getUsers2().subscribe(
+      data => {   
+        //console.log(data);  
+        let _body = data._body;  
+        let usersRaw = JSON.parse(_body);  
+        let users: any[] = [];
+
+        usersRaw = JSON.parse(usersRaw);
+
+        for(var prop in usersRaw) {
+          if (!usersRaw.hasOwnProperty(prop)) continue;
+          users.push(usersRaw[prop]);
+        }
+        
+        this.users2 = users;                                                                                                                                  
+        console.log(this.users2); 
+      }, 
+      err => {
+        console.log('err')         
+      });    
+  };    	
+
+
+}
+
+
+==================
+шаблон:
+<div class="user" *ngFor="let user of users">
+  <span>{{ user.pk }}</span> - 
+  <span>{{ user.fields.name }}</span> - 
+  <span>{{ user.fields.position }}</span> - 
+</div>
+
+<hr>
+
+<div class="user" *ngFor="let user of users2">
+  <span>{{ user.pk }}</span> - 
+  <span>{{ user.fields.name }}</span> - 
+  <span>{{ user.fields.position }}</span> - 
+</div>
+
+==================
+json:
+[{
+    "model": "users.user",
+    "fields": {
+        "position": "general",
+        "published_date": "2017-11-29T10:37:16Z",
+        "created_date": "2017-11-29T10:37:01Z",
+        "name": "sergey"
+    },
+    "pk": 1
+}, {
+    "model": "users.user",
+    "fields": {
+        "position": "manager",
+        "published_date": "2017-11-29T10:37:32Z",
+        "created_date": "2017-11-29T10:37:20Z",
+        "name": "michael"
+    },
+    "pk": 2
+}, {
+    "model": "users.user",
+    "fields": {
+        "position": "coffee maker",
+        "published_date": "2017-11-29T10:37:55Z",
+        "created_date": "2017-11-29T10:37:34Z",
+        "name": "vanessa"
+    },
+    "pk": 3
+}, {
+    "model": "users.user",
+    "fields": {
+        "position": "security",
+        "published_date": "2017-11-29T10:38:48Z",
+        "created_date": "2017-11-29T10:37:57Z",
+        "name": "obama"
+    },
+    "pk": 4
+}]
+
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================

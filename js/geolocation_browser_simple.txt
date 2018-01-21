@@ -1,0 +1,20 @@
+определение местоположения срадствами браузера:
+
+
+if(navigator.geolocation) {
+    console.log("Geolocation API поддерживается");
+
+		navigator.geolocation.getCurrentPosition(function(position) {
+	    var latitude = position.coords.latitude;
+	    var longitude = position.coords.longitude;
+	    console.log(latitude, longitude);
+		});    
+
+		
+} else {
+    console.log("Geolocation API не поддерживается в вашем браузере");
+}
+
+
+
+

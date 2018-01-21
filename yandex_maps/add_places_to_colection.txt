@@ -1,0 +1,60 @@
+можно добавлять маркеры не напрямую в объект geoObjects, а сначала в коллекцию, а потом уже в geoObjects
+
+================
+минимальный пример:
+ymaps.ready(init);
+
+var myMap;
+
+function init(){     
+    myMap = new ymaps.Map("map", {
+        center: [35.37686209135329, 37.580798182778594],
+        zoom: 7
+    });
+
+    // Создаем коллекцию геообъектов и задаем опции.
+    var myGeoObjects = new ymaps.GeoObjectCollection();
+
+    // Добавляем в коллекцию метки и линию.
+    myGeoObjects.add(new ymaps.Placemark([13.38, 52.51]));
+    myGeoObjects.add(new ymaps.Placemark([30.30, 50.27]));
+
+    // Добавляем коллекцию на карту.
+    myMap.geoObjects.add(myGeoObjects);
+
+    // Устанавливаем карте центр и масштаб так, чтобы охватить коллекцию целиком.
+    myMap.setBounds(myGeoObjects.getBounds());
+};
+
+================
+маркеры появляются после клика:
+ymaps.ready(init);
+
+var myMap,
+    collectionMarkers,
+    myPlacemark;
+
+function init(){     
+    myMap = new ymaps.Map("map", {
+        center: [35.37686209135329, 37.580798182778594],
+        zoom: 7
+    });
+
+    collectionMarkers = new ymaps.GeoObjectCollection();
+
+    myMap.events.add('click', function (e) {
+        var coords = e.get('coords');
+        console.log('lat:', coords[0], 'lng:', coords[1]);
+
+        var placemark = new ymaps.Placemark([coords[0], coords[1]]);  
+        collectionMarkers.add(placemark);        
+        myMap.geoObjects.add(collectionMarkers);      
+    });
+};
+
+================
+================
+================
+================
+================
+================

@@ -1,0 +1,118 @@
+можно использовать плагин d3-charts: https://github.com/swimlane/ngx-charts
+
+например перенесём в ангуляр проект график на основе статических данных.
+
+сначала в package.json подключим d3:
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "d3": "^4.12.0",
+
+npm i    
+
+==================================
+npm i @swimlane/ngx-charts --save
+
+==================================
+<section class="section">
+  <ngx-charts-bar-vertical
+    [view]="view"
+    [scheme]="colorScheme"
+    [results]="single"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    (select)="onSelect($event)">
+  </ngx-charts-bar-vertical>
+</section>
+
+==================================
+import { Component, OnInit } from '@angular/core';
+
+import { TrainingsService } from '../../../services/trainings.service';
+import { Training } from '../../../interfaces/training';
+
+
+@Component({
+  selector: 'app-graph',
+  templateUrl: './graph.component.html',
+  styleUrls: ['./graph.component.scss']
+})
+export class GraphComponent implements OnInit {
+
+  single: any[] = [
+    {
+      "name": "Germany",
+      "value": 8940000
+    },
+    {
+      "name": "USA",
+      "value": 5000000
+    },
+    {
+      "name": "France",
+      "value": 7200000
+    }
+  ];
+
+  view: any[] = [700, 400];
+
+  // options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Country';
+  showYAxisLabel = true;
+  yAxisLabel = 'Population';
+
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+
+  private trainings: Training[] = [];
+
+  constructor(private trainingsService: TrainingsService) { Object.assign(this, this.single)   }
+
+  ngOnInit() {
+    this.getTrainings();
+
+  }
+
+  private getTrainings(): void {
+    this.trainingsService.getTrainings().subscribe((trainings) => {
+      this.trainings = trainings;
+    });
+  }
+
+  onSelect(event) {
+    console.log(event);
+  }
+
+}
+
+
+==================================
+colorScheme здесь просто список повторяющихся цветов
+
+view: any[] = [1700, 400]; - это длина высота фрейма
+
+==================================
+==================================
+живой пример: https://swimlane.gitbooks.io/ngx-charts/content/charts/bar-vertical.html
+
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================

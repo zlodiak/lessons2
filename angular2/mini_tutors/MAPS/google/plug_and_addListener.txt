@@ -1,0 +1,74 @@
+можно в ангуляр подключить нативные гугл-карты:
+<!doctype html>
+<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <title>Gmap1</title>
+	  <base href="/">
+
+	  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCd0JCVp3-dlMUjdfsJuAJYQ0AoCilDgSQ" async defer></script>	
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="icon" type="image/x-icon" href="favicon.ico">
+	</head>
+
+	<body>
+	  <app-root></app-root>
+	</body>
+</html>
+
+
+==================
+component:
+import { Component, OnInit } from '@angular/core';
+
+declare var google: any;
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+	private map: any;
+  
+	ngOnInit() {
+		this.initMap();
+	}
+
+	private initMap(): void {
+		let mapEl = document.getElementById('map');
+		let mapOptions = {
+			center: new google.maps.LatLng(51, 7),
+			zoom: 8
+		};
+		this.map = new google.maps.Map(mapEl, mapOptions);
+
+		google.maps.event.addListener(this.map, 'click', (e) => {
+			console.log(e);
+		});		
+
+
+	};
+
+}
+
+
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================

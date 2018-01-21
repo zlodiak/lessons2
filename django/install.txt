@@ -52,9 +52,10 @@ http://127.0.0.1:8000/
 
 Открой файл blog/models.py, удали весь текст и вставь на его место следующий код:
 
+
+
 from django.db import models
 from django.utils import timezone
-
 
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
@@ -102,7 +103,7 @@ admin.site.register(Post)
 python manage.py createsuperuser
 
 ==========================
-install in firefox sqlite manager
+  install in firefox sqlite manager
 
 ==========================
 git init
@@ -121,9 +122,74 @@ db.sqlite3
 
 ==========================
 ==========================
+теперь настроим адреса, которые отдают json:
+
+роутинг в корне приложения:
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    # Examples:
+    # url(r'^$', 'observer1.views.home', name='home'),
+    # url(r'^blog/', include('blog.urls')),
+
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'users/', include('users.urls')),
+]
+
+
+роутинг в приложении:
+from django.conf.urls import url
+from . import views
+
+urlpatterns = [
+    url(r'^users_list$', views.users_list, name='users_list'),
+]
+
+
+
 ==========================
+модель в приложении:
+
+from django.db import models
+from django.utils import timezone
+
+
+class User(models.Model):
+    name = models.CharField(max_length=200)
+    position = models.CharField(max_length=200)
+    created_date = models.DateTimeField(
+            default=timezone.now)
+    published_date = models.DateTimeField(
+            blank=True, null=True)
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return self.name
+
+
 ==========================
+view в приложении:
+from django.shortcuts import render
+from django.utils import timezone
+from django.http import JsonResponse
+from django.core import serializers
+import json
+
+from .models import User
+
+def users_list(request):
+    users = User.objects.all()   
+    users_serialized = serializers.serialize('json', users)
+    return JsonResponse(users_serialized, safe=False)       
+
+
 ==========================
+таким образом по адресу http://127.0.0.1:8000/users/users_list в json отдаётся список пользователей
+
 ==========================
 ==========================
 ==========================

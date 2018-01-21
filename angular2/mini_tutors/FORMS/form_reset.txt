@@ -1,0 +1,24 @@
+
+сбросить форму можно так:
+
+@Component({
+  selector: 'form-component',
+  template: `
+    <form #form>
+      <input type="file" placeholder="File Name" name="filename">
+    </form>
+    <button (click)="reset()">Reset</button>
+`
+})
+class FormComponent {
+
+
+
+  @ViewChild('form') form;
+
+
+  reset() {
+    this.form.nativeElement.reset()
+  }
+}
+https://plnkr.co/edit/Ulqh2l093LV6GlQWKkUA?p=preview

@@ -1,0 +1,87 @@
+задача. есть sidenav меню, в котором есть кнопка "закрыть меню". снаружи есть кнопка "открыть меню".
+нужно чтобы при открытии меню исчезала кнопка "открыть меню"
+
+========================++
+<mat-sidenav-container class="side-nav-container">
+  <mat-sidenav #sidenav class="left-sidenav" mode="side">
+  	<div class="header">
+	    <button class="btn btn-common" type="button" mat-button (click)="sidenav.close()">
+				<i class="icon material-icons">close</i>
+	      <div class="label">Закрыть меню</div>
+	    </button>
+  	</div>
+
+		<nav class="nav">
+		  <a class="link" [routerLink]="['/vote']" routerLinkActive="active">
+		    <span class="title">Голосование</span>
+		  </a> 
+
+		  <a class="link" [routerLink]="['/results']" routerLinkActive="active">
+		    <span class="title">Результаты</span>
+		  </a>      
+		</nav>
+  </mat-sidenav>
+
+  <div class="sidenav-content">
+  	<div class="header">
+	    <button class="btn btn-common" type="button" mat-button (click)="sidenav.open()" *ngIf="!sn.opened">
+				<i class="icon material-icons">menu</i>
+	      <div class="label">Открыть меню</div>
+	    </button>
+    </div>
+
+	  <div class="sidenav-content">
+	    <router-outlet></router-outlet>
+	  </div>
+  </div>
+</mat-sidenav-container>
+
+
+
+
+
+
+
+========================++
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+  @ViewChild('sidenav')
+  sn: ElementRef;
+
+  ngOnInit() {
+  	console.log(this.sn.opened); 
+  }  
+
+}
+
+
+
+
+
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++
+========================++

@@ -1,0 +1,21 @@
+можно ставить такое условие для видимости блока:
+
+<div *ngIf="isVisible; then block2 else block3">block1</div>
+
+<ng-template #block2>block2</ng-template>
+<ng-template #block3>block3</ng-template>
+
+при этом фраза block1 не видна. 
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.youtube.com/watch?v=JZq3GBnOe4c&list=PLYxzS__5yYQmi8f94KAGx1ofwFIn-FLNt&index=8

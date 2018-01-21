@@ -1,6 +1,17 @@
 https://github.com/ottoyiu/django-cors-headers
 
 
+
+
+
+=====================
+
+
+
+
+
+
+
 config example:
 """
 Django settings for messages project.

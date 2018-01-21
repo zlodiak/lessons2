@@ -58,7 +58,33 @@ Something, somehow, somewhere should be done so that this file detection always 
 
 
 ===============================================
+обновление с 4 до 5 версии
+
+npm uninstall -g angular-cli
+npm cache clean
+npm install -g @angular/cli@latest
+
+npm install @angular/{animations,common,compiler,compiler-cli,core,forms,http,platform-browser,platform-browser-dynamic,platform-server,router}@latest
+
+npm install typescript@'>=2.4.2 <2.5.0'
+
+и ещё так:
+npm upgrade @angular/cli
+
+npm install --save-dev @angular/cli@latest
+
+
+или попробовать так:
+ng serve --host 0.0.0.0 --port 8080 --live-reload-port 8081
+
+
+
 ===============================================
+Your global Angular CLI version (1.6.2) is greater than your local
+solution:
+npm install --save-dev @angular/cli@latest
+
+
 ===============================================
 ===============================================
 ===============================================

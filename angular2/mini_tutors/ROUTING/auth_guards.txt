@@ -1,0 +1,93 @@
+можно все роуты защитить. после этого они будут закрыты для пользователей без определенного признака(например неавторизованных)
+
+======================
+создаём сервис и подключаем его в app.modules:
+import { Injectable } from '@angular/core';
+import { Router, CanActivate } from '@angular/router';
+
+
+@Injectable()
+export class AgreeGuardService implements CanActivate {
+
+  constructor(private router: Router) { }
+
+  canActivate() {
+    this.router.navigate(['/agree']);
+    return false;
+  }  
+
+}
+
+
+
+======================
+импортируем его в конфиг роутов:
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { AgreeComponent } from './agree/agree.component';
+import { FeedbackComponent } from './feedback/feedback.component';
+import { QuestionComponent } from './question/question.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { MainComponent } from './main/main.component';
+import { AgreeGuardService } from './services/agree-guard.service';
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/main',
+    pathMatch: 'full'
+  },
+  {
+    path: 'main',
+    children: [],
+    component: MainComponent
+  }, 
+  {
+    path: 'agree',
+    children: [],
+    component: AgreeComponent
+  },   
+  {
+    path: 'feedback',
+    children: [],
+    component: FeedbackComponent
+  }, 
+  {
+    path: 'question',
+    children: [],
+    canActivate: [AgreeGuardService],
+    component: QuestionComponent
+  },   
+  {
+  	path: '**', 
+  	component: PageNotFoundComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+======================
+теперь если по определенному роуту AgreeGuardService возвращает false, то перехода не происходит. так же можно добавить редирект, модальное окно и т.д.
+
+======================
+======================
+======================
+======================
+======================
+======================
+======================
+======================
+https://ru.stackoverflow.com/questions/735728/%D0%9A%D0%B0%D0%BA-%D1%83%D0%BB%D1%83%D1%87%D1%88%D0%B8%D1%82%D1%8C-%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%BA%D1%83-%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D1%8F-%D0%BE%D0%B1-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D0%B8-%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85
+
+======================
+https://angular.io/guide/router#canactivate-requiring-authentication
+======================
+======================
+======================

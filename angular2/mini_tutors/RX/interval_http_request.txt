@@ -1,0 +1,66 @@
+можно получать данные, если запрос поместить в нативный setInterval. но можно использовать средства библиотеки rxjs
+
+service:
+import { Injectable } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/interval';
+import 'rxjs/add/operator/switchMap';
+
+
+@Injectable()
+export class TasksService {
+
+  constructor(private http: HttpClient) { };
+
+  getUserTasks(userId): Observable<any> {
+  	// return this.http.get('http://127.0.0.1:8000/app_tasks/user_tasks?user_id=' + userId);
+		return Observable.interval(5000).switchMap(() => {
+			return this.http.get('http://127.0.0.1:8000/app_tasks/user_tasks?user_id=' + userId);
+		});  	
+  };
+
+}
+
+
+===========
+component:
+  ngOnInit() {
+  	let userId = this.globalVarsService.getVar('authorizedPk');
+    let this_ = this;
+
+    //setInterval(function() {
+      this_.getUserTasks(userId);
+    //}, 3000);  	
+  }
+
+  private getUserTasks(userId): void { 	
+  	this.tasksService.getUserTasks(userId).subscribe(
+      data => {   
+        let userTasks = JSON.parse(data);         
+
+        userTasks.forEach((task) => {
+          task.fields['deadline_date_unix'] = this.dateService.stringToUnix(task.fields.deadline_date);
+          task.fields.deadline_date = this.dateService.fromUnixToHuman(task.fields['deadline_date_unix']);
+        });    
+
+        this.userTasks = userTasks; 
+        console.log('userTasks', this.userTasks);
+      }, 
+      err => {
+        // console.log('err', err)         
+      }
+    )
+  };
+
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========

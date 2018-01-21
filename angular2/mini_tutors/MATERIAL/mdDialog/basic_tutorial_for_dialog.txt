@@ -1,0 +1,89 @@
+подключим простейшее диалоговое окно.
+
+ng g c dialogs/infoDialog
+
+=======================
+в appModules:
+import { InfoDialogComponent } from './dialogs/info-dialog/info-dialog.component';
+
+declarations: [
+  InfoDialogComponent
+],
+
+
+// все динамически создаваемые компоненты прописываются так:
+entryComponents: [
+  InfoDialogComponent
+], 
+
+=======================
+из компонента при вызове окна отправляем параметры так:
+import { MatDialog } from '@angular/material';
+import { InfoDialogComponent } from '../dialogs/info-dialog/info-dialog.component';
+
+constructor(private matDialog: MatDialog) { }
+
+this.matDialog.open(InfoDialogComponent, {
+  width: '300px',
+  hasBackdrop: true,
+  data: { title: 'Ошибка!', message: message }
+});
+
+=======================
+принимаем их в компоненте окна так:
+import { Component, OnInit, Inject } from '@angular/core';
+
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+
+@Component({
+  selector: 'app-info-dialog',
+  templateUrl: './info-dialog.component.html',
+  styleUrls: ['./info-dialog.component.scss']
+})
+export class InfoDialogComponent implements OnInit {
+
+  constructor(private matDialogRef: MatDialogRef<InfoDialogComponent>,
+  						@Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  ngOnInit() {
+  }
+
+}
+
+
+=======================
+и в шаблоне окна выводим так(обратите внимание на кнопку, после клика на котрой окно закроется):
+<div class="title">{{ data.title }}</div>
+
+<div class="message">{{ data.message }}</div>
+
+<div class="footer">
+	<button class="btn btn-common" mat-button (click)="matDialogRef.close()">
+	  OK
+	</button>
+</div>
+
+
+
+=======================
+.title{
+  font-weight: bold;
+  padding-bottom: 20px;
+}
+
+.message{
+  padding-bottom: 20px;
+}
+
+.footer{
+  overflow: hidden;
+
+  .btn{
+    float: right;
+  }
+}
+
+=======================
+=======================
+=======================

@@ -1,0 +1,68 @@
+можно использовать jquery. 1 способ:
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Jquery</title>
+  <base href="/">
+  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+
+
+=======================
+import { Component, OnInit } from '@angular/core';
+declare var $: any;
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+	ngOnInit() {
+		console.log('start');
+		let elems = $('.el');
+		let head = $('#head');
+		console.log(elems);
+		console.log(head);
+		head.css({background: 'red'});
+	}
+  
+}
+
+
+=======================
+<div class="wrap">
+  <div class="in h" id="head">headerr</div>
+  <div class="in b" id="body">
+    <span>body</span>
+    <span class="el">1</span>
+    <span class="el num">2</span>
+    <span class="el">3</span>
+  </div>
+  <div class="in f" id="foot">footerrr</div>
+</div>
+
+=======================
+=======================
+второй способ:
+http://deanmalone.net/post/using-jquery-from-angular2/
+
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================

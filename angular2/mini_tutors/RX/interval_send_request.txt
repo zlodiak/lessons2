@@ -1,0 +1,72 @@
+можно отправлять запрос на сервер через интервалы времени и получать ответ.
+
+import { Injectable } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/timer';
+
+@Injectable()
+export class UsersService {
+
+  constructor(private http: HttpClient) { };
+
+  getUsers(): Observable<any> {
+    return Observable.timer(0, 2000).switchMap(() => {
+      return this.http.get('http://127.0.0.1:8000/app_users/index');
+    });    	
+  };
+
+}
+
+
+==============
+  private subUser: any;
+	private allUsersData: User[] = [];	
+
+  constructor(private usersService: UsersService) { }
+
+  ngOnInit() {      
+  	this.getAllUsersData();    
+  }
+
+  ngOnDestroy() {
+    this.subUser.unsubscribe();
+  }   
+
+
+
+  ....
+  ....
+
+  private getAllUsersData(): void { 	
+  	this.subUser = this.usersService.getUsers().subscribe(
+      data => {   
+        this.allUsersData = JSON.parse(data);                 
+        console.log('allUsersData', this.allUsersData);
+      }, 
+      err => {
+        // console.log('err', err)         
+      }
+    )
+  };   
+
+==============
+==============
+или через именно interval: https://stackoverflow.com/questions/47802752/how-get-data-from-server-use-interval-operator
+
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============

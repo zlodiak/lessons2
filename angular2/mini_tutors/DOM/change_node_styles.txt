@@ -1,0 +1,41 @@
+можно из компонента менять стили и тект в элементе DOM.
+<div #graph style="background: red">df</div>
+
+===============
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+
+@Component({
+  selector: 'app-graph',
+  templateUrl: './graph.component.html',
+  styleUrls: ['./graph.component.scss']
+})
+export class GraphComponent implements OnInit {
+
+  @ViewChild('graph') graph: ElementRef;
+
+  constructor(private elementRef: ElementRef) { }
+
+  ngOnInit() {
+    this.graph.nativeElement.style.backgroundColor = 'yellow';
+  }
+
+}
+
+
+===============
+или через renderer:
+import {Directive, ElementRef, Renderer} from '@angular/core';
+
+@Directive({
+  selector: '[styled]',
+})
+export class StyledDirective {
+  constructor(public el: ElementRef, public renderer: Renderer) {
+    // el.nativeElement.style.backgroundColor = 'yellow';
+    renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'yellow');
+  }
+}
+
+===============
+===============
+===============

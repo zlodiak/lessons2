@@ -1,0 +1,30 @@
+если нужно в паттерне master\details запоминать позицию скролла, то нужно в списке каждый элемент пометить id.
+после клика в details передавать этот id.
+а после выхода из details опяьт передавать этот id. и затем искать по этому id контейнер в списке и использовать scrollIntoView
+
+========================
+https://learn.javascript.ru/metrics-window#scrollintoview
+
+========================
+  private checkScroll(): void {
+		this.sub = this.activatedRoute
+		  .queryParams
+		  .subscribe(params => {
+		    if(params['guid']) {
+		    	console.log(params['guid'], 'el_' + params['guid']);
+		    	setTimeout(function() {
+			    	let content = document.getElementById('el_' + params['guid']);
+			    	console.log(content);
+			    	content.scrollIntoView(true);
+		    	}, 1000);
+		    }
+		  });  	
+  };
+  
+========================
+========================
+========================
+========================
+========================
+========================
+========================

@@ -1,0 +1,31 @@
+как в шаблоне вставить фон для элемента?
+
+<div class="speakers">
+	<mat-card class="speaker" *ngFor="let speaker of speakers">
+		<div class="left">
+			<div 	class="img" 
+						[ngStyle]="{
+							'background-image': 'url(../assets/speakers_imgs/' + speaker.photo + ')',
+							'background-position': 'center center',
+							'background-repeat': 'no-repeat',
+							'background-size': 'cover'
+						}"></div>
+		</div>
+
+		<div class="right">
+			<!-- <div class="guid">{{ speaker.guid }}</div> -->
+		</div>		
+	</mat-card>
+</div>
+
+=====
+=====
+=====
+=====
+=====
+=====
+=====
+=====
+=====
+=====
+=====D
