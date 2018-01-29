@@ -1,0 +1,35 @@
+var player,
+    enemies = [],
+    enemiesCntInit = 10;
+
+function Ship(x, y) {
+  this.xCoord = x;
+  this.yCoord = y;
+};
+
+function PlayerShip(x, y) {
+  Ship.call(this, x,y);
+  this.petrol = 100;
+};  
+
+function EnemyShip(x, y) {  
+	Ship.call(this, x,y);
+  this.color = 'red';
+}; 
+
+PlayerShip.prototype = Object.create(Ship.prototype);
+EnemyShip.prototype = Object.create(Ship.prototype);
+
+
+player = new PlayerShip(100, 100); 
+
+for(var i = 0; i < enemiesCntInit; i++) {
+  enemies.push(new EnemyShip(0, 0));
+}
+
+console.log(player);
+console.log(enemies);
+
+
+
+https://jsfiddle.net/5va8rtbk/10/

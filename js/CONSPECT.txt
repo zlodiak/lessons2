@@ -169,3 +169,150 @@ var p = new Person();
 ==============================
 ==============================
 ==============================
+книги:
+1. выразительный javascript
+2. учебник ильи кантора
+3. JavaScript. Подробное руководство. флэнаган
+4. js шаблоны стоян стефанов
+5. Совершенный код. Стив Макконнелл.
+6. чистый код. роберт мартин
+7. Эдди Османи "Паттерны для масштабируемых JavaScript-приложений" 
+8. А. Бихерев "Сюрреализм на JavaScript" 
+
+==============================
+инкапсуляция:
+скрытие внутреннего устройства объекта. в результате объект имеет внутренний и внешний интерфейс.
+
+function Machine() {
+  var petrol = 100;
+
+  this.getPetrol = function() {
+    return petrol;
+  };
+
+  this.setPetrol = function(value) {
+    petrol = value;
+  };
+}
+
+var machine = new Machine();
+var p = machine.getPetrol();
+machine.setPetrol(5);
+var newP = machine.getPetrol();
+console.log(p, newP);
+
+или то же ПОЧТИ самое:
+var machine = {
+  petrol: 100,
+
+  getPetrol: function() {
+    return this.petrol;
+  },
+
+  setPetrol: function(value) {
+    this.petrol = value;
+  }
+}
+
+console.log(machine.getPetrol());
+
+==============================
+полиморфизм: способность функции выполнять различные действия в зависимости от количества переданных аргументов. чстный случай полиморфизма это перегрузка метода
+
+
+
+==============================
+наследование:
+может быть на уровне объектов(через __proto__) и на уровне "классов"(через .prototype)
+
+function Machine() {
+  var petrol = 100;
+
+  this.getPetrol = function() {
+    return petrol;
+  };
+
+  this.setPetrol = function(value) {
+    petrol = value;
+  };
+}
+
+function Opel() {
+  Machine.call(this); 
+  this.go = function() {
+    console.log('go');
+  };
+}
+
+var opel = new Opel();
+opel.go();
+
+или
+
+function Animal(name) {
+  this.name = name;
+  this.speed = 0;
+}
+
+Animal.prototype.run = function(speed) {
+  this.speed += speed;
+  alert( this.name + ' бежит, скорость ' + this.speed );
+};
+
+==============================
+==============================
+шаблон подписчик:
+var PubSub = function ()
+{
+    var handlers = {};
+ 
+    this.subscribe = function (event, handler)
+    {
+        if (handlers[event] === undefined)  handlers[event] = [];
+        handlers[event].push(handler);
+    };
+ 
+    this.publish = function (event)
+    {
+        if (handlers[event] === undefined) return;
+ 
+        var i = 0,
+            len = handlers[event].length;
+ 
+        for (i; i < len; i++)
+        {
+            handlers[event][i](arguments[i+1]);
+        }
+    };
+};
+ 
+pubSub = new PubSub();
+pubSub.subscribe('myEvent', function(arg){alert("myEvent worked. Arg: " + arg);});
+pubSub.publish('myEvent', 'it myArg');
+
+
+==============================
+шаблон декоратор:
+function Coffee() {
+    this.cost = function() {
+    return 1;
+    };
+}
+ 
+function Milk(coffee) {
+    this.cost = function() {
+    return coffee.cost() + 0.5;
+    };  
+}
+
+var coffee = new Coffee();
+coffee = new Milk(coffee);
+alert(coffee.cost());
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================

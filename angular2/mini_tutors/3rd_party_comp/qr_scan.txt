@@ -1,0 +1,73 @@
+можно сканировать qr при помощи этого: https://www.npmjs.com/package/angular2-qrscanner 
+
+https://github.com/tulkasEldarion/angular2-qrscanner
+
+---
+<!--
+Component attributes
+[debug]         debug flag for console.log spam              (default: false)
+[canvasWidth]   canvas width                                 (default: 640)
+[canvasHeight]  canvas height                                (default: 480)
+[mirror]        should the image be a mirror?                (default: false)
+[stopAfterScan] should the scanner stop after first success? (default: true)
+[updateTime]    miliseconds between new capture              (default: 500)
+(onRead)        callback when qr code is detected
+-->
+<qr-scanner    
+   [debug]="false"        
+   [canvasWidth]="640"    
+   [canvasHeight]="480"   
+   [mirror]="false"       
+   [stopAfterScan]="true" 
+   [updateTime]="500"     
+   (onRead)="decodedOutput($event)"></qr-scanner>
+
+
+<div class="result">{{ result | json }}</div>   
+
+
+---
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+	result: string;
+  
+	decodedOutput(ev) {
+		console.log(ev);
+		alert(JSON.stringify(ev));
+		this.result = ev;
+	}
+
+}
+
+
+----
+
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { QrScannerModule } from 'angular2-qrscanner';
+
+import { AppComponent } from './app.component';
+
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+  	QrScannerModule,
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }

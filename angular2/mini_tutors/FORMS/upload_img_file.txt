@@ -1,0 +1,4 @@
+загрузка файла на сервер:
+
+
+https://scotch.io/tutorials/file-uploads-in-angular-with-a-node-and-hapi-backend
