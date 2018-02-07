@@ -1,0 +1,104 @@
+если приложение разбито на несколько модулей и у каждого из этих моделуй имеется свой массив роутов, то 
+RouterModule.forRoot(routes) указывается в главном модуле,
+RouterModule.forChild(routes) указывается в дочерних модулях
+
+==================================
+{
+  path: '',
+  redirectTo: 'todos',
+  pathMatch: 'full'
+}
+здесь только роут "" будет вести на роут todos
+
+{
+  path: '',
+  redirectTo: 'todos',
+  pathMatch: 'prefix'
+}
+здесь любой роут будет вести на todos потому что любой роут начинается с пробела
+
+Angular router has two matching strategies:
+prefix: default, matches when the URL starts with the value of path
+full: matches when the URL equals the value of path
+
+
+==================================
+==================================
+app.routes:
+export const rootRoutes: Routes = [
+  {
+    path: '',
+    redirectTo: 'auth',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'pages'
+  }
+];
+
+
+
+
+auth.routes:
+export const AuthRoutes: Routes = [
+  {
+    path: 'auth',
+    component: AuthPageComponent
+  }
+];
+
+
+
+
+pages.routes:
+export const PagesRoutes: Routes = [
+  {
+    path: 'pages',
+    component: PagesRootComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'root',
+        pathMatch: 'full'
+      },       
+      {
+        path: 'welcome',
+        component: WelcomePageComponent
+      },
+      {
+        path: 'root',
+        component: PagesRootComponent
+      }            
+    ]
+  }
+];
+
+
+
+здесь при пустом роуте попадаем в auth. а там запускается соответствующий компонент.
+при роуте 'pages' попадаем в pages/root
+при роуте 'welcome' попадаем в pages/welcome
+
+
+
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
