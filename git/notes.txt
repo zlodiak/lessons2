@@ -11,7 +11,7 @@ HEAD - снимок последнего коммита
 =========================================
 однострочный формат лога: git log --pretty=oneline
 git log --all --pretty=format:"%h %cd %s (%an)"
-git log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short
+git log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short --all
 
 =========================================
 откат изменений:
