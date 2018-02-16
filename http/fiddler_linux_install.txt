@@ -1,0 +1,60 @@
+fiddler есть теперь для линукса.
+сначала нужно установить mono . это линуксовый аналог net framework. то есть может запускать в линуксе экзешники.
+
+
+
+====================
+установка mono здесь: http://www.mono-project.com/download/stable/
+или:
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+sudo apt-get update
+
+sudo apt-get install mono-devel
+
+Console Hello World
+To test the most basic functionality available, copy the following code into a file called hello.cs.
+
+using System;
+ 
+public class HelloWorld
+{
+    static public void Main ()
+    {
+        Console.WriteLine ("Hello Mono World");
+    }
+}
+To compile, use mcs:
+
+mcs hello.cs
+The compiler will create “hello.exe”, which you can run using:
+
+mono hello.exe
+The program should run and output:
+
+Hello Mono World 
+
+
+====================
+далее с оф сайта скачиваем дистрибутив для линукс.
+распаковываем его в каталог.
+заходим в него и выполняем:
+mono ./Fiddler.exe
+
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
