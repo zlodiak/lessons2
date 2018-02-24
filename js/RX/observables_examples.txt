@@ -1,0 +1,321 @@
+операторы можно разделить на группы:
+combination(combineLatest, merge, startWith),
+conditional,
+creation(from, of, interval, range, timer, create, fromEvent),
+errors(retry),
+filtering(filter, first, last, take),
+transformation(map, mergeMap),
+utility(delay, timeout, toPromise)
+
+======================================
+преобразование любого итерируемого объекта в последовательность:
+var a = Rx.Observable.from([1, 3, 5, 6, 7, 8, 10]);
+a.subscribe(val => console.log(val));
+
+======================================
+взять последнее значение из последовательности:
+var a = Rx.Observable.of(1, 3, 5, 6, 7, 8, 10).last();
+a.subscribe(val => console.log(val));
+
+======================================
+генерация последовательных чисел через временной промежуток:
+var a = Rx.Observable.interval(2000);
+a.subscribe(val => console.log(val));
+
+======================================
+синхронная генерация последовательности: 1,2,3
+var a = Rx.Observable.of(1, 2, 3);
+a.subscribe(val => console.log(val));
+
+======================================
+генерация последовательных чисел с добавлением строки:
+var a = Rx.Observable.interval(2000).map(val => 'a_' + val);
+a.subscribe(val => console.log(val));
+
+======================================
+объединение двух потоков:
+var a = Rx.Observable.interval(2000).map(val => 'a_' + val);
+var b = Rx.Observable.interval(1000).map(val => 'b_' + val);
+Rx.Observable.merge(a, b).subscribe(val => console.log(val));
+
+======================================
+генерация последовательных чисел в пределах интервала:
+var a = Rx.Observable.range(1, 5).map(i => i * 2);
+a.subscribe(val => console.log(val));
+
+======================================
+пример фильтра последовательности чисел. пропускаются только меньшие или равные 3:
+var a = Rx.Observable.range(1, 5).filter(i => i<=3)
+a.subscribe(val => console.log(val));
+
+======================================
+пример сохранения промежуточного значения. аналог нативного reduce:
+var a = Rx.Observable.range(1, 5).reduce((acc, i) => acc + i)
+a.subscribe(val => console.log(val));
+
+======================================
+пример добавления действия после каждого полученного из потока значения:
+let stream$ = 
+Rx.Observable
+.of(1,2,3,4,5)
+.do((value) => {
+  console.log('do',value)
+})
+.filter((value) => {
+  return value % 2 === 0;
+})
+
+stream$.subscribe((value) => {
+  console.log('value', value)
+})
+
+//  do: 1,do : 2, do : 3, do : 4, do: 5 
+// value : 2, 4
+
+в консоли будет:
+do 1
+do 2
+value 2
+do 3
+do 4
+value 4
+do 5
+
+======================================
+объединение нескольких потоков. возвращается массив с последними значениями каждого потока:
+var a = Rx.Observable.interval(2000);
+var b = Rx.Observable.interval(1000);
+Rx.Observable.combineLatest(a, b).subscribe(([val1, val2]) => console.log(val1, val2));
+
+======================================
+последовательное объединение синхронных потоков в один:
+var b = Rx.Observable.of(4,5,6);
+var a = Rx.Observable.of(1,2,3);
+b.concat(a).subscribe((val) => console.log(val));
+
+======================================
+объединение(вдавливание) синхронных потоков в один:
+var b = Rx.Observable.interval(1000);
+var a = Rx.Observable.interval(3000);
+Rx.Observable.merge(a, b).subscribe((val) => console.log(val));
+
+======================================
+заставить поток начаться с определенного значения:
+var b = Rx.Observable.of(4,5,6,7,8);
+b.startWith(2).subscribe((val) => console.log(val));
+
+или для асинхронного потока:
+var b = Rx.Observable.interval(1000);
+b.startWith(-2).subscribe((val) => console.log(val));
+
+======================================
+создание потока ручками:
+var b = Rx.Observable.create(function(observer) {
+  observer.next('Hello');
+  observer.next('World');
+});
+b.subscribe((val) => console.log(val));
+
+вывод консоли:
+hello
+world
+
+======================================
+по прошествии секунды возвращает 0:
+var b = Rx.Observable.timer(1000);
+b.subscribe((val) => console.log(val));
+
+через 1 сек выводит 0, затем каждые 3 сек выводит последовательность чисел:
+var b = Rx.Observable.timer(1000, 3000);
+b.subscribe((val) => console.log(val));
+
+======================================
+удаление повторяющихся значений:
+var b = Rx.Observable.of(1,2,3,3,4,5,3,6,7,7,8).distinct();
+b.subscribe((val) => console.log(val));
+
+======================================
+подсчёт количества элементов синхронного потока:
+var b = Rx.Observable.of(1,2,3,7,8).count();
+b.subscribe((val) => console.log(val));
+
+======================================
+выбор минимального элемента потока:
+var b = Rx.Observable.of(1,2,3,3,4,5,3,6,7,7,8).min();
+b.subscribe((val) => console.log(val));
+
+======================================
+итерация с сохранением промежуточного значения:
+var b = Rx.Observable.of(1,2,3).reduce((acc, x) => { return acc + x });
+b.subscribe((val) => console.log(val));
+
+======================================
+подмена каждого результата последовательности новой последовательностью:
+const source = Rx.Observable.of('Hello', 'bye');
+const example = source.mergeMap(val => Rx.Observable.of(`${val} World!`, 2, 3, 4));
+const subscribe = example.subscribe(val => console.log(val));
+
+отличается от map тем, что возвращает результаты новой последовательности, а не саму последовательность(observable)
+
+======================================
+поиск первого элемента последовательности, который удовлетворяет условию:
+const source = Rx.Observable.of(2,3,4).find((x) => x < 4);
+source.subscribe(val => console.log(val));
+
+======================================
+получение индекса элемента:
+const source = Rx.Observable.of(2,3,4,5,6,7,8).findIndex((x) => x === 6);
+source.subscribe(val => console.log(val));
+
+======================================
+пропускает результат через сито:
+const source = Rx.Observable.interval(1000).sample(Rx.Observable.interval(2000));
+source.subscribe(val => console.log(val));
+
+вывод в консоли: 0 2 4 6 8...
+
+
+======================================
+пропускает первые 3 значения:
+const source = Rx.Observable.interval(1000).skip(3);
+source.subscribe(val => console.log(val));
+
+======================================
+подмена вывода каждого элемента последовательности:
+const source = Rx.Observable.interval(1000).mapTo(333);
+source.subscribe(val => console.log(val));
+
+в консоли: 333 333 333 333 ......
+
+======================================
+взятие значения по ключу из массива объектов:
+const source = Rx.Observable.from([{ name: 'Joe', age: 30 }, { name: 'Sarah', age: 35 }]);
+source.pluck('name').subscribe(val => console.log(val));
+
+======================================
+при получении очередного значения из основного потока, возвращаются значения из нового потока:
+const source = Rx.Observable.timer(0, 3000);
+const example = source.switchMap(() => Rx.Observable.of(1,2,3));
+const subscribe = example.subscribe(val => console.log(val));
+
+таким образом само значение основного потока не выводится нигде. оно просто даёт сигнал для запуска нового потока
+
+======================================
+задерживает излучение значений из потока:
+const source = Rx.Observable.of(1,2,3,4,5,6).delay(2000);
+source.subscribe(val => console.log(val));
+
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+пример когда subject - источник данных.(не подписан на поток):
+const mySubject = new Rx.Subject();
+
+mySubject.next(1);
+
+const subscription1 = mySubject.subscribe(x => {
+  console.log('Подписка 1:', x);
+});
+
+mySubject.next(2);
+
+const subscription2 = mySubject.subscribe(x => {
+  console.log('Подписка 2:', x);
+});
+
+mySubject.next(3);
+
+subscription1.unsubscribe();
+
+mySubject.next(4);
+
+
+В результате мы получим:
+Подписка 1: 2
+Подписка 1: 3
+Подписка 2: 3
+Подписка 2: 4
+
+======================================
+пример когда subject подписываеися на observable:
+const mySubject = new Rx.Subject();
+const words = ['Hot Dog', 'Pizza', 'Hamburger'];
+
+const trickleWords = Rx.Observable.zip(
+  Rx.Observable.from(words),
+  Rx.Observable.interval(750),
+  word => word
+);
+
+const subscription1 = mySubject.subscribe(x => {
+  console.log(x.toUpperCase());
+});
+
+const subscription2 = mySubject.subscribe(x => {
+  console.log(
+    x
+      .toLowerCase()
+      .split('')
+      .reverse()
+      .join('')
+  );
+});
+
+trickleWords.subscribe(mySubject);
+
+
+Вот что выведется в консоль:
+
+HOT DOG
+god toh
+PIZZA
+azzip
+HAMBURGER
+regrubmah
+
+
+
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
