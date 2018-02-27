@@ -1,0 +1,65 @@
+можно пре переходе на страничку сначала получать данные через сервмс-резолвер.
+если данные пришли, то делается переход на страницу. иначе - нет
+
+=====================
+сервис резолвера:
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs/Observable';
+
+
+@Injectable()
+export class ResolverService {
+
+  constructor(private httpClient: HttpClient) {}
+
+  resolve(): Observable<any> {
+  	//return null;
+    return this.httpClient.get('https://api.github.com/users');
+  }  
+
+}
+
+
+=====================
+роутер:
+const routes: Routes = [
+  {path: '', redirectTo: '/page1', pathMatch : 'full'},
+  {path : 'page1', component : Page1Component},
+  {
+  	path : 'page2', 
+  	component : Page2Component, 
+    resolve: {
+      users: ResolverService
+    }  	
+  }
+];
+
+=====================
+компонент:
+  constructor(private activatedRoute: ActivatedRoute, private resolverService: ResolverService) { }
+
+  ngOnInit() {
+		this.activatedRoute.data.subscribe((resp) => {
+			console.log(resp);
+		});
+  }
+
+
+=====================
+или можно получить данные в компоненте так:
+  ngOnInit() {
+    this.contact = this.route.snapshot.data['contact'];
+  }
+
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================
+=====================

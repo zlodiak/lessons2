@@ -1,0 +1,35 @@
+можно передавать данные при переходе не определенный роут:
+import { Page1Component } from './components/page1/page1.component';
+import { Page2Component } from './components/page2/page2.component';
+
+
+const routes: Routes = [
+  {path: '', redirectTo: '/page1', pathMatch : 'full'},
+  {path : 'page1', component : Page1Component},
+  {path : 'page2', component : Page2Component, data : {some_data : 'some value'}}
+];
+
+
+====================
+в компоенете:
+constructor(private activatedRoute: ActivatedRoute) { }
+
+ngOnInit() {
+	console.log('init p2');
+	this.activatedRoute.data.subscribe(v => console.log(v));  	
+}
+
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
+====================
