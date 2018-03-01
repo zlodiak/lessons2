@@ -111,6 +111,10 @@ git reset --hard qwerty
 git branch -r
 
 ----------
+если нужно залить ветку на сервер, а её там пока не существует, то можно использовать один из двух способов:
+git branch --set-upstream-to=origin/feature/delo-2742 feature/delo-2742
+git push -u origin feature/delo-2742
+
 ----------
 ----------
 ----------
