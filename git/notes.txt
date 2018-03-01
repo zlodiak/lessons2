@@ -48,7 +48,7 @@ git checkout master && git reset 65db748
 
 =========================================
 если нужно ввести пароль только один раз, вместо каждого раза, то:
-git config --global http."https://gitlab.skblab.ru/".sslVerify false
+git config --global http."https://gitlab.qqq.ru/".sslVerify false
 глобал делать не обязательно и даже нежелательно
 после этого можно клонировать репозиторий
 
