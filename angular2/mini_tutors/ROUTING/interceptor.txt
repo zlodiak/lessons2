@@ -1,0 +1,145 @@
+интерсептор перехватывает любой исходящий запрос и может изменять его.
+интерсепторов может быть несколько. каждый из них модифицирует запрос. в порядке, в котором прописаны в providers модуля.
+
+интерсепторы могут добавлять заголовки или query params. 
+
+============================
+module:
+import { GitHubService } from './services/github.service';
+import { DataService } from './services/data.service';
+
+import { GitHubInterceptor } from './services/github.interceptor';
+import { DataInterceptor } from './services/data.interceptor';
+
+import { Page2InterceptorComponent } from './components/page2-interceptor/page2-interceptor.component';
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    Page1Component,
+    Page2Component,
+    Page3Component,
+    Page1MapComponent,
+    Page2InterceptorComponent
+  ],
+  imports: [
+    HttpClientModule,
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [
+    ResolverService,
+    GitHubService,
+    DataService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: GitHubInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: DataInterceptor,
+      multi: true
+    }    
+  ],
+
+============================
+GitHubInterceptor:
+
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+
+@Injectable()
+export class GitHubInterceptor implements HttpInterceptor {
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+	  const newRequest = req.clone({
+	  	headers: req.headers.set('authorization', 'qwerty123456'),
+	  	params: req.params.set('id', 'githubbbb')
+	  })
+
+	  console.log(newRequest);
+	  console.log(newRequest.body);
+
+  	return next.handle(newRequest)
+  }
+
+}
+
+
+============================
+DataInterceptor:
+
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+
+@Injectable()
+export class DataInterceptor implements HttpInterceptor {
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+	  const newRequest = req.clone({
+	  	headers: req.headers.set('Content-Type', 'data_zxcvbnmnb,nm,nm,'),
+	  	params: req.params.set('idd', 'dataaa')
+	  })
+
+	  console.log(newRequest);
+	  console.log(newRequest.body);
+
+  	return next.handle(newRequest)
+  }
+
+}
+
+
+============================
+page component: 
+
+  pressGithub(): void {
+    this.gitHubService.getUserInformation('zlodiak').subscribe(
+      success => {
+        console.log(success);
+      }
+    );
+    // this.httpClient.get('https://api.github.com/users/zlodiak').subscribe(
+    //   (success) => {
+    //     console.log(success);
+    //   }
+    // );    
+  }
+
+  pressData(): void {
+    this.dataService.getDataInformation().subscribe(
+      success => {
+        console.log(success);
+      }
+    );   
+  } 
+
+
+
+============================
+tpl component:
+
+<button (click)="pressGithub()">github</button>
+<button (click)="pressData()">data</button>
+
+============================
+здесь кроссдоменный запрос на гитхаб проходит нормально потому что гитхаб разрешает кроссдоменный запрос.
+а другой запрос не проходит потому что тот мутный сервер не разрешает кроссдоменный запрос
+
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================

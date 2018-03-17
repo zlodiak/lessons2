@@ -1,0 +1,118 @@
+subject может излучать события по сигналу.
+например есть сервис:
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Subject} from 'rxjs/Subject';
+ 
+@Injectable()
+export class MessageService {
+    private subject = new Subject<any>();
+ 
+    sendMessage(message: string): void {
+        this.subject.next({ text: message });
+    }
+ 
+    clearMessage(): void {
+        this.subject.next();
+    }
+ 
+    getMessage(): Observable<any> {
+        return this.subject.asObservable();
+    }
+}
+
+=====================================
+app.comp:
+import {Component, OnDestroy} from '@angular/core';
+import {Subscription} from 'rxjs/Subscription';
+ 
+import {MessageService} from './_services/index';
+ 
+@Component({
+    moduleId: module.id,
+    selector: 'app',
+    templateUrl: 'app.component.html'
+})
+ 
+export class AppComponent implements OnDestroy {
+    message: any;
+    subscription: Subscription;
+ 
+    constructor(private messageService: MessageService) {
+        // подписываемся на сообщения
+        this.subscription = this.messageService.getMessage().subscribe(message => { this.message = message; });
+    }
+ 
+    ngOnDestroy(): void {
+        // нужно отписаться чтобы не выгружать память
+        this.subscription.unsubscribe();
+    }
+}
+
+=====================================
+Home-component будет отправлять сообщения к app-component используя созданный выше сервис:
+
+import {Component} from '@angular/core';
+import {MessageService} from '../_services/index';
+ 
+@Component({
+    moduleId: module.id,
+    templateUrl: 'home.component.html'
+})
+ 
+export class HomeComponent {
+    constructor(private messageService: MessageService) {}
+     
+    sendMessage(): void {
+        // отправляем сообщения ко всем кто подписался через observable subject
+        this.messageService.sendMessage('Message from Home Component to App Component!');
+    }
+ 
+    clearMessage(): void {
+        // очищаем сообщения
+        this.messageService.clearMessage();
+    }
+}
+=====================================
+=====================================
+https://plnkr.co/edit/FHIPt1?p=preview
+
+https://weburoki.pro/angular-observable-and-subject
+
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================

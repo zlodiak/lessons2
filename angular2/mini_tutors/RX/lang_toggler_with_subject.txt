@@ -1,0 +1,119 @@
+для переключателя языка можно использовать beaheaviorSubject:
+
+
+=============================
+global service:
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+
+@Injectable()
+export class GlobalService {
+
+  constructor() { }
+
+  lang$: BehaviorSubject<any> = new BehaviorSubject<any>('ru');
+
+  setLang(lang) {
+    console.log('setLang', lang);
+    this.lang$.next(lang); 
+  }
+
+}
+
+
+
+=============================
+app.html:
+<div class="lang-area">
+  <button (click)="toggleLang('ru')" [disabled]="lang == 'ru'">ru</button>
+  <button (click)="toggleLang('en')" [disabled]="lang == 'en'">en</button>
+</div>
+
+<hr>
+
+
+=============================
+app.component:
+
+import { Component, OnInit } from '@angular/core';
+
+import { GlobalService } from './services/global.service';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+
+  lang: string = '';
+
+  constructor(private globalService: GlobalService) {}
+
+  toggleLang(lang): void {
+    this.globalService.setLang(lang);
+  }
+
+  ngOnInit() {
+    this.globalService.lang$.subscribe((lang) => {
+      this.lang = lang;
+    });    
+  }
+
+}
+
+
+=============================
+page1.component:
+
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+//import {Observable} from 'rxjs/Rx'
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/mergeMap';
+
+import { GlobalService } from '../../services/global.service';
+
+
+@Component({
+  selector: 'app-page1',
+  templateUrl: './page1.component.html',
+  styleUrls: ['./page1.component.scss']
+})
+export class Page1Component implements OnInit {
+
+  lang: string = '';
+
+  constructor(private httpClient: HttpClient, private globalService: GlobalService) { }
+
+  ngOnInit() {
+    this.globalService.lang$.subscribe((lang) => {
+      this.lang = lang;
+    });
+  }
+
+}
+
+
+=============================
+на страницах типа page1  использоавть условные операторы для отображения фраз на разных языках
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================

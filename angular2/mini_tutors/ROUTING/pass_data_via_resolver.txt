@@ -3,23 +3,38 @@
 
 =====================
 сервис резолвера:
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
+import { ResolverService } from '../../services/resolver.service';
 
 
-@Injectable()
-export class ResolverService {
+@Component({
+  selector: 'app-page2',
+  templateUrl: './page2.component.html',
+  styleUrls: ['./page2.component.scss']
+})
+export class Page2Component implements OnInit {
 
-  constructor(private httpClient: HttpClient) {}
+  users: any[] = [];
 
-  resolve(): Observable<any> {
-  	//return null;
-    return this.httpClient.get('https://api.github.com/users');
-  }  
+  constructor(private activatedRoute: ActivatedRoute, private resolverService: ResolverService) { }
+
+  ngOnInit() {
+    const users = this.activatedRoute.data;
+    users.subscribe(
+      (users) => {
+        console.log(users);
+        this.users = users;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
 }
+
 
 
 =====================
@@ -38,20 +53,22 @@ const routes: Routes = [
 
 =====================
 компонент:
-  constructor(private activatedRoute: ActivatedRoute, private resolverService: ResolverService) { }
 
-  ngOnInit() {
-		this.activatedRoute.data.subscribe((resp) => {
-			console.log(resp);
-		});
-  }
+  constructor(private httpClient: HttpClient,
+              private router: Router) {}
 
+  resolve(): Observable<any> {
+    //return [1,2];
+    return this.httpClient.get('https://api.github.com/users');
+  }  
 
 =====================
-или можно получить данные в компоненте так:
-  ngOnInit() {
-    this.contact = this.route.snapshot.data['contact'];
-  }
+важно то, что если сервис резолвера возвращает не observable и не promise , то влиять на переход невозможно.
+
+резолвер обязательно должен возращать не результат, а результат, завёрнутый в observable или в promise. а подписка должна происходить уже в компоненте
+
+тут больше:
+https://ru.stackoverflow.com/questions/793138/%D0%9F%D0%BE%D1%87%D0%B5%D0%BC%D1%83-resolver-%D0%BD%D0%B5-%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8%D1%80%D1%83%D0%B5%D1%82-%D0%BF%D0%B5%D1%80%D0%B5%D1%85%D0%BE%D0%B4
 
 =====================
 =====================

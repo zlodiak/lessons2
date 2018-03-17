@@ -1,0 +1,31 @@
+<div class="parent">
+    <div class="child">
+        <div class="child2">Aspect is kept when resizing</div>
+    </div>
+</div>
+
+
+
+.parent {
+    position: relative;
+    width: 75%;
+}
+.child {
+    position: relative;
+    padding-bottom: calc(100% * 9 / 16);
+}
+.child2 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: blue;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+
+
+https://jsfiddle.net/qaez1mLw/108/
