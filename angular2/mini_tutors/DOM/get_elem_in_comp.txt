@@ -1,0 +1,25 @@
+можно поменитть элемент в шаблоне и получить в компоненте доступ к его свойствам. таким как содержание и классы
+<div class="back" (click)="close()" #back>Назад</div>
+
+===========
+import { Component, ElementRef } from '@angular/core';
+
+
+@ViewChild('back') back: ElementRef;
+
+  close(): void {
+    this.back.nativeElement.className += ' active'
+  }
+
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========

@@ -1,0 +1,38 @@
+Отличие RxJS Subjects от Observable на примерах
+
+
+
+
+Чистый Observable.
+
+var observable = Rx.Observable.create(function(source) {
+  source.next(Math.random());
+});
+
+observable.subscribe(v => console.log('consumer A: ' + v));
+observable.subscribe(v => console.log('consumer B: ' + v));
+
+/* Prints DIFFERENT values for both consumers */
+// consumer A: 0.25707833297857885
+// consumer B: 0.8304769607422662
+
+
+
+
+
+Observable обернутый в Subject.
+
+var observable = Rx.Observable.create(function(source) {
+  source.next(Math.random());
+});
+
+var subject = new Rx.Subject();
+
+subject.subscribe(v => console.log('consumer A: ' + v));
+subject.subscribe(v => console.log('consumer B: ' + v));
+
+observable.subscribe(subject);
+
+/* Prints SAME values for both consumers */
+// consumer A: 0.8495447073368834
+// consumer B: 0.8495447073368834
