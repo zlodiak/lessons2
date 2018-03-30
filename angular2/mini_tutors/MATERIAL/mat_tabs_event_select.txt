@@ -1,0 +1,45 @@
+в табах не обязательно вешать по одному обработчику клика на каждую вкладку. можно использовать материаловское делегирование:
+
+@Output()
+selectedTabChange: EventEmitter<MatTabChangeEvent>
+
+https://material.angular.io/components/tabs/api
+
+===========
+
+  setTab(event): void {
+    this.tabNum = event.index;
+  }
+
+
+
+    <mat-tab-group class="tab-group" (selectedTabChange)="setTab($event)">
+      <mat-tab label="" *ngFor="let tab of tabs; let i = index">
+        <ng-template class="tab" mat-tab-label>
+          <div class="tab-inner">
+            <img class="icon" src="/assets/images/{{ tab.imgUnactive }}" *ngIf="tabNum != i">
+            <img class="icon" src="/assets/images/{{ tab.imgActive }}" *ngIf="tabNum == i">
+            <div class="label">{{ tab.label }}</div>
+          </div>
+        </ng-template>
+        <div class="tab-content">
+          <cc-info *ngIf="tabNum === 0"></cc-info>
+          <cc-media *ngIf="tabNum === 1"></cc-media>
+          <cc-damage *ngIf="tabNum === 2"></cc-damage>
+          <cc-result *ngIf="tabNum === 3"></cc-result>
+          <cc-complete *ngIf="tabNum === 4"></cc-complete>      
+        </div>
+      </mat-tab>          
+    </mat-tab-group>
+      
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
+===========
