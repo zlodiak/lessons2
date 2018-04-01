@@ -201,8 +201,90 @@ debouncedExample.subscribe(val => console.log(val));
 // 'Last will display'
 
 ===============================================
+9:
+
+оператор combineLatest берёт 2 потока и к каждому значению, полученному из любого потока, добавляет последнее значение из другого потока.
+var source = Rx.Observable.combineLatest(
+  Rx.Observable.of(42),
+  Rx.Observable.range(0, 3)
+);
+source.subscribe(function (x) { console.log(x); });
+// [42, 0]
+// [42, 1]
+// [42, 2]
+
+оператор forkJoin, в отличие от combineLatest, возвращает тоько последнюю пару, если в одном из потоков значения не менялось:
+var source = Rx.Observable.forkJoin(
+  Rx.Observable.of(42),
+  Rx.Observable.range(0, 3)
+);
+source.subscribe(function (x) { console.log(x); });
+// [42, 2]
+
+оператор merge складывает потоки в режиме реального времени:
+var source = Rx.Observable.merge(
+  Rx.Observable.interval(2000),
+  Rx.Observable.timer(5000, 2000)
+);
+source.subscribe(function (x) { console.log(x); });
+0
+1
+ 0
+2
+ 1
+3
+ 2
+4
+
+оператор concat после того как закончатся значения в потоке 1, прибаляет значения потока 2. аналогично rebase в git
+var source = Rx.Observable.concat(
+  Rx.Observable.range(0, 3),
+  Rx.Observable.range(10, 3)
+);
+source.subscribe(function (x) { console.log(x); });
+0
+1
+2
+ 10
+ 11
+ 12
+
+оператор startWith заставляет последовательность начинаться с определённого значения:
+var source = Rx.Observable.range(10, 3).startWith(5);
+source.subscribe(function (x) { console.log(x); });
+// 5, 10, 11, 12
+
+оператор withLatestFrom, подобно combineLatest, берёт пару последних значений из двух потоков, но только когда один из потоков отдаёт ПЕРВОЕ по порядку значение:
+var source = Rx.Observable.interval(2000)
+  .withLatestFrom(Rx.Observable.timer(10000, 5000))
+source.subscribe(function (x) { console.log(x); });
+// каждую секунду:
+[4, 0]
+[5, 0]
+[6, 0]
+[7, 1]
+[8, 1]
+[9, 2]
+
 ===============================================
+10:
+
+оператор catch срабатывает когда поток прерывается ошибкой. в этом случает блок catch передаёт в subscribe значение ошибки. 
+есть возможность генерировать ошибку при помощи throw
+var source = Rx.Observable.throw(new Error('err'))
+.catch((e) => {
+  return Rx.Observable.of(1, 2, e);
+});
+source.subscribe(function (x) { console.log(x); });
+1
+2
+Error: err
+
+оператор retry игнорирует ошибку и снова пробует получить данные из потока n-ое число раз
+
 ===============================================
+11:
+
 ===============================================
 ===============================================
 ===============================================
