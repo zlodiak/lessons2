@@ -1,0 +1,12 @@
+можно инжектировать сервия не напрямую через конструктор
+
+
+import { Injector } from '@angular/core';
+...
+...
+
+  public this.authService;
+  constructor(private injector: Injector) {}  
+...
+..
+this.authService = injector.get(AuthService);
