@@ -285,8 +285,69 @@ Error: err
 ===============================================
 11:
 
+оператор do выполняет действие, никак не изменяющее поток. например логирование:
+var source = Rx.Observable.interval(1000)
+    .do((x) => console.log('log', x))
+source.subscribe(
+  function (x) { console.log('Next: ' + x); }
+);
+
+оператор delay задерживает на определённое время выход каждого значения из потока:
+var source = Rx.Observable.interval(1000).delay(3000);
+source.subscribe(
+  function (x) { console.log(x); }
+);
+
+оператор finally выполняет действие после того как поток перестанет излучать в результате error() или complete()
+
 ===============================================
+12:
+
+оператор defaultIfEmpty возвращает определённое значение, если последовательность оказалась пустой
+var source = Rx.Observable.empty().defaultIfEmpty('qwerty');
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next', x);
+  });
+
+оператор every возвращает true или false в зависимости от того проходит ли каждое значение поледовательности условие или нет:
+var source = Rx.Observable.of(1,2,3,4,5)
+  .every(function (x) {
+    return x < 6;
+  });
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next', x);
+  });
+
+оператор isEmpty() возвращает true или false в зависимости от того пустая последовательность или нет:
+var source = Rx.Observable.empty().isEmpty();
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next', x);
+  });
+
 ===============================================
+13:
+
+отличие scan от reduce в том, что scan итерирует излучённую последовательность, а reduce выдаёт только конечный результат:
+var obsScan = Rx.Observable.from([1,2,3]);
+var count1 = obsScan.scan((acc, one) => acc + one, 0);
+count1.subscribe(x => {
+  console.log('scan shows incremental total', x);
+});
+// scan shows incremental total 1
+// scan shows incremental total 3
+// scan shows incremental total 6
+
+
+var obsReduce = Rx.Observable.from([1,2,3]);
+var count2 = obsReduce.reduce((acc, one) => acc + one, 0);
+count2.subscribe(x => {
+  console.log('reduce shows only total', x);
+});
+// reduce shows only total 6
+
 ===============================================
 ===============================================
 ===============================================
