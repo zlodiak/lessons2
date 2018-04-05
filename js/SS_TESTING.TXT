@@ -1,0 +1,170 @@
+0 - не знаю
+1 - слабо знаю
+2 - знаю
+
+ES6:==================================================================================
+
+1. Константы и блочные переменные (2)
+
+2. Стрелочные функции (2)
+
+3. Значение по умолчанию и rest оператор (1)
+	var log = function(a, b, c) { console.log(a, b, c); }
+	log(...['Spread', 'Rest', 'Operator']); // spread
+
+	var log = function(a, b, c = 3) { console.log(a, b, c); }
+	log(1, 2);
+
+	var log = function(a, b, ...rest) { console.log(a, b, rest); }
+	log('Basic', 'rest', 'operator', 'usage'); // Basic rest ['operator', usage]
+
+4. Интерполяции (2)
+	var age = 25;
+	console.log(`I am ${age} years old`); 
+
+5. Свойства объектов (2)
+	let a = 1, b = 2;
+	let obj = { a, b };
+
+	const obj = {
+	  a() { /* function body */ },
+	  b() { /* function body */ }
+	};
+
+6. Деструкторизация (1)
+	let [firstName, lastName] = ["Илья", "Кантор"];
+	let {var1, var2} = {var1: …, var2: …};
+
+7. Модульность (2)
+	export const MY_CONSTANT = 123;			// calculator/lib/calc.js
+	import { square } from 'lib/calc';	// calculator/main.js
+
+8. Классы и наследование (1)
+	class Point {
+	    constructor(x, y) {
+	        this.x = x;
+	        this.y = y;
+	    }
+	    toString() { return '(' + this.x + ', ' + this.y + ')'; }
+	}
+	class ColorPoint extends Point {
+	    constructor(x, y, color) {
+	        super(x, y); 
+	        this.color = color;
+	    }
+	    toString() {  return super.toString() + ' in ' + this.color;  }
+	}
+
+9. Symbol (0)
+	var sym = Symbol("foo");
+	var obj = {[sym]: 1};
+	obj[sym];		// 1	
+	Symbol("foo") === Symbol("foo"); // false
+	// не участвуют в итерациях. уникальны. зачем они вообще существуют никто не знает
+
+10. Итераторы (0)
+	for (let char of "Привет") { alert(char); }
+	// перебор любых итерируемых объектов. не только массивов
+
+11. Генераторы (0)
+
+12. Map, WeakMap (1)
+	let map = new Map();
+	map.set('1', 'str1');   // ключ-строка
+	map.set(1, 'num1');     // число
+	alert( map.get(1)   ); // 'num1'
+	alert( map.get('1') ); // 'str1'
+	// WeakMap: если ключ удалён, то значение тоже удаляется сборщиком мусора
+
+13. Set, WeakSet (0)
+	let set = new Set();
+	let vasya = {name: "Вася"};
+	set.add(vasya);
+	// добавляются только уникальные значения
+
+14. Типизированные массивы ()
+15. Новые встроенные методы ()
+16. Промисы (2)
+17. Proxy ()
+18. Reflect ()
+19. Intl локализация ()
+
+TS:==================================================================================
+
+Типы все базовые типы ()
+Интерфейсы создание, композиция, наследование ()
+Классы наследование, абстрактные классы, модификаторы доступа в классах ()  
+Enums числовые, текстовые ()  
+Generics зависимость от типа ()  
+Декораторы class, method, property, accessor, parameter ()  
+Module Resolution Import, export, import *, import {}, import '' ()   
+Итераторы и генераторы ()      
+Модули ()    
+Namespaces ()
+
+A2+:==================================================================================
+
+Компоненты Создание компонент, Metadata ()
+Жизненный цикл, функции жизненного цикла ()  
+Привязка данных: Data binding ()  
+Получение и передача данных: Input, Output ()  
+Доступ к DOM: ViewChild, ContentChild ()  
+Инкапсуляция стилей компоненты, специальные селекторы (host, deep) ()  
+   
+Работа с событиями    
+	Работа с событиями: HostListener, HostBinding ()  
+	Директивы привязанные к событиям ()  
+   
+Динамические компоненты    
+	Создание динамических компонент,  ComponentFactoryResolver, ()   
+   
+Директивы     
+	Создание директив, отличие от компонент, Metadata ()  
+	Директивы из коробки ()  
+	Структурные директивы, Атрибутные директивы ()  
+   
+Сервисы    
+	Создание сервисов, Metadata ()  
+	Injectable ()  
+	Сервисы из коробки ()  
+	Injector ()  
+	   
+HTTP запросы ()    
+Interceptors ()  
+Сервис HttpClient, HttpServer отличие ()  
+   
+Модули   
+	Модули, NgModule ()    
+	Создание модуля, Metadata ()  
+	imports, providers, declarations, entry component ()  
+	Lazy Loading Modules ()  
+	   
+Роутинг    
+	Конфигурация роутинга ()  
+	RouterOutlet ()   
+	Одноуровневый роутинг, дочерний роутинг ()  
+	Componentless Routes ()   
+	Guards ()   
+	Навигация в коде и html ()  
+	Resolver ()   
+	События роутинга ()  
+   
+Работа с формами     
+	Reactive Forms ()  
+	Template-driven forms ()  
+	Валидация ()  
+   
+Механика    
+	ChangeDetection ()   
+	Module Bootstrapping ()  
+	Angular dependency injection ()  
+   
+	Pipe     
+	Создание pipe ()  
+	стандартные pipe ()   
+	Chaining pipes ()   
+	Async pipes ()  
+	pure pipes, not pure pipes ()  
+   
+Анимация    
+	trigers, state, transition, animate ()  
