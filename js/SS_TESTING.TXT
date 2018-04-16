@@ -212,7 +212,26 @@ A2+:============================================================================
 Сервисы    
 	Создание сервисов, Metadata ()  
 	Injectable ()  
-	Сервисы из коробки ()  
+	Сервисы из коробки (1)  
+		существует несколько готовых сервисов, которые можно заинжектить и использовать.
+
+		ElementRef служит для получения ссылки на элементу компонента. одно из применений - менять стили этого элемента: this.elementRef.nativeElement.style.backgroundColor = 'yellow';
+
+		Renderer служит для манипуляция существующих элементов: 
+		установка атрибутов: this.renderer.setProperty(inputElement, 'checked', true);
+		добавление новых элементов в DOM: this.renderer.appendChild(parent, inputElement);
+		добавление текста в элемент: this.renderer.appendChild(buttonElement, text);
+		добавление класса: this.renderer.addClass(buttonElement, 'btn-large');
+		добавление стилей: renderer.setElementStyle(el.nativeElement, 'backgroundColor', 'yellow');
+
+		пример генерации элементов и добавления на страницу:
+    const buttonElement = this.renderer2.createElement('button');
+    const text = this.renderer2.createText('Text');
+    this.renderer2.appendChild(buttonElement, text);
+    this.renderer2.appendChild(this.elementRef.nativeElement, buttonElement);		
+
+    TemplateRef служит для ссылки на кусок разметки, который пока не виден в DOM, но который можно использовать(например добаить в какой-нибудь элемент).
+    связь осуществляется так: @ViewChild('tpl1') tpl1: TemplateRef<any>;
 	Injector ()  
 	   
 HTTP запросы ()    
