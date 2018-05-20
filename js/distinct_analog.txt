@@ -1,0 +1,45 @@
+аналог distinct
+
+__ВХОД__ = [
+  'Category 1',
+  'Category 1',
+  'Category 2',
+  'Category 1',
+  'Category 1',
+  'Category 3',
+  'Category 1',
+]
+
+итерация 0:
+index=0
+результат сравнения true потому что __ВХОД__ содержит Category 1 в позиции 0
+
+итерация 1:
+index=1
+результат сравнения false потому что __ВХОД__ содержит Category 1 в позиции 0, а не в позиции 1
+
+итерация 2:
+index=2
+результат сравнения true потому что __ВХОД__ содержит Category 2 в позиции 2
+
+и т.д.
+
+
+.filter((c, index, array) => array.indexOf(c) == index);
+
+====================
+https://toster.ru/q/529740
+
+====================
+или так: alert(Array.from(new Set([1,2,3,1,2,3])))
+
+https://javascript.ru/forum/misc/58230-kak-udalit-povtoryayushhiesya-znacheniya-s-massiva.html#post388024
+
+
+====================
+====================
+====================
+====================
+====================
+====================
+====================
