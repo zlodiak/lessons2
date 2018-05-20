@@ -1,0 +1,163 @@
+можно забить данные формы с двумя уровнями вложенности в json и вывести в шаблон с предустановленными значениями:
+
+json:
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, FormArray, FormBuilder  } from '@angular/forms';
+
+@Component({
+  selector: 'cc-info',
+  templateUrl: './info.component.html',
+  styleUrls: ['./info.component.scss']
+})
+export class InfoComponent implements OnInit {
+
+  formData = {
+    'Информация из КХД': {
+      Марка: {
+        type: 'input',
+        value: 'qwerty',
+      },
+    'Модель': {
+        type: 'select',
+        value: ['wqeqwewq', 'sadasdasdda', 'xcvxcxcvxcv',],
+        selected: 1,
+      },
+      'Год выпуска': {
+        type: 'input',
+        value: '',
+      },
+    },
+    'Общая информация': {
+      'ПТС': {
+        type: 'input',
+        value: 'qwerty',
+      },
+      'Пробег': {
+        type: 'select',
+        value: ['tgtrgrt', 'fdvdfvdf', 'csdcscsc',],
+        selected: 2,
+      },
+      'Тип кузова': {
+        type: 'select',
+        value: ['sdv', '544564564', 'yjyujuyj',],
+        selected: 0,
+      },
+    },
+    // and more, more, more...
+  }
+
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
+
+  ngOnInit() {
+    this.form = this.fb.group(
+      this.createForm(Object.keys(this.formData))
+    );
+  }
+
+  createForm(fields) {
+    const result = {};
+    fields.forEach(field => {
+      const fields = Object.keys(this.formData[field])
+      result[field] = this.fb.group(this.createSubForm(field, fields));
+    });
+    return result;
+  }
+
+  createSubForm(field, fields) {
+    const result = {};
+    fields.forEach(f => {
+      let fd = this.formData[field][f];
+      if (fd.type === 'select') {
+        result[f] = new FormControl(fd.value[fd.selected]);
+      } else if (fd.type === 'input') {
+        result[f] = new FormControl(fd.value);
+      }      
+    });
+    return result;
+  }
+
+  getKeys() {
+    return Object.keys(this.form.controls);
+  }
+
+  getSubKeys(key) {
+    const subControls = this.form.get(key).value;
+    return Object.keys(subControls);
+  }
+
+  onSubmit() {
+    console.log('form submitted', this.form.value);
+  }
+
+}
+
+
+======================
+thml:
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="key" *ngFor="let key of getKeys()">
+    <h1 class="head">{{key}}</h1>
+
+    <div class="subKey" *ngFor="let subKey of getSubKeys(key)" [formGroupName]="key">
+      <label>{{subKey}}</label>
+
+      <input type="text" [formControlName]="subKey" *ngIf="formData[key][subKey].type === 'input'">
+
+      <select [formControlName]="subKey" *ngIf="formData[key][subKey].type === 'select'">
+        <option 
+          *ngFor="let item of formData[key][subKey].value; let i = index" 
+          [value]="item">
+          {{ item }}
+        </option>
+      </select>
+    </div> 
+  </div>  
+
+  <button class="submit" type="submit">Submit</button>
+</form>
+
+======================
+scss:
+.head {
+    font-weight: bold;
+    text-decoration: underline;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.key {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+
+    .subKey {
+        width: 47%;
+        display: block;
+        margin-bottom: 15px;
+
+        >* {
+            width: 100%;
+        }
+    }
+}
+
+
+======================
+======================
+https://stackblitz.com/edit/angular-dr2ujy
+
+======================
+======================
+======================
+======================
+======================
+======================
+======================
+======================
+======================
+======================
+======================
