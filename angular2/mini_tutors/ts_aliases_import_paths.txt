@@ -1,0 +1,51 @@
+можно задать алиасы для путей импорта. выглядят так: 
+import { Contract } from '@core/Models/contract.interface';
+
+
+для этого нужно в корне проекта нанити tsconfig.json и добавить пути так:
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "paths": {
+      "@app/*": ["app/*"],
+      "@core/*": ["app/Modules/Core/*"],
+      "@pages/*": ["app/Modules/Pages/*"],
+      "@shared/*": ["app/Modules/Shared/*"]
+    },
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  }
+}
+
+
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
+========++++
