@@ -1,0 +1,93 @@
+если в шаблоне родительского компонента задана двусторонняя привязка, то можно пробросить из дочернего компонента значение при помощи eventEmitter
+
+
+
+========================
+родительский компонент:
+
+<app-color-picker 
+  [colors]="['#f00', '#ff0', '#a00']" 
+  [(selectedColor)]="color">
+</app-color-picker>
+
+<p>selected color is: {{ color }}</p>
+
+
+
+
+========================
+дочерний компонент:
+
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-color-picker',
+  template: `
+		<a 
+		  *ngFor="let color of colors" 
+		  class="color" 
+		  [style.background-color]="color"
+		  [class.selected]="color === selectedColor"
+		  (click)="selectedColor_(color)">
+		  {{ color }}
+		</a>
+  `,
+  styleUrls: ['./color-picker.component.css']
+})
+export class ColorPickerComponent implements OnInit {
+
+  @Input() colors: string[] = [];
+  @Input() selectedColor: string;
+
+  @Output() selectedColorChange = new EventEmitter<string>();
+
+  constructor() { }
+
+  selectedColor_(color) {
+    this.selectedColor = color;
+    this.selectedColorChange.emit(color);
+  }
+
+  ngOnInit() {
+  }
+
+}
+
+
+========================
+https://angular.io/guide/template-syntax#two-way-binding---
+
+https://toster.ru/q/532477
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================

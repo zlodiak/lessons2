@@ -1,0 +1,55 @@
+можно создавать svg так:
+
+import { Component, Renderer2, ElementRef, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: [ './app.component.css' ]
+})
+export class AppComponent  {
+  
+  constructor(
+    private renderer: Renderer2,
+    protected el: ElementRef,
+  ) {}
+
+  ngOnInit() {
+    const rootElement = this.el.nativeElement;
+    
+    const svgEl = this.renderer.createElement('svg', 'svg');
+    this.renderer.setAttribute(svgEl, 'viewBox', '0 0 200 200' );
+    this.renderer.setAttribute(svgEl, 'xmlns', 'http://www.w3.org/2000/svg' );
+
+    const circleEl = this.renderer.createElement('circle', 'svg');
+    this.renderer.setAttribute(circleEl, 'cx', '100' );
+    this.renderer.setAttribute(circleEl, 'cy', '100' );
+    this.renderer.setAttribute(circleEl, 'r', '100' );
+    this.renderer.setAttribute(circleEl, 'fill', '#666' );
+
+    this.renderer.appendChild(svgEl, circleEl);
+    this.renderer.appendChild(rootElement, svgEl);
+
+  }
+
+}
+
+=======================
+=======================
+https://stackblitz.com/edit/angular-xkammq
+
+https://toster.ru/q/532511
+
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================
+=======================

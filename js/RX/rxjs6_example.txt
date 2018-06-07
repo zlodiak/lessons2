@@ -1,0 +1,14 @@
+новый синтаксис. пример: https://jsfiddle.net/1Lgtwb01/5/
+
+<button>press me</button>
+
+
+const { fromEvent } = rxjs;
+const { scan } = rxjs.operators;
+
+var button = document.querySelector('button');
+fromEvent(button, 'click').pipe(
+  // scan (reduce) to a stream of counts
+  scan(count => count + 1, 0)
+  // Set the count on an element each time it changes
+).subscribe(count => console.log(count));

@@ -1,15 +1,33 @@
 можно поменитть элемент в шаблоне и получить в компоненте доступ к его свойствам. таким как содержание и классы
-<div class="back" (click)="close()" #back>Назад</div>
+<hello name="{{ name }}" #elem2></hello>
+<p #elem>
+  Start editing to see some magic happen :)
+</p>
 
 ===========
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: [ './app.component.css' ]
+})
+export class AppComponent  {
+  name = 'Angular 6';
+  @ViewChild('elem') elem: ElementRef;
+  @ViewChild('elem2') elem2: ElementRef;
 
-@ViewChild('back') back: ElementRef;
+  constructor() {
 
-  close(): void {
-    this.back.nativeElement.className += ' active'
   }
+
+  ngAfterViewInit() {
+    console.log(this.elem.nativeElement.innerText);
+    console.log(this.elem.nativeElement.innerHTML);
+    this.elem.nativeElement.className += ' active'
+  }
+}
+
 
 ===========
 ===========
