@@ -1,0 +1,56 @@
+если guard асинхронный, то записывается так:
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+
+    constructor(private auth: AngularFireAuth, private router: Router) {}
+
+    canActivate(route:ActivatedRouteSnapshot, state:RouterStateSnapshot):Observable<boolean>|boolean {
+        return this.auth.map((auth) => {
+            if (auth) {
+                console.log('authenticated');
+                return true;
+            }
+            console.log('not authenticated');
+            this.router.navigateByUrl('/login');
+            return false;
+        }).first(); // this might not be necessary - ensure `first` is imported if you use it
+    }
+
+
+https://stackoverflow.com/questions/38425461/angular2-canactivate-calling-async-function
+
+
+
+второй пример:
+import { Injectable } from '@angular/core';
+import { Router, CanActivate } from '@angular/router';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/first';
+import { Observable } from 'rxjs/Observable';
+
+import { UserService } from '../services/user.service';
+
+@Injectable()
+export class AuthGuardService {
+
+  constructor(
+    private router: Router,
+    private userService: UserService,
+  ) { }
+
+  canActivate():Observable<boolean>|boolean {
+    return this.userService.getStateUser().map(user => {
+      if (!user.login) {
+        this.router.navigate(['/login']);
+        return false;
+      } else {
+        return true;
+      }
+    }).first();
+
+  }
+
+}
+    

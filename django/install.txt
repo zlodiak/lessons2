@@ -74,7 +74,9 @@ class Post(models.Model):
         return self.title
 
 ==========================
-Последним шагом будет добавление нашей модели в базу данных. Сначала мы должны дать Django знать, что сделали изменения в нашей модели (мы её только что создали!). Набери python manage.py makemigrations blog. Должно получиться примерно так:
+Последним шагом будет добавление нашей модели в базу данных. Сначала мы должны дать Django знать, что сделали изменения в нашей модели (мы её только что создали!). Набери python manage.py makemigrations blog 
+
+Должно получиться примерно так:
 
 (myvenv) ~/djangogirls$ python manage.py makemigrations blog
 Migrations for 'blog':

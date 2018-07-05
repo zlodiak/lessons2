@@ -1,0 +1,83 @@
+ElementRef в компоненте ссылается на host компонента
+
+    <template #tpl>
+      <h1>ViewContainerRef</h1>
+    </template>
+
+    <div class="qw" id="qw">qwerty</div>
+
+    <div class="a" #a>aaa</div>
+
+
+
+import { Component, ElementRef, ViewContainerRef, ViewChild } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: [ './app.component.css' ]
+})
+export class AppComponent  {
+
+  @ViewChild('a') a: ElementRef;
+  @ViewChild('tpl') tpl: ElementRef;
+
+  constructor(
+    private el: ElementRef, 
+  ) {
+    const elem = el.nativeElement;
+    console.log('elem', elem, el);
+  }
+
+  ngAfterContentInit() {
+    console.log(this.el.nativeElement.querySelector('.qw'));
+    console.log(this.a);
+    console.log(this.tpl);
+  }
+
+}
+
+=============
+можно в view встоить содержимое темплейта:
+
+    <ng-template #tpl>
+      <h1>ViewContainerRef___</h1>
+    </ng-template>
+
+
+
+import { Component, ElementRef, ViewContainerRef, ViewChild, TemplateRef } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: [ './app.component.css' ]
+})
+export class AppComponent  {
+
+  @ViewChild('tpl') tpl: TemplateRef<any>;
+
+  constructor(
+    private viewContainerRef: ViewContainerRef
+  ) {
+
+  }
+
+  ngAfterViewInit() {
+    console.log('viewContainerRef', this.viewContainerRef);
+    const res = this.viewContainerRef.createEmbeddedView(this.tpl);
+    console.log(res);    
+  }
+
+}
+    
+
+=============
+=============
+=============
+=============
+=============
+=============
+=============
+=============
+=============

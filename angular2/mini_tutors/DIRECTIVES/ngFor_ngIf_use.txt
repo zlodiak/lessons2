@@ -1,0 +1,38 @@
+    <ng-container class="comment-outer" *ngFor="let comment of comments; let i = index" >
+      <div class="comment" id="comment_{{ comment.id }}" *ngIf="comment.id !== 0">
+        <div class="text">
+          {{ comment.text }}--
+          <pre>{{ comment|json }}</pre>
+        </div>
+
+        <app-panel></app-panel>
+
+        <app-area [isOpenArea]="comment.isOpenArea"></app-area>
+      </div>
+    </ng-container>
+
+
+
+
+
+
+  ngOnInit() {
+    this.commentsService.getComents().subscribe(comments => {
+
+      this.comments = comments.map(comment => {
+        return {
+          id: comment.id + 1,
+          author: comment.author,
+          text: comment.text,
+          isOpenArea: false
+        }
+      });
+      this.comments.push({
+        id: 0,
+        author: null,
+        text: null,
+        isOpenArea: false
+      });
+      console.log(this.comments);
+    });
+  }    

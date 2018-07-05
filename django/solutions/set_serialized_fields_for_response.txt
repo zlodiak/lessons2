@@ -1,0 +1,31 @@
+Как исключить из выборки поле?
+Фронт запрашивает у бека данные по такому адресу:
+http://127.0.0.1:8000/users/get_user?login=qwerty@yandex.ru
+
+
+Приходит такой ответ с сервера:
+fields:{fname: "kalinin", lname: "sergey", login: "qwerty@yandex.ru", pass_hash: "D033E22AE348AEB5660FC2140AEC35", created_date: "2018-07-01T10:53:58Z", …}
+model:"app_users.user"
+pk:1
+
+
+Я хотел бы на стороне сервера из ответа исключить поле pass_hash. Помогите пожалуйста поправить контроллер бека:
+
+def get_user(request):
+    login_ = request.GET['login']
+    user = User.objects.filter(login=login_)
+    user_serialized = serializers.serialize('json', user) 
+    return JsonResponse(user_serialized, safe=False)
+
+
+
+
+ответ:
+
+На сколько я помню, то можно задать поля для сериализации:
+
+user_serialized = serializers.serialize('json', user, fields=('fname', 'lname' ...)
+
+
+
+https://toster.ru/q/542767
