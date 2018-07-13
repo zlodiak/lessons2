@@ -1,0 +1,23 @@
+from django.conf.urls import url
+from . import views
+
+urlpatterns = [
+    url(r'^display_form$', views.display_form, name='display_form'),
+]
+
+
+
+
+---
+
+from django.http import HttpResponse
+from django.middleware.csrf import rotate_token
+
+def display_form(request):
+		response = HttpResponse('set csrf cookie for form')
+		rotate_token(request)
+		return response	
+
+
+
+
