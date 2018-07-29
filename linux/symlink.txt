@@ -1,0 +1,8 @@
+можно создать ссылку из одного каталога в другой(даже на уровне операционных систем):
+ln -s /home/kalinin/_MINT_18/lessons2 /var/www/html/MAPS
+
+
+тут больше:
+https://www.linux.org.ru/forum/general/14375620?lastmod=1532862658615#comment-14376218
+
+

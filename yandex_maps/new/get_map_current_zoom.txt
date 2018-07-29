@@ -1,0 +1,5 @@
+можно получить текущее значение зума карты:
+    myMap.events.add('actionend', function (e) {
+        console.log('stop action', myMap.getZoom());        
+        circle.geometry.setCoordinates(myMap.getCenter());
+    });

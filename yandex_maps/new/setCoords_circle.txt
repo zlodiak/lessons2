@@ -1,0 +1,10 @@
+можно по ходу программы менять координат круга:
+
+    circle = new ymaps.Circle([currCoords, 30], null, { fill: false, outline: true });
+
+
+    myMap.events.add('actionend', function (e) {
+        console.log('stop action');        
+        console.log('curr map center coords is: ', myMap.getCenter());
+        circle.geometry.setCoordinates(myMap.getCenter());
+    });
