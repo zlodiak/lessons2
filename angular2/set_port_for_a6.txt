@@ -1,0 +1,21 @@
+в angular 6 можно поменять порт так:
+
+Update for @angular/cli@6.x: In the new angular.json you now specify a port per "project"
+
+"projects": {
+    "my-cool-project": {
+        ... rest of project config omitted
+        "architect": {
+            "serve": {
+                "options": {
+                    "port": 1337
+                }
+            }
+        }
+    }
+}
+
+
+
+
+https://stackoverflow.com/questions/50519121/angular-6-how-to-change-default-port-4200
