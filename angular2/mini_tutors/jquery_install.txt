@@ -60,6 +60,30 @@ http://deanmalone.net/post/using-jquery-from-angular2/
 
 =======================
 =======================
+третий способ:
+// In the console
+// First install jQuery
+npm install --save jquery
+// and jQuery Definition
+npm install -D @types/jquery
+STEP 2 - IMPORT
+// Now, within any of the app files (ES2015 style)
+import * as $ from 'jquery';
+//
+$('#elemId').width();
+
+// OR
+
+// CommonJS style - working with "require"
+import $ = require('jquery')
+//
+$('#elemId').width();
+
+
+
+https://stackoverflow.com/questions/30623825/how-to-use-jquery-with-angular
+
+
 =======================
 =======================
 =======================
