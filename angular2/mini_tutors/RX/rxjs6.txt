@@ -1,0 +1,33 @@
+новый синтаксис для запроса через период:
+
+import { interval } from 'rxjs';
+import { mergeMap, map } from 'rxjs/operators';
+
+return interval(5000).pipe(
+  mergeMap(() => this.httpClient.get('https://jsonplaceholder.typicode.com/posts')),
+  map((r) => {
+    console.log(r);
+    return r;
+  })
+);
+
+
+
+или
+
+
+
+    return interval(5000).pipe(
+      tap(() => {
+        console.log('Прошло 5 секунд. Делаем запрос.');
+      }),
+      switchMap(() => this.httpClient.get('http://realtyminer.simbirsoft/api/houses/statistics/fill-factor'))
+    )
+
+
+
+
+тут больше:
+https://toster.ru/q/554648
+
+https://stackoverflow.com/questions/51849763/how-to-get-data-from-the-server-through-an-interval    
