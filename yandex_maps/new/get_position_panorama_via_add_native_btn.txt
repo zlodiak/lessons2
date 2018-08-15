@@ -1,0 +1,95 @@
+можно добавить кнопочку и через неё получать позицию текущей панорамы:
+
+
+ymaps.ready(init);
+
+var myMap,
+    currCoords = [55.76, 37.64];
+
+function init(){     
+		const closePanoramaElem = document.getElementById('closePanorama');  
+    myMap = new ymaps.Map("map", {
+        center: currCoords,
+        zoom: 18
+    });
+    
+  ymaps.panorama.locate([55.76, 37.64]).done(
+    (panoramas) => {
+      if (panoramas && panoramas.length > 0) {
+        const panoramaPlayer = new ymaps.panorama.Player('panorama', panoramas[0]);
+       
+        document.getElementById('closePanorama').addEventListener('click', () => {
+        	const panoObj = panoramaPlayer.getPanorama();
+          console.log('close', panoObj);
+          console.log(panoObj.getPosition())
+          closePanoramaElem.style.display = 'none';
+          panoramaPlayer.destroy();
+        });        
+      }
+    }); 
+    
+    
+    
+
+     
+};
+
+
+
+
+
+
+
+
+<div class="map" id="map"></div>
+<div class="panorama" id="panorama"></div>
+
+<div class="close-panorama" id="closePanorama" title="Назад к окружению">
+  close
+</div>
+
+
+
+body{
+  padding: 0px;
+  margin: 0;
+}
+
+
+.map {
+	width: 100vw;
+  height: 100vh;
+}
+
+#clear {
+  position: fixed;
+  top: 100px;
+  right: 10px;
+  background : red;
+  padding: 6px;
+}
+
+.panorama {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.close-panorama {
+  position: absolute;
+  z-index: 1000000000;
+  top: 60px;
+  right: 40px;
+  width: 60px;
+  height: 20px;
+  background: red;
+}
+
+
+
+
+http://jsfiddle.net/zlodiak/1x2w8fsb/166/

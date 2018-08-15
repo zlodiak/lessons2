@@ -1,0 +1,27 @@
+Обработчики надо привязывать не к самой карте, а к элементу управления, отвечающему за переключение фулскрин режима.
+
+
+ymaps.ready(init);
+
+var myMap,
+    collectionMarkers,
+    currCoords = [55.76, 37.64];
+
+function init(){     
+    myMap = new ymaps.Map("map", {
+        center: currCoords,
+        zoom: 18
+    });
+
+    var fs = myMap.controls.get('fullscreenControl');
+    fs.events.add('fullscreenenter', () => console.log('ON'));
+    fs.events.add('fullscreenexit', () =>console.log('OFF'));
+};
+
+
+
+
+
+
+http://jsfiddle.net/1x2w8fsb/9/
+https://toster.ru/q/550617

@@ -1,0 +1,45 @@
+при выходе из режима панорамы можно установить текущие координаты и поставить на них карту
+
+
+ymaps.ready(init);
+
+var myMap,
+    currCoords = [55.76, 37.64];
+
+function init(){     
+		const closePanoramaElem = document.getElementById('closePanorama');  
+    myMap = new ymaps.Map("map", {
+        center: currCoords,
+        zoom: 18
+    });
+    
+  ymaps.panorama.locate([55.76, 37.64]).done(
+    (panoramas) => {
+			setTimeout(() => {
+        if (panoramas && panoramas.length > 0) {
+          const panoramaPlayer = new ymaps.panorama.Player('panorama', panoramas[0]);
+
+          document.getElementById('closePanorama').addEventListener('click', () => {
+            const panoObj = panoramaPlayer.getPanorama();
+            console.log('close', panoObj);
+            console.log(panoObj.getPosition())
+            closePanoramaElem.style.display = 'none';
+            panoramaPlayer.destroy();
+            myMap.setCenter(panoObj.getPosition());
+          });        
+        }      
+      }, 3000);
+    }); 
+    
+    
+    
+
+     
+};
+
+
+
+
+
+
+http://jsfiddle.net/zlodiak/1x2w8fsb/178/
