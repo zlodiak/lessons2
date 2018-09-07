@@ -1,0 +1,8 @@
+если урл в виде строки, то можно получить параметр так:
+
+
+    getUrlParams(k, url){
+        const p = {};
+        url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(s, k, v){ return p[k] = v })
+        return k ? p[k] : p;
+    }

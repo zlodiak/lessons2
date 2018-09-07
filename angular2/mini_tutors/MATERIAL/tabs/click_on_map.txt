@@ -1,0 +1,20 @@
+ou could use the (selectedTabChange) event. Check Material2#tabs.
+
+Template:
+
+<mat-tab-group color="primary" (selectedTabChange)="onLinkClick($event)">
+  ...
+</mat-tab-group>
+Component:
+
+import { MatTabChangeEvent } from '@angular/material';
+
+// ...
+
+onLinkClick(event: MatTabChangeEvent) {
+  console.log('event => ', event);
+  console.log('index => ', event.index);
+  console.log('tab => ', event.tab);
+
+  this.router.navigate(['contacts']); 
+}

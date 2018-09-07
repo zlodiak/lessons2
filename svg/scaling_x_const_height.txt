@@ -1,0 +1,4 @@
+можно сделать постоянную высоту, но при этом svg будет занимать всю ширину. шрифты будут плющиться:
+<div style="width: 100%">
+  <svg width="360" height="200" viewBox="0 0 360 200" preserveAspectRatio="none" style="width:100%"></svg>
+</div>
