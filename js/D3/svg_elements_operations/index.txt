@@ -1,0 +1,77 @@
+в svg можно добавлять родные элементы типа rect, а можно html-элементы типа div(через foreignObject)
+
+родным элементам можно добавлять стандартные атрибуты, двигать их можно при помощи .attr("transform", "translate(100,200)");
+
+если родные элементы обёрнуты в тег g, то размеры тега g подстраиваются под содержимое
+
+в родные элементы вставлять другие элементы нельзя.
+
+для html-элементов нужно указывать пространство имён fo.append('xhtml:div').attr('class', 'div').html('its div');
+
+выборка делается аналогично getElementById или querySelector:
+const svg = d3.select('#svg');
+
+далее используются методы, подобные методам нативного js: const group = svg.append('g')
+
+в группу можно включать как родные элементы, так и html-элементы:
+const group = svg.append('g')
+                  .classed('group', true)
+                  .attr("transform", "translate(100,200)");   
+
+const fo = group.append("foreignObject")
+                .attr("class","fo")
+                .attr("x","40")
+                .attr("y","40")
+                .attr("width","200")
+                .attr("height","100");
+
+===================
+===================
+const svg = d3.select('#svg');
+
+const group = svg.append('g')
+                  .classed('group', true)
+                  .attr("transform", "translate(100,200)");
+
+group.append("circle") 
+        .classed('circle', true)
+        .attr("cx", 100)
+        .attr("cy", 100)
+        .attr("r", 50)
+        .attr("stroke-width", "2px")
+        .attr("stroke", "red")
+        .attr("transform", "translate(-200,0)");
+
+group.append("text") 
+        .attr("x", 0)
+        .attr("y", 200)
+        .attr("stroke-width", "2px")
+        .attr("stroke", "red")
+        .text('this is text');        
+
+
+const fo = svg.append("foreignObject")
+                .attr("class","fo")
+                .attr("x","40")
+                .attr("y","40")
+                .attr("width","200")
+                .attr("height","100");
+
+fo.append('xhtml:div').attr('class', 'div').html('its div');
+
+
+
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
+===================
