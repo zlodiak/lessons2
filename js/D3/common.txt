@@ -70,6 +70,39 @@ svg.append('g')
 		.style('stroke-width', lineWidth);	
 
 ==============================
+чтобы нарисовать вертикальную гисторгамму нужно:
+
+1. отрисовать высоту блоков: 
+function renderData() {
+	svg.selectAll(null)
+			.data(points)
+			.enter('')
+			.append('circle')
+		  .attr('cx', d => xScale(d[0]))
+		  .attr('cy', d => yScale(d[1]))
+		  .attr('r', radius)
+		  .attr('fill', pointColor);
+}
+
+->
+
+function renderData() {
+	svg.selectAll(null)
+			.data(points)
+			.enter('')
+			.append('rect')
+		  .attr('x', d => xScale(d[0]))
+		  .attr('y', d => yScale(d[1]))
+		  .attr('fill', barColor)
+		  .attr('width', width / points.length)
+		  .attr('height', d => height - yScale(d[1]) - paddings.bottom)
+		  .attr('stroke', pointColor)
+		  .attr('stroke-width', lineWidth);	             		
+}
+
+2. добавить длины оси X
+
+
 ==============================
 ==============================
 ==============================
