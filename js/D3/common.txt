@@ -1,0 +1,120 @@
+функция скаллинга отображает множество реальных координат на множество видимых координат(ширину/высоту холста)
+
+==============================
+чтобы сменить систему координат(начало переместить в нижний левый угол) нужно сделать:
+
+1. передвинуть ось X вниз так: attr('transform', 'translate(0,' + (height - 1) + ')')
+
+2. изменить функцию Yскаллинга так: .range([0, height]); -> .range([height, 0]);
+
+==============================
+чтобы добавить отступы по краям графика нужно сделать следующее:
+
+1. определить величины отступов:
+const paddings = {
+	left: 20,
+	top: 10,
+	right: 10,
+	bottom: 20
+};
+
+2. изменить скаллинг по Х: .range([0, width]); -> .range([paddings.left, width - paddings.right]);
+
+3. изменить скаллинг по Y: .range([height, 0]); -> .range([height - paddings.bottom, 0 + paddings.top]);
+
+4. сместить ось X: .attr('transform', 'translate(0,' + (height - 1) + ')') -> .attr('transform', 'translate(0,' + (height - paddings.bottom) + ')')
+
+5. сместить ось Y: .attr('transform', 'translate(' + paddings.left + ',0)')
+
+==============================
+чтобы добавить гриды(при условии, что ticks смотрят ВНЕ) нужно:
+
+1. 
+svg.selectAll('.x-axis-group .tick')
+	  .append('line')
+	  .classed('grid-line', true)
+	  .attr('x1', 0)
+	  .attr('y1', 0)
+	  .attr('x2', 0)
+	  .attr('y2', -height + paddings.top + paddings.bottom)		// ЭТО ВАЖНО
+	  .attr('shape-rendering', 'crispedges')
+	  .attr('stroke-width', gridWidth)
+	  .attr('stroke-opacity', gridOpacity)
+	  .attr('stroke', gridColor);
+
+2.
+svg.selectAll('.y-axis-group .tick')
+	  .append('line')
+	  .classed('grid-line', true)
+	  .attr('x1', 0)
+	  .attr('y1', 0)
+	  .attr('x2', width - paddings.right - paddings.left)		// ЭТО ВАЖНО
+	  .attr('y2', 0)
+	  .attr('shape-rendering', 'crispedges')
+	  .attr('stroke-width', gridWidth)
+	  .attr('stroke-opacity', gridOpacity)
+	  .attr('stroke', gridColor);	 	  
+
+==============================
+чтобы добавить линию нужно создать функцию линии и применить её:
+const line = d3.line()
+		            .x(d => xScale(d[0]))
+		            .y(d => yScale(d[1]));
+
+svg.append('g')
+		.classed('path', true)
+		.append('path')
+		.attr('d', line(points))
+		.style('fill', 'none')
+		.style('stroke', pointColor)
+		.style('stroke-width', lineWidth);	
+
+==============================
+чтобы нарисовать вертикальную гисторгамму нужно:
+
+1. отрисовать высоту блоков: 
+function renderData() {
+	svg.selectAll(null)
+			.data(points)
+			.enter('')
+			.append('circle')
+		  .attr('cx', d => xScale(d[0]))
+		  .attr('cy', d => yScale(d[1]))
+		  .attr('r', radius)
+		  .attr('fill', pointColor);
+}
+
+->
+
+function renderData() {
+	svg.selectAll(null)
+			.data(points)
+			.enter('')
+			.append('rect')
+		  .attr('x', d => xScale(d[0]))
+		  .attr('y', d => yScale(d[1]))
+		  .attr('fill', barColor)
+		  .attr('width', width / points.length)
+		  .attr('height', d => height - yScale(d[1]) - paddings.bottom)
+		  .attr('stroke', pointColor)
+		  .attr('stroke-width', lineWidth);	             		
+}
+
+2. добавить длины оси X
+
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
