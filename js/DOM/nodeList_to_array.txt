@@ -1,0 +1,47 @@
+можно коллекцию нод преобразовать в массив
+
+const nodelist = document.querySelectorAll('div');
+const nodelistToArray = Array.apply(null, nodelist);
+
+//later on ..
+
+nodelistToArray.forEach(...);
+nodelistToArray.map(...);
+nodelistToArray.slice(...);
+
+
+
+
+==========
+const nodelist = document.querySelectorAll('div');
+const nodelistToArray = Array.prototype.slice.call(nodelist); // or equivalently Array.prototype.slice.apply(nodelist);
+
+//later on ..
+
+nodelistToArray.forEach(...);
+nodelistToArray.map(...);
+nodelistToArray.slice(...);
+
+
+==========
+const nodelist = [...document.querySelectorAll('div')]; // returns a real array
+
+//later on ..
+
+nodelist.forEach(...);
+nodelist.map(...);
+nodelist.slice(...);
+
+
+==========
+==========
+https://www.jstips.co/en/javascript/converting-a-node-list-to-an-array/
+
+==========
+==========
+==========
+==========
+==========
+==========
+==========
+==========
