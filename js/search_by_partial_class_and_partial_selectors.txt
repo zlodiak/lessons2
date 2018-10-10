@@ -1,0 +1,24 @@
+можно искать элементы по части класса:
+
+
+<div id="panorama">
+<form class="poll-1225962377536__top-right" action="/cs/Satellite" target="_blank"></form>  
+</div>
+
+
+console.log(document.getElementById('panorama').querySelector('[class$=__top-right]'))
+
+https://stackoverflow.com/questions/3338680/is-there-a-css-selector-by-class-prefix
+
+
+
+
+
+и ещё можно назначать селекторы тоже по части класса:
+
+
+    #panorama ymaps[class$="__top-right"] {
+      top: 5px !important;
+      padding-right: 47px;
+      padding-top: 10px;
+    }
