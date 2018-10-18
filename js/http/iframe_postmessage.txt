@@ -1,0 +1,95 @@
+можно передавать данные между окнамиЪвкладками/ifames.
+для этого используется документированная возможность postMessage.
+при этом важно следаить за безопасностью.
+
+===========================
+пусть на http://localhost:300 крутится angular-приложение.
+пусть на http://localhost есть страничка, в которую в виде iframe-виджета встраивается angular-приложение, описанное выше.
+эти два адреса не same origin. 
+
+===========================
+на стороне целевой странице сделаем отправку данных по событию клика на кнопке:
+
+<iframe 
+  src="http://localhost:3001/#/estimate-compare" 
+  width="1200" 
+  height="800" 
+  id="widgetFlat"
+  name="target"
+  align="left">Ваш браузер не поддерживает плавающие фреймы!</iframe>    
+
+<button id="but">press me</button>
+
+<script type="text/javascript">
+  document.getElementById('but').addEventListener('click', send);
+  const widgetFlatEl = document.getElementById('widgetFlat');
+
+  function send() {
+    const obj = {
+      "aa": 12,
+      "bb": true,
+      "cc": "qwerty"
+    }
+    const objS = JSON.stringify(obj);
+    var win = window.frames.target;
+    win.postMessage(objS, "http://localhost:3001"); // хост/протокол/порт того окна, в которое отправляется сообщение
+  }
+</script>
+
+===========================
+на стороне angular-приложения организуем приём данных так:
+ngOnInit() {
+  window.window.addEventListener("message", (e) => {
+    if (e.origin !== "http://localhost") { return; }  // если данные пришли не с указанного хоста/протокола/порта, то не принимаем их
+    console.log('recieve', JSON.parse(e.data));
+  }, false);
+}
+
+===========================
+===========================
+есть способ передавать данные из целевой странички в angular-приложение:
+
+на целевой страничке делаем так:
+
+<button id="but">press me</button>
+
+<iframe 
+  src="http://localhost:3001/#/estimate-compare?a=123&b=qwe" 
+  width="1200" 
+  height="800" 
+  id="widgetFlat"
+  name="target"
+  align="left">Ваш браузер не поддерживает плавающие фреймы!</iframe>    
+
+<script type="text/javascript">
+  document.getElementById('but').addEventListener('click', send);
+  const widgetFlatEl = document.getElementById('widgetFlat');
+
+  function send() {
+    const src = widgetFlatEl.src;
+    let b = JSON.stringify({"aa": 111, "bb": true, "cc": "qwe"});
+    const src_ = 'http://localhost:3001/#/estimate-compare?a=' + Math.random() + '&b=' + b;
+    widgetFlatEl.setAttribute('src', src_);
+  }     
+</script>
+
+
+===========================
+на стороне angular-приложения делаем из гет-параметров поток и принмаем их:
+ngOnInit() {
+  this.route
+    .queryParams
+    .subscribe(params => {
+      console.log('queryParams:', params['a'], params['b']);
+    });
+}
+
+===========================
+таким образом можно данные отправлять многократно в пределах одного сеанса
+
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
