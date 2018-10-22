@@ -1,0 +1,113 @@
+маркеры можно создавать и удалить. карта состоит из коллекций объектов. каждая коллекция может хранить определенный вид объектов: маркеры, линии, полилинии и т.д. можно одной командой совершить действие с каждым объектом коллекции.
+
+=============================
+создаём карту и одну коллекция для маркеров:
+      this.map = new ymaps.Map('map', {
+        center: [this.latitude, this.longitude],
+        zoom: this.zoom,
+        controls: this.controls
+      });
+
+      this.collectionMarkers = new ymaps.GeoObjectCollection({});
+      this.map.geoObjects.add(this.collectionMarkers);
+
+
+=============================
+создаём маркер и помещаем его в коллекцию:
+    const marker = new ymaps.Placemark(coords, {}, { preset: 'islands#redHomeIcon' });
+    this.collectionMarkers.add(marker);
+
+
+=============================
+удаляем все маркеры из коллекции так:
+this.collectionMarkers.removeAll();
+
+=============================
+=============================
+полный код на angular:
+
+import { Component, OnInit } from '@angular/core';
+
+declare var ymaps: any;
+
+
+@Component({
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss']
+})
+export class MapComponent implements OnInit {
+
+  map: any;
+  GeoObjectCollection;
+  latitude = 55.8005930;
+  longitude = 49.2119510;
+  zoom = 16;
+  controls = ['fullscreenControl', 'rulerControl'];
+  collectionMarkers;
+
+  constructor() { }
+
+  ngOnInit() {
+    ymaps.ready().then(() => {
+      this.map = new ymaps.Map('map', {
+        center: [this.latitude, this.longitude],
+        zoom: this.zoom,
+        controls: this.controls
+      });
+
+      this.collectionMarkers = new ymaps.GeoObjectCollection({});
+      this.map.geoObjects.add(this.collectionMarkers);
+
+      this.startClickListener();
+      this.setMarker([this.latitude, this.longitude]);
+    });
+  }
+
+  startClickListener() {
+    this.map.events.add('click', (e) => {
+      e.stopPropagation();
+
+      const coords = e.get('coords');
+      this.latitude = coords[0];
+      this.longitude = coords[1];
+
+      ymaps.geocode(coords).then((res) => {
+        const firstGeoObject = res.geoObjects.get(0);
+        if (firstGeoObject) {
+          const addressLine = firstGeoObject.getAddressLine();
+        }
+      });
+
+      this.setMarker([this.latitude, this.longitude]);
+    });
+  }
+
+  setMarker(coords) {
+    this.collectionMarkers.removeAll();
+    const marker = new ymaps.Placemark(coords, {}, { preset: 'islands#redHomeIcon' });
+    this.collectionMarkers.add(marker);
+  }
+
+}
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
