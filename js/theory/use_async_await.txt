@@ -1,0 +1,12 @@
+пример простейшего использования async await. это альтернатива промисам
+
+			 (async function(){
+					const url = 'http://localhost/WIDGETS/body_widget/0_default/index.html';
+					const html = await (await fetch(url)).text();
+					console.log(html);
+			 })();
+
+
+
+
+https://toster.ru/q/574678			 
