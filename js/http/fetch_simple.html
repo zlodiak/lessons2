@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang=ru>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title></title>
+		<link href="css/styles.css" rel="stylesheet">
+	</head>
+	
+	<body>
+		<div id="happyWidgetParent"></div>
+
+		<script> 
+			 fetch('http://localhost/WIDGETS/body_widget/0_default/index.html')
+			 	.then(
+			 		resp => {
+			 			// console.log(resp.text());		// it promis
+			 			return resp.text();
+			 		},
+			 		error => {
+			 			console.log(error);
+			 		}
+			 	)
+			 .then(
+			 		resp => {
+			 			console.log(resp);
+			 		}
+			 	);
+		</script>
+	</body>
+</html>

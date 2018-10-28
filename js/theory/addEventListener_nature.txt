@@ -1,0 +1,74 @@
+класс окна и класс едемента наследуются от общего класса события.
+после клика, из класса окна вызывается очерель событий с аргументом event.
+так происходит навешивание обработчика событий.
+
+
+		class Events {
+		  constructor () {
+		    this.listeners = {};
+		  }
+		  get (event) {
+		    return this.listeners[event] || null;
+		  }
+		  addListener (event, listener) {
+		  	console.log('addListener start');
+		  	this.listeners[event] = listener;
+		  }
+		  removeListener (event, listener) {
+		  	const func = this.get(event);
+		    if (func) {
+		    	delete func[event];
+		    }
+		  }
+		  trigger (event, eventObj) {
+		  	console.log('trigger start. eventObj: ', eventObj);
+		    const func = this.get(event);
+		    if (func) {
+		    	func(eventObj);
+		    }
+		  }
+		}		
+
+		class DOMelement {
+			constructor() {
+				console.log('construct dom element');
+			}
+		}
+
+		class WINDOWelement {
+			constructor() {
+				console.log('construct window element');
+
+				// user click simulation
+				setTimeout(() => {
+					console.log('user click to dom element');
+					this.trigger('click', {
+						x: 100,
+						y: 200,
+						target: 'bla bla'
+					});
+				}, 3000);
+			}
+		}		
+
+		const events = new Events();
+		const domElement = new DOMelement();
+		const windowElement = new WINDOWelement();
+
+		domElement.__proto__ = events;
+		windowElement.__proto__ = events;
+
+		domElement.addListener('click', (eventObj) => { console.log('is clicked. eventObj: ', eventObj) });
+
+
+
+
+
+
+
+
+
+
+		========
+
+		https://toster.ru/q/574375

@@ -1,0 +1,96 @@
+можно вставить одну страничку в другую, подгрузив её аяксом
+
+
+<!DOCTYPE html>
+
+<html lang=ru>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title></title>
+		<link href="css/styles.css" rel="stylesheet">
+	</head>
+	
+	<body>
+		<div id="happyWidgetParent"></div>
+
+		<script> 
+		  (async function(){
+		      const url = '/widgets/body_widget/0_default/'
+		      const html = await (await fetch(url + 'index.html')).text()
+		      const dom = new DOMParser().parseFromString(html, 'text/html')
+		      const scripts = []
+		      for(let i of dom.querySelectorAll('[href], [src]')){
+		          let attr = i.attributes['href' in i.attributes ? 'href' : 'src']
+		          attr.textContent = url + attr.textContent
+		          if(i instanceof HTMLScriptElement) scripts.push(
+		                  Object.assign(document.createElement('script'), {
+		                      parent: i.parentNode, src: i.src, async: i.remove()
+		                  })
+		              )
+		      }
+		      happyWidgetParent.append(...dom.body.children)
+              for(let i of scripts) i.parent.append(i)
+		  })()
+		</script>
+	</body>
+</html>
+
+=====================================
+body:
+
+
+<!DOCTYPE html>
+
+<html lang=ru>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>widget body</title>		
+	</head>
+	
+	<body>		
+		<div class="table" id="table">tablee</div>
+
+		<div id="styles">
+			<link href="css/styles.css" rel="stylesheet">
+		</div>
+
+		<div id="scripts">
+			<script src="js/jquery.js"></script>	
+			<script src="js/scripts.js"></script>
+		</div>
+	</body>
+</html>
+
+
+js/scripts.js:
+console.log('widget start');
+const tableEl = $('#table');
+console.log('tableEl', tableEl);
+console.log('tableEl html', tableEl.html());
+tableEl.on('click', () => { alert('click!'); });
+
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
