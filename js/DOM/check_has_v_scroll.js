@@ -23,3 +23,18 @@ function hasNoVerticalScroll(node){
       return node.scrollHeight> node.offsetHeight;
   }
 }    
+
+
+
+
+
+
+
+
+
+
+// второй способ.
+
+    var div = document.querySelector('html');
+    var hasVerticalScrollbar = div.scrollHeight > div.clientHeight;
+    console.log(hasVerticalScrollbar);
