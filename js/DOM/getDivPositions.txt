@@ -1,0 +1,21 @@
+можно получить позицию блока относительно окна и относительно документа, используя такую функцию:
+
+
+function getOffset(el) {
+  const rect = el.getBoundingClientRect();
+  return {
+    left: rect.left,
+    top: rect.top,
+    leftAbs: rect.left + window.scrollX,
+    topAbs: rect.top + window.scrollY
+  };
+}
+
+
+    const element = document.getElementById('filterIcon');
+    const offset = getOffset(element);
+    console.log('offset', offset)
+
+
+
+    тут больше: https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element
