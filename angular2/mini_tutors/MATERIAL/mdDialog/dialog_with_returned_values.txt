@@ -1,0 +1,79 @@
+диалог может возвращать значения:
+
+основной компонент:
+import { FilterComponent } from './filter/filter.component';
+import { MatDialog, MatDialogRef } from '@angular/material';
+
+  constructor(
+    private matDialog: MatDialog
+  ) { }
+
+  openFilter() {
+    const filterDialog = this.matDialog.open(FilterComponent, {
+      maxWidth: '50vw',
+      hasBackdrop: true,
+      data: { 
+        message: 'message',
+        versions: this.versions,
+        periods: this.periods
+      }
+    });
+
+    filterDialog.afterClosed().subscribe(val => {
+      console.log('returned val is :', val);
+    }); 
+  }  
+
+===========================
+компонент окна:
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+  constructor(public matDialogRef: MatDialogRef<FilterComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+
+  filtering() {
+    const filterValues = {
+      radius: this.form.get('radius').value,
+      limit: this.form.get('limit').value,
+      selectedPeriod: this.form.get('selectedPeriod').value,
+      sourceFlat: this.form.get('sourceFlat').value,
+      sourceAvito: this.form.get('sourceAvito').value,
+      material1: this.form.get('material1').value,
+      material2: this.form.get('material2').value
+
+    };
+    console.log('filterValues', filterValues);
+    this.matDialogRef.close(filterValues)
+  }
+
+
+  tpl:
+
+    <button 
+    class="w3-btn w3-border w3-border-blue w3-round w3-ripple w3-blue submit-btn btn" 
+    [disabled]="!form.valid"
+    mat-rad-buton 
+    (click)="filtering()">Применить
+  </button>    
+
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
