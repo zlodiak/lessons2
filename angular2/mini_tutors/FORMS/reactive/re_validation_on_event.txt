@@ -1,0 +1,4 @@
+перезапуск валидации всех полей по событию:
+	ngDoCheck() {
+		this.form.get('floor').updateValueAndValidity();
+	}

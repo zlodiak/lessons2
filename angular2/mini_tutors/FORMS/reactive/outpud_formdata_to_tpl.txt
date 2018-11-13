@@ -1,0 +1,9 @@
+можно данные формы вывести в шаблон:
+
+  get errors() {
+    return JSON.stringify(this.form.get('count').errors, null, 2)
+  }
+
+
+
+  <pre>{{ errors }}</pre>
