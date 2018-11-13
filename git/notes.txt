@@ -182,6 +182,9 @@ kalinin@lenovo /var/www/html/misc/tag $ git hist --all
 необходимо сделать fast-forward так: git checkout master && git merge second
 
 =========================================
+удалить удалённую ветку:
+git push origin --delete <branchName>
+
 =========================================
 =========================================
 =========================================
