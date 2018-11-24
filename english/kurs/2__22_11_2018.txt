@@ -43,6 +43,35 @@ reading1:
 
 
 ==============================
+IDE полезна для быстрого рефакторинга существующего кода. также она удобна для написания нового кода. но любая IDE сильно нагружает процессор поэтому некоторые разработчики предпочитают более простые решения.
+
+IDE is useful for fast code refactoring. also she is useful for writing a new code. but any IDE boosted processor so much, therefore some developers prefer alternative solutions.
+
+
+опенсорс это хорошо, однако он накладывает некоторые ограничения на разработчика. например если разработчик создаёт продукт на базе опенсорса, то он не может защитить его при помощи лицензии.
+
+open source is good, but he restrict a developers. for example if developer create a product on open source base, then he cannot defend this product.
+
+
+существует много компаний, которые нанимают программистов и перепродают их работу намного дороже.
+
+there are many companies, which are hiring developers and resale theirs works.
+
+
+пользователи проприетарного кода попадают в зависимость от компаний.
+
+proprietar products users become dependent on companies.
+
+
+в интернете очень трудно управлять доступом к запрещённым ресурсам.
+
+access control of restricted internet-resources is very hard goal.
+
+
+юзабилити важно только при управлении самолётом, а в интернете это бесполезная вещь.
+
+usability is important only for flying machines pilots, but in internet is thing so useless.
+
 ==============================
 ==============================
 ==============================
