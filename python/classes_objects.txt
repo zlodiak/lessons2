@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+class A(object): 
+  def foo1(self,x): 
+    print("executing foo1(%s,%s)" % (self,x) )
+    self.foo2()
+
+  def foo2(self): 
+    print('method foo2 ' + str(self.__class__))    
+
+  @classmethod 
+  def class_foo(cls,x): 
+    print("executing class_foo(%s,%s)" % (cls,x) )
+    cls.class_foo2()
+
+  @classmethod 
+  def class_foo2(cls):
+    print('method class_foo2')
+
+  @staticmethod 
+  def static_foo(x): 
+    print("executing static_foo(%s)" % x)
+
+a = A() 
+
+# при вызове метода экземпляра класс первым аргументом всегда неявно передаётся ссылка на экземпляр класса. 
+# её можно использовать для вызова других методов этого экземпляра(foo2)
+# при этом из экземпляра класса можно добраться до самого класса self.__class__
+a.foo1(1)
+a.foo2()
+
+# при вызове метода класса первым аргументом неявно передаётся ссылка на класс
+# её можно использовать для запуска других методов класса(class_foo2)
+a.class_foo(2)
+A.class_foo2()
+
+# это просто метод класса никак не связанный с классом
+A.static_foo(100)
+
+
+# можно вызвать метод через класс. для этого первым аргументом нужно передать объект, который вызывается
+A.foo1(a, 1)
+
+
+
+
+
+==================================
+#!/usr/bin/env python3
+
+class Person(object):
+  type = 'man'
+
+  def __init__(self, first_name, last_name):
+    self.first_name = first_name
+    self.last_name = last_name
+
+  def who(self):
+    return self.type
+
+  def change(self):
+    self.type = 'woman'
+
+  def who2(self):
+    return self.type    
+
+  def delete(self):
+    del self.type 
+
+  def who3(self):
+    return self.type       
+  
+
+p = Person('qqq', 'www')
+print(p.who())
+p.change()
+print(p.who2())
+p.delete()
+print(p.who3())
+
+# type из класса наследуется экземплярами. но экземпляр может переопределить type.
+# однако экземпляр не может изменить переменную класса. поэтому поле удаления переменной из экземплляра, опять берётся переменная класса
+
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
