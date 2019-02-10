@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+from inspect import getgeneratorstate as gs
+
+def subgen():
+  print('start')
+  message = yield
+  print('recieved', message)
+
+# 1
+g = subgen()
+
+# 2
+g.send(None)
+# next(g)
+
+# 3
+g.send('ok')
+
+print(gs(g))
+
+
+
+корутин нужно сначала:
+1. создать
+2. проинициализировать
+3. отправить значение
+
+он будет работать так же ка кгенератор. то есть отдавать значения пошагово

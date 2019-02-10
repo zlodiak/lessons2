@@ -1,0 +1,19 @@
+def subgen():
+  print('start')
+  x = 'ready'
+  message = yield x
+  print('recieved', message)
+
+g = subgen()
+print(g.send(None)) # start, ready
+g.send('ok')        # recieved
+
+
+# то есть в первой итерации передаём None в скобки, а во второй итерации передаём 'ok' в yield
+
+out:
+
+start
+ready
+
+recieved ok

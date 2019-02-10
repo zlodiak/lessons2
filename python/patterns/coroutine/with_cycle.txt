@@ -1,0 +1,26 @@
+def average():
+  count = 0
+  summ = 0
+  average = None
+  print('init')
+
+  while True:
+    try:
+      x = yield average
+    except StopIteration:
+      print('Done')
+    else:     # выполняется если не произошло исключения
+      count += 1
+      summ += x
+      average = round(summ / count, 2)
+
+
+g = average()         # init пока не выводится
+print(g.send(None))   # init выводится, yield возвращает None
+# print(g.send(4))
+# print(g.send(5))
+# print(g.send(3))
+
+
+
+это вычисление среднего значения

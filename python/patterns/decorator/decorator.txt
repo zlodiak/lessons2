@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+# декораторная функция оборачивает действиями целевую функцию.
+def my_shiny_new_decorator(function_to_decorate):
+ def the_wrapper_around_the_original_function():
+    print("Я - код, который отработает до вызова функции")
+    function_to_decorate() # Сама функция
+    print("А я - код, срабатывающий после")
+ return the_wrapper_around_the_original_function
+
+def stand_alone_function():
+  print("Я простая одинокая функция, ты ведь не посмеешь меня изменять?")
+  
+#и затем подменяет её название
+stand_alone_function = my_shiny_new_decorator(stand_alone_function)
+
+# вызов декорированной функции
+stand_alone_function()
+
+========================
+то же самое записанное через @:
+
+#!/usr/bin/env python3
+
+def my_shiny_new_decorator(function_to_decorate):
+ def the_wrapper_around_the_original_function():
+    print("Я - код, который отработает до вызова функции")
+    function_to_decorate() # Сама функция
+    print("А я - код, срабатывающий после")
+ return the_wrapper_around_the_original_function
+
+@my_shiny_new_decorator
+def stand_alone_function():
+  print("Оставь меня в покое")
+
+stand_alone_function()    
+
+
+# stand_alone_function = my_shiny_new_decorator(stand_alone_function)
+# то есть вызываем stand_alone_function, но на самом деле вызываем my_shiny_new_decorator
+ 
+
+========================
+https://pythonworld.ru/osnovy/dekoratory.html
+
+============================
+
+декораторы можно применять последовательно по несколько штук
