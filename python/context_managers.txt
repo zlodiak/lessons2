@@ -1,0 +1,96 @@
+контекстный менеджеры реализуют 2 метода: __enter__, __exit__. они выполняются соответственно при старте и удалении объекта, с которым работает контекстный менеджер.
+
+====================================
+пример открытия и закрытия файла:
+
+class FileConn:
+ 
+    def __init__(self, file_name):
+        self.file_name = file_name
+    
+    def __enter__(self):
+        print('open connection')
+        self.file = open(self.file_name, 'r')
+        return self.file
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print('close connection')
+        self.file.close()
+ 
+if __name__ == '__main__':
+    print('start of script')
+
+    name = 'test.txt'
+    
+    with FileConn(name) as file:
+        for string in file:
+            print(string, end=' ')
+
+    print('end of script')
+
+====================================
+пример работы с sqlite3:
+
+import sqlite3
+
+class DBConn:
+ 
+    def __init__(self, db_name):
+        self.db_name = db_name
+    
+    def __enter__(self):
+        print('open connection')
+        self.conn = sqlite3.connect(self.db_name)
+        return self.conn
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print('close connection')
+        self.conn.close()
+ 
+if __name__ == '__main__':
+    print('start of script')
+
+    name = 'test.db'
+    
+    with DBConn(name) as db:
+        cursor = db.cursor()
+        cursor.execute("SELECT age FROM t1 ORDER BY age LIMIT 2")
+        results = cursor.fetchall()
+        print(results)
+
+    print('end of script')
+
+
+# start of script
+# open connection
+# [(11,), (22,)]
+# close connection
+# end of script
+
+
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
