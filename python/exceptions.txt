@@ -6,19 +6,135 @@ except ValueError:
   print("Пожалуйста, вводите только числа")
 except ZeroDivisionError:
   print("На ноль делить нельзя")
+except:
+  print('common error')
 else:
 	print('исключения не было')
 finally:
 	print('выполняется всегда')
 
 =========================+
+можно и так:
+except KeyError:
+    print("A KeyError occurred!")
+
 =========================+
+генерация исключения:
+raise IOError("текст исключения")
+
+проброс выше:
+try:
+    your_code
+except Exception as e:
+    raise
+
 =========================+
+если есть вложенность, то исключение всплывает:
+try:
+  q = [1, 2, 3]
+  try:
+    a = q[10]
+  except:
+    print('errorr')
+  else:
+    print('okk')
+except:
+  print('error out')
+else:
+  print('ok out')
+
+# errorr
+# ok out
+
+
 =========================+
+если исключение не отлавливается внутренним блоком, то оно высплывает:
+try:
+  q = [1, 2, 3]
+  try:
+    a = q[10]
+  except TypeError:
+    print('errorr')
+  else:
+    print('okk')
+except:
+  print('error out')
+else:
+  print('ok out')
+
+# ok out  
+
 =========================+
+можно генерировать и пробрасывать исключения во внешний блок. при этом в этом примере во внешнем блоке отлавливается только определённый тип исключения:
+
+try:
+  q = [1, 2, 3]
+  try:
+    a = q[10]
+  except:
+    raise IndexError()
+  else:
+    print('okk')
+except TypeError:
+  print('errorr TypeError')
+except IndexError:
+  print('errorr IndexError')   
+else:
+  print('ok out')
+
+# errorr IndexError  
+
 =========================+
+гененрировать исключения можно в секции try, в этом случае исключение не всплывает.
+
+try:
+  raise IndexError()
+except IndexError:
+  print('err')
+  pass
+else:
+  print('okk')
+
 =========================+
+можно определитьсвои классы исключений:
+class SpecialErrorOne(Exception):
+    def __init__(self):
+        print('Call SpecialErrorOne')
+
+class SpecialErrorTwo(Exception):
+    def __init__(self):
+        print('Call SpecialErrorTwo')
+
+try:
+    raise SpecialErrorTwo
+except SpecialErrorTwo:
+    print('eee')
+
+
 =========================+
+или то же самое, но сложнее:
+
+class SpecialErrorOne(Exception):
+    def __init__(self):
+        print('Call SpecialErrorOne')
+
+class SpecialErrorTwo(Exception):
+    def __init__(self):
+        print('Call SpecialErrorTwo')
+
+try:
+    raise SpecialErrorTwo
+except Exception as ex:
+    if isinstance(ex, SpecialErrorOne):
+        print('doing_special_action1')
+    elif isinstance(ex, SpecialErrorTwo):
+        print('doing_special_action2')
+
+
+# Call SpecialErrorTwo
+# doing_special_action2
+
+
 =========================+
 =========================+
 =========================+

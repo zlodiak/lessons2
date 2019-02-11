@@ -1,0 +1,49 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/observable/interval';
+import 'rxjs/add/operator/takeUntil';
+
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+
+@Component({ ... })
+export class AppComponent implements OnInit, OnDestroy {
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
+  constructor(private apollo: Apollo) {}
+
+  ngOnInit() {
+    this.apollo.watchQuery({
+      query: gql`
+        query getAllPosts {
+          allPosts {
+            title
+            description
+            publishedAt
+          }
+        }
+      `
+    })
+    .takeUntil(this.destroy$)
+    .subscribe(({data}) => {
+      console.log(data);
+    });
+  }
+
+  onStartInterval() {
+    Observable
+    .interval(250)
+    .takeUntil(this.destroy$)
+    .subscribe(val => {
+      console.log('Current value:', val);
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    // Now let's also unsubscribe from the subject itself:
+    this.destroy$.unsubscribe();
+  }
+}

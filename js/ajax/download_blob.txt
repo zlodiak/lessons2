@@ -1,0 +1,54 @@
+можно скачать файл в двоичном формате
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState==4 && xhr.status==200) {
+        var blob = new Blob([xhr.response], {
+            type: xhr.getResponseHeader("Content-Type")
+        });
+        var imgUrl = window.URL.createObjectURL(blob);
+        document.getElementById("img").src = imgUrl;
+      }
+    }
+  xhr.responseType = "arraybuffer";
+  xhr.open("GET","Hacker.jpg",truexhr.send();
+  
+xhr.send();
+  
+
+
+
+
+
+
+https://capdroid.wordpress.com/2015/03/09/html-download-image-through-ajax-and-display-it/
+
+
+
+
+
+
+
+или так:
+
+    var URL = window.URL;
+    if(this.item.images) {
+      this.item.images.forEach((imageUrl, i) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'arraybuffer';
+        xhr.open('GET', '//realtyminer.simbirsoft/api/proxy/image?url=' + imageUrl, true);
+        xhr.send();
+    
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var blob = new Blob([xhr.response], {
+              type: xhr.getResponseHeader("Content-Type")
+            });
+            var imgUrl = window.URL.createObjectURL(blob);
+            this.imagesUrls.push(this.domSanitizer.bypassSecurityTrustUrl(imgUrl));
+          } else {
+            console.log( 'error' + xhr );
+          }
+        };
+      });
+    }     
