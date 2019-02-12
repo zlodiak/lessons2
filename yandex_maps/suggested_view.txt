@@ -1,0 +1,40 @@
+пример провайдера, обрезающего строку адреса:
+
+
+ymaps.ready().then(() => {
+  const find = function (arr, find) {
+    return arr.filter(function (value) {
+        return (value + "").toLowerCase().indexOf(find.toLowerCase()) != -1;
+    });
+  };
+
+  this.suggestView = new ymaps.SuggestView('addressField', {
+    offset: [-1, 10],
+    container: document.getElementById('dropAddr'),
+    provider: {
+      suggest: function (request, options) {
+        let resultArray = [];
+        let suggest = new ymaps.suggest(request);
+        let addressShort = Helper.toClearAddress(Helper._addDtoAddress(i.value));
+        let result = suggest.then( items => {
+          for(const i of items) {
+            resultArray.push({
+              value:        addressShort,
+              displayName:  addressShort
+            });
+          }
+          return ymaps.vow.resolve(resultArray);
+        });
+        return ymaps.vow.resolve(result);        
+      }
+    }
+  });
+
+  // когда пользователь сделал выбор в suggestedView
+  this.suggestView.events.add('select', addr => {
+    const addressStr = addr.originalEvent.item.value;
+    const addressClear = Helper.toClearAddress(addressStr);
+    const address = Helper._addDtoAddress(addressClear);
+    this.requestGeocoder(address); 
+  });
+});
