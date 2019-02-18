@@ -1,0 +1,46 @@
+string неизменяемый хэшируемый массив символов юникода. каждый символ строки явяется строкой с длиной 1.
+
+==================
+s = 'qwerty'
+s[1] = 'x' #приведёт к ошибке
+
+имеет методы:
+s = 'qwerty'
+d = s.upper()
+print(d) 	#QWERTY
+
+string1 = 'Hello, hello, hello, hello'
+string1.count('hello')  		# 3
+
+string1 = 'interface FastEthernet0/1'
+string1.find('Fast') 		# 10
+
+string1 = 'FastEthernet0/1'
+string1.replace('Fast', 'Gigabit')   # 'GigabitEthernet0/1'
+
+strip()
+lstrip()
+rstrip()
+
+startswith()
+endswith()
+
+upper(), lower(), swapcase(), title()
+
+Метод split() разбивает строку на части, возвращает список
+
+>>> print('qwerty{0}---{1}'.format(333, 444))
+qwerty333---444
+
+>>> print("%s---%s---%s" % ('aaa', 'sss', 'ddd'))
+aaa---sss---ddd
+
+
+==================
+==================
+==================
+==================
+==================
+==================
+==================
+==================
