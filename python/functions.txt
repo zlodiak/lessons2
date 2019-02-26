@@ -5,7 +5,7 @@
 если функция не заканчивается инструкцией return, то она возвращает None
 
 =======================
-map, filater, reduce можно заменить списковыми включениями:
+map, filter, reduce можно заменить списковыми включениями:
 
 def func(a): return a + 10
 
@@ -14,6 +14,23 @@ print(s)
 
 d = [func(n) for n in range(3)]
 print(d)
+
+=======================
+
+# map analog
+q = [1,2,3,4]
+b = [x+10 for x in q]
+print(b)
+
+# filter analog
+q = [1,2,3,4]
+b = [x for x in q if x > 2]
+print(b)
+
+# reduce analog
+q = [1,2,3,4]
+b = sum([x for x in q])
+print(b)
 
 
 =======================

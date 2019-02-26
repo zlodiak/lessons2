@@ -37,6 +37,16 @@ aaa---sss---ddd
 
 
 ==================
+проверка на строку:
+
+#!/usr/bin/env python3
+
+print(type('qwe') is str)
+
+print(isinstance('qwe', str))
+
+print('qwe'.isalpha())
+
 ==================
 ==================
 ==================
