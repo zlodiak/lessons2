@@ -25,7 +25,34 @@ for l in obj:
 генератор отличается от итератора там, что производит отдаваемые величины(например по какой-нибудь формуле/выражению). итератор же отдаёт готовые значения, которые в нём хранятся.
 
 ======================
+def gen(word):
+  for n in word:
+    try:
+      i += 1
+    except:
+      i = 0
+    yield word[i]
+
+for letter in gen('sergey'):
+  print(letter)
+
 ======================
+def gen(word):
+  for n in word:
+    try:
+      i += 1
+    except:
+      i = 0
+    yield word[i]
+
+g = gen('sergey')
+print(next(g))
+print(next(g))
+print(next(g))
+print(next(g))
+print(next(g))
+print(next(g))
+
 ======================
 ======================
 ======================
