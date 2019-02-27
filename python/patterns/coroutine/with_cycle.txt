@@ -24,3 +24,34 @@ print(g.send(None))   # init выводится, yield возвращает None
 
 
 это вычисление среднего значения
+
+
+
+===========
+вот два зацикленные:
+
+import time
+
+def gen1():
+    nums = yield
+    while True:
+        time.sleep(2)
+        nums = yield nums[0] + nums[1]
+
+g1 = gen1()
+g1.send(None)
+
+
+def gen2():
+    nums = yield
+    while True:
+        time.sleep(0.4)
+        nums = yield nums[0] + nums[1]
+
+g2 = gen2()
+g2.send(None)
+
+
+for i in range(5):
+    print('g1: ', g1.send((1, i)))
+    print('g2: ', g2.send((1, i)))
