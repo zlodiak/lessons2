@@ -29,3 +29,27 @@ print(g)
 3. отправить значение
 
 он будет работать так же ка кгенератор. то есть отдавать значения пошагово
+
+
+======
+чтобы избавиться от исключения по завершению корутины можно зациклить:
+def subgen():
+    while True:
+        print('first iteration')
+        message = yield
+        print('second iteration')
+        print('recieved', message)
+
+# 1
+g = subgen()
+
+# 2
+g.send(None)
+
+# 3
+g.send('ok')
+
+print(g)
+
+
+===========
