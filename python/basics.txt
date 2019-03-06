@@ -201,8 +201,62 @@ next(i) # 2
 условие if __name__ == '__main__' проверяет, был ли файл запущен напрямую.
 
 ==============================================
+print(*objects, sep=' ', end='n', file=sys.stdout, flush=False)
+
+можно вывести объекты в файл, указав параметр file:
+
+sourceFile = open('python.txt', 'w')
+print("Круто же, правда?', file = sourceFile)
+sourceFile.close()
+
+
+аналоги input, print:
+
+>>> import sys
+>>> contents = sys.stdin.read()
+a
+b
+EOF
+>>> contents
+'a\nb\nEOF\n'
+>>> sys.stdout.write(contents)
+a
+b
+EOF
+
+не забыть нажать ctrl+D
+
 ==============================================
+a = [1, 2]
+b = a
+print(id(a), id(b))
+print(a == b) # true
+print(a is b) # true
+print(a is not b) # false
+
+
+q = [1, 2]
+w = [1, 2]
+print(q == w) # true
+print(q is w) # false
+
+
+----
+
+a = [1, 2]
+b = a
+
+print(a == b) # true
+print(a is b) # true
+
+c = list([1, 2])
+print(a == c)
+print(a is c)
+
+
 ==============================================
+
+
 ==============================================
 ==============================================
 ==============================================

@@ -69,6 +69,34 @@ if __name__ == '__main__':
 
 
 ====================================
+существует модуль contextmanager, который представляет из себя генератор.
+__enter__ соответствует тому, что до yield.
+__exit__ соответствует тому, что после yield.
+
+
+вот пример открытия файла и записи в него.
+
+from contextlib import contextmanager
+ 
+@contextmanager
+def file_open(path):
+    try:
+        f_obj = open(path, 'w')
+        yield f_obj
+    except OSError:
+        print("We had an error!")
+    finally:
+        print('Closing file')
+        f_obj.close()
+ 
+ 
+if __name__ == '__main__':
+    with file_open('test.txt') as fobj:
+    fobj.write('Testing context managers')
+
+
+существуют многоразовые контекстные менеджеры.    
+
 ====================================
 ====================================
 ====================================
