@@ -170,8 +170,21 @@ print(p.who3())
 
 ==================================
 class Manager(Person):        # Наследование
-def giveRaise(self, ...):     # Адаптация(тоже можно адаптировать конструктор)
-def someThingElse(self, ...): # Расширение
+
+def giveRaise(self, ...):     # Адаптация(тоже можно адаптировать конструктор). по сути вызывается метод родителя, но пеердаются другие аргументы
+
+class Person:
+  def giveRaise(self, percent):
+    print(percent)
+class Manager(Person):
+  def giveRaise(self, percent):
+    Person.giveRaise(self, percent + 10)  
+p = Person()
+p.giveRaise(1)  # 1
+m = Manager()
+m.giveRaise(1)  # 11
+
+def someThingElse(self, ...): # Расширение. это просто добавление в наследника метода, которого не в родителе
 
 ----------------------
 перегрузка методов.
