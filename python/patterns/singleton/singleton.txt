@@ -1,0 +1,51 @@
+синглтон гарантирует, что не будут созданы два и более экземпляра определённого класса.
+
+это бывает необходимо например когда нужно организовать доступ к ресурсу(БД, файл и т.д.) только через одну точку входа.
+
+Основная мысль:
+1. Гарантирует, что у класса есть только один экземпляр!
+2. Предоставляет глобальную точку доступа (в отличии от переменных, их можно переписывать)
+
+вот однопоточный вариант синглтона:
+
+class Singleton:
+    _instance = None
+
+    def __init__(self):
+        if Singleton._instance is not None:
+            raise ReferenceError("Cannot instantiate a singleton class.")
+        else:
+            Singleton._instance = self
+
+    @staticmethod
+    def get_instance():
+        if not Singleton._instance:
+            Singleton()
+        return Singleton._instance
+
+    def some_business_logic(self):
+        with open('test.txt', 'r') as file:
+            for line in file:
+                print(line)
+
+if __name__ == "__main__":
+    s1 = Singleton.get_instance()
+    s2 = Singleton.get_instance()
+    # s3 = Singleton() # error
+
+    if id(s1) == id(s2):
+        print("Singleton works", id(s1), id(s2))
+    else:
+        print("Singleton failed.", id(s1), id(s2))
+
+    s1.some_business_logic()
+
+
+
+суть в том, что инстанс хранится в статическом свойстве класса. класс также имеет статический метод для создания инстанса. при попытке создания не через этот метод генерируется ошибка.
+кроме того инстанс имеет метод с бизнес-логикой по доступу к ресурсу.
+
+
+этот паттерн может пригодится в игре, в котрой существует только один объект игрока. при этом в этом объекте есть бизнес-логика для показа состояния игрока и для изменения состояния.
+
+минус синглтона в том, что он является глобальным объектом, а это всегда плохо.

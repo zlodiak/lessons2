@@ -1,0 +1,20 @@
+паттерн фабрика просто создаёт объекты по чертежу вместо оператора new. удобство в том, что может использоваться разными частями приложения, а изменения вносить придётся только в одном месте.
+
+например человек строит дом, он заказывает двери разного веса на фабрике, а не делает их сам(то есть делегирует создание двери другому):
+
+
+class Door:
+    def __init__(self, weight):
+        self.weight = weight
+
+    def __str__(self):
+        return str(self.weight)
+
+class Factory:
+    def createDoor(self, weight):
+        return Door(weight)
+
+f = Factory()
+door1 = f.createDoor(10)
+door2 = f.createDoor(13)
+print('door1 weight:', door1, ' door2 weight: ', door2)

@@ -1,0 +1,38 @@
+фабричный метод похож на паттерн фабрика. отличие в том, что класс-наследник переопределяет пустой создающий метод родителя условием.
+
+этот паттерн используется для создания объектов разного типа. например строитель может заказывать на фабриках кирпичи и двери. при этом испольхуется один объект-заказчик, который работает на основе условия:
+
+class Door:
+    def __init__(self, weight):
+        self.weight = weight
+
+    def __str__(self):
+        return str(self.weight)
+
+class Brick:
+    def __init__(self, weight):
+        self.weight = weight
+
+    def __str__(self):
+        return str(self.weight)        
+
+class FactoryMethod:
+    def create(self, weight, type_):
+        pass
+
+class Creator(FactoryMethod):
+    def create(self, type_, weight):
+        if type_ == 'door':
+            print('door with weight: ', Door(weight))
+        else:
+            print('brick with weight: ', Brick(weight))
+
+c = Creator()
+c.create('brick', 10)
+c.create('door', 100)
+
+
+
+
+так же этот паттерн может быть полезен при создании кроссплатформенных кнопочек. в этом случае в классе Creator происходит отпределения типа ОС и на основе этого выбирается конструктор для создания кнопочки.
+

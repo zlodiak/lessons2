@@ -1,0 +1,136 @@
+Стратегия - это инкапсуляция алгоритма, т.е. отделение алгоритма от объекта этот алгоритм использующий.
+Это вообще основа ООП-проектирования, так называемый “принцип единичной ответственности”. Простыми словами, класс должен делать что-то одно. Стратегия позволяет объекту использующему стратегию не беспокоиться о том, какой именно алгоритм реализован в данной стратегии - он просто вызывает некий метод объекта, главное чтобы объект этот метод имел, а что именно метод делает (и какой у него конкретный тип!!!!!) - это ответственность объекта-стратегии. 
+
+суть паттерна стратегия в том, что при создании объекта, ему передаётся для композиции один из вариантов класса, реализующего какое-либо действие.
+
+в результате при попытке вызвать действие в объекте, оно вызывается в экземпляре переданного при инициализации класса.
+
+это например удобно для изменения источника поиска картинок для сервиса. в примере картинки могут искться в собственной БД или в flickr.
+
+class ImageFinder():   
+    def __init__(self, strategy=None):
+        self.action = None
+        if strategy:
+            self.action = strategy()
+    
+    def find(self, image):
+        if(self.action):
+            return self.action.find(image)
+        else: 
+            raise UnboundLocalError('no strategyClass!')
+
+class ImageFinderFlickr():
+    def find(self, image):
+        return "Found image in Flickr: " + image
+
+
+class ImageFinderDatabase():
+    def find(self, image):
+        return "Found image in database: " + image
+    
+
+finderBase = ImageFinder()
+finderFlickr = ImageFinder(strategy=ImageFinderFlickr)
+finderDatabase = ImageFinder(strategy=ImageFinderDatabase)
+
+try:
+    print(finderBase.find('chickens'))
+except Exception as e:
+    print("exception :", e)
+    
+
+print(finderFlickr.find('chickens'))
+print(finderDatabase.find('dogs'))
+
+======================
+можно вместо композиции пользоваться наследованием. при этом в классах наследниках придётся переопределять методы родителя:
+
+пусть существует игра типа ГТА, в кторой есть персонажи, которые пишут ручкой, а есть которые рисуют кистью. на этапе создания этих персонажей каждому в атрибут жётско прописывается стратегия действия:
+
+class People():
+    tool = None
+    
+    def __init__(self, name):
+        self.name = name
+    
+    def setTool(self, tool):
+        self.tool = tool
+    
+    def write(self, text):
+        self.tool.write(self.name, text)
+    
+class ToolBase:
+    def write(self, name, text):
+        raise NotImplementedError()
+    
+class PenTool(ToolBase):
+    def write(self, name, text):
+        print('%s (ручкой) %s' % (name, text))
+    
+class BrushTool(ToolBase):
+    def write(self, name, text):
+        print('%s (кистью) %s' % (name, text))
+    
+
+class Student(People):
+    tool = PenTool()
+    
+class Painter(People):
+    tool = BrushTool()
+
+maxim = Student(u'Максим')
+maxim.write(u'Пишу лекцию о паттерне Стратегия')
+# Максим (ручкой) Пишу лекцию о паттерне Стратегия
+
+sasha = Painter(u'Саша')
+sasha.write(u'Рисую иллюстрацию к паттерну Стратегия')
+# Саша (кистью) Рисую иллюстрацию к паттерну Стратегия
+
+======================
+допустим, завод выпускает градусники, кторые могут показывать температуру в кельвинах и градусах фаренгейта. после покупки градусник единожды настраивается на нужные единицы, после чего может производить измерение температуры. в этом случае можно систему описать так:
+
+from abc import ABC, abstractmethod
+
+class Termometer():
+    def __init__(self, strategy):
+        self.strategy = strategy()
+
+    def calculate(self):
+        try:
+            print(self.strategy.calculate())
+        except:
+            print('no straregy error')
+
+class Gradus(ABC):
+    @abstractmethod
+    def calculate(self):
+        pass
+
+class Farenheit(Gradus):
+    def calculate(self):
+        return 'farenheit value'
+
+class Kelvin(Gradus):
+    def calculate(self):
+        return 'kelvin value'   
+
+class Celsius(Gradus):
+      pass
+
+termometer1 = Termometer(Farenheit)     
+termometer1.calculate()
+
+termometer2 = Termometer(Kelvin)     
+termometer2.calculate()
+
+# error
+# termometer3 = Termometer(Celsius)     
+# termometer3.calculate()
+
+======================
+======================
+======================
+======================
+======================
+======================
+======================
