@@ -1,0 +1,48 @@
+proxy создаёт промежуточный слой для доступа к функциональности объекта. таким образом прокси может выступать в роли ограничителя доступа или логгера. рассмотрим пример, в котором каждое обращение к БД логируется.
+
+Допустим есть база данных с некоторыми данными. К ней можно обращаться напрямую и запрашивать данные. Допустим заказчик захотел логировать каждое обращение к БД. для этого я создал proxy-объект, который делегирует запрос данных, логируя каждый запрос.
+
+Конечно, и БД, и прокси имеют одинаковый интерфейс, это выражено в том, что они наследуются от абстрактного класса.
+
+В результате создаются два пользователя, первый из которых админ, а второй простой пользователь. Как видите простой пользователь запрашивает данные через прокси, а админ напрямую.
+
+
+from abc import ABCMeta, abstractmethod
+import datetime
+ 
+class DBint(metaclass=ABCMeta):
+    @abstractmethod
+    def getData(self):
+        pass
+ 
+class DB(DBint):
+    def getData(self):
+        return 'private data'
+ 
+class Proxy(DBint):
+    def __init__(self, db):
+        self.db = db
+
+    def getData(self):
+        self.writeLog()
+        return self.db.getData()
+
+    def writeLog(self):
+        print('request data in:', datetime.datetime.now())        
+ 
+class User:
+    def __init__(self, dataObj):
+        self.dataObj = dataObj
+
+    def requestData(self):
+        return self.dataObj.getData()
+
+
+db = DB()
+user1 = User(db)
+print(user1.requestData())
+
+proxy = Proxy(db)
+user2 = User(proxy)
+print(user2.requestData())
+
