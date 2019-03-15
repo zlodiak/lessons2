@@ -1,0 +1,27 @@
+адаптер преобразует интерфейс одного класса к интерфейсу другого. таким образом можно например использовать сторонние библиотеки, пользуясь интерфейсом, который принят в проекте.
+
+в следующем примере есть два класса, которые генерируют случайное число, но в разном формате и различноназванными методами. адаптер приводит их к единому интерфейсу
+
+import random
+ 
+class RandomNum:
+  def getNum(self):
+    return random.random()
+ 
+class RandomObj:
+  def getObj(self):
+    return {'num': random.random()}
+ 
+class Adapter:
+  def __init__(self, adaptee):
+    self.adaptee = adaptee
+ 
+  def getNum(self):
+    return self.adaptee.getObj()['num']
+ 
+n = RandomNum()
+o = Adapter(RandomObj())
+ 
+print(n.getNum())
+print(o.getNum())
+
