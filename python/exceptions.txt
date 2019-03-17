@@ -136,6 +136,15 @@ except Exception as ex:
 
 
 =========================+
+можно выводить текст исключения:
+
+        try:
+            if price <= 0: raise Exception('wrong price!')
+            self.price = price
+        except Exception as e:
+            print('w', e)
+
+
 =========================+
 =========================+
 =========================+

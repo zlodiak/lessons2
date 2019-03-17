@@ -1,0 +1,49 @@
+допустим есть продуки, при назначении ему цены логгер логирует ошибки. вот неправильный с точки зрения SRP и OCP код:
+
+class Product:
+    def __init__(self, title):
+        self.title = title
+
+    def setPrice(self, price):
+        try:
+            if price <= 0: raise Exception('wrong price!')
+            self.price = price
+        except Exception as e:
+            print('error: ', e)
+
+product = Product('phone')
+product.setPrice(-10)
+
+
+
+здесь ошибка в том, что сущность выполняет и расчёт, и логирование. правильным решением будет разделить эти функциональности на 2 класса. при этом класс логгера имеет возможность расширения:
+
+class Product:
+    def __init__(self, title, logger):
+        self.title = title
+        self.logger = logger
+
+    def setPrice(self, price):
+        try:
+            if price <= 0: raise Exception('wrong price!')
+            self.price = price
+        except Exception as e:
+            self.logger.makeLog(e)
+
+class Logger:
+    def __init__(self, type):
+        self.log = []
+        self.type = type
+
+    def makeLog(self, message):
+        getattr(self, self.type)(message)
+
+    def printLog(self, message):
+        print('error: ', message)
+
+    def fillLog(self, message):
+        self.log.append(message)
+
+logger = Logger('printLog')
+product = Product('phone', logger)
+product.setPrice(-10)

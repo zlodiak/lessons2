@@ -1,0 +1,61 @@
+Программные сущности должны быть открыты для расширения, но закрыты для модификации.
+
+
+#!/usr/bin/env python3
+ 
+# # wrong example
+# class Rect:
+#     def __init__(self, w, h):
+#         self.w = w
+#         self.h = h
+
+# class Circle:
+#     def __init__(self, r):
+#         self.r = r
+      
+# class AreaCalc:
+#     def calc(self, shape):
+#         if isinstance(shape, Rect):
+#             area = shape.w * shape.h
+#             print('area rect:', area)
+#         else:
+#             area = shape.r * shape.r * 3.14
+#             print('area circle: ', area)
+
+# circle = Circle(2)
+# rect = Rect(4, 2)
+# areaCalc = AreaCalc()
+# areaCalc.calc(rect)
+# areaCalc.calc(circle)
+
+
+# right example
+class Rect:
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+
+    def calc(self):
+        area = self.w * self.h
+        print('area rect:', area)        
+
+class Circle:
+    def __init__(self, r):
+        self.r = r
+
+    def calc(self):
+        area = self.r * self.r * 3.14
+        print('area circle: ', area)
+
+      
+class AreaCalc:
+    def calc(self, shape):
+        shape.calc()
+
+
+circle = Circle(2)
+rect = Rect(4, 2)
+areaCalc = AreaCalc()
+areaCalc.calc(rect)
+areaCalc.calc(circle)
+

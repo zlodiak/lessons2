@@ -1,0 +1,46 @@
+интерфесы полезны тем, что классы их использующие как бы становятся объектами одного типа. таким образом когда инстансы этих классов я буду передавать куда-нибудь, то можно проверить их тип, основываясь на интерфейсе.
+
+from abc import ABCMeta, abstractmethod
+
+class Shape_(metaclass=ABCMeta):
+    @abstractmethod
+    def calc_(self):
+        pass
+
+class Shape(metaclass=ABCMeta):
+    @abstractmethod
+    def calc(self):
+        pass
+
+class Rect(Shape):
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+
+    def calc(self):
+        area = self.w * self.h
+        print('area rect:', area)        
+
+class Circle(Shape):
+    def __init__(self, r):
+        self.r = r
+
+    def calc(self):
+        area = self.r * self.r * 3.14
+        print('area circle: ', area)
+
+      
+class AreaCalc:
+    def calc(self, shape):
+        # if isinstance(shape, Shape_):     # wrong
+        if isinstance(shape, Shape):        # right
+            shape.calc()
+        else:
+            raise Exception('wrong interface') 
+
+
+circle = Circle(2)
+rect = Rect(4, 2)
+areaCalc = AreaCalc()
+areaCalc.calc(rect)
+areaCalc.calc(circle)

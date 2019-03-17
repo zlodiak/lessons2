@@ -42,6 +42,22 @@ print(s)
 если у объекта есть __call__, то его можно вызывать как функцию.
 
 =======================
+функции(и методы класса) можно вызывать динамически:
+
+class Logger:
+    def __init__(self, type):
+        self.log = []
+        self.type = type
+
+    def makeLog(self, message):
+        getattr(self, self.type)(message)
+
+    def printLog(self, message):
+        print('error: ', message)
+
+    def fillLog(self, message):
+        self.log.append(message)
+
 =======================
 =======================
 =======================

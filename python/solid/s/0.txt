@@ -1,0 +1,84 @@
+принцип единой обязанности заключается в том, что каждый объект должен меняться только одним актором(группой однотпных: пользователей, функций, событий и т.д.)
+
+
+вот пример нарушения этого принципа. здесь клас отвечает и за расчёт суммы, и за вывод.
+
+class Rect():
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+
+    def calcArea(self):
+        return self.w * self.h  
+
+class Circle():
+    def __init__(self, r):
+        self.r = r
+
+    def calcArea(self):
+        return self.r * self.r * 3.14
+
+      
+class AreaCalc:
+    def __init__(self, shapes):
+        self.shapes = shapes
+
+    def sumArea(self):
+        self.sum = sum([area.calcArea() for area in self.shapes])
+
+    def outputSum(self):
+        print(self.sum)
+
+    def outputSumRound(self):
+        print(round(self.sum))
+
+circle = Circle(2)
+rect = Rect(4, 2)
+areaCalc = AreaCalc([circle, rect])
+areaCalc.sumArea()
+areaCalc.outputSum()
+areaCalc.outputSumRound()
+
+
+следующий пример не нарушает принцип. потому что за расчёт суммы отвечает один класс, а за выод - другой.
+
+
+class Rect():
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+
+    def calcArea(self):
+        return self.w * self.h  
+
+class Circle():
+    def __init__(self, r):
+        self.r = r
+
+    def calcArea(self):
+        return self.r * self.r * 3.14
+
+      
+class AreaCalc:
+    def __init__(self, shapes):
+        self.shapes = shapes
+
+    def sumArea(self):
+        return sum([area.calcArea() for area in self.shapes])
+
+class AreaOutput:
+    def __init__(self, sum):
+        self.sum = sum
+
+    def outputSum(self):
+        print(self.sum)
+
+    def outputSumRound(self):
+        print(round(self.sum))        
+
+circle = Circle(2)
+rect = Rect(4, 2)
+areaCalc = AreaCalc([circle, rect])
+sum = areaCalc.sumArea()
+AreaOutput(sum).outputSum()
+AreaOutput(sum).outputSumRound()

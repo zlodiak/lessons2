@@ -266,6 +266,40 @@ class qwert:
 
 , то print(qwert())   выведет hello. мы перегрузили __str__()
 
+вот классический случай полиморфизма:
+
+class Product:
+    def __init__(self, title, logger):
+        self.title = title
+        self.logger = logger
+
+    def setPrice(self, price):
+        try:
+            if price <= 0: raise Exception('wrong price!')
+            self.price = price
+        except Exception as e:
+            self.logger.makeLog(e)
+
+class LoggerFill:
+    def __init__(self):
+        self.log = []
+
+    def makeLog(self, message):
+        self.log.append(message)       
+
+class LoggerPrint:
+    def makeLog(self, message):
+        print('error: ', message)
+
+
+
+product = Product('phone', LoggerFill())
+product.setPrice(-10)
+
+product = Product('phone', LoggerPrint())
+product.setPrice(-10)
+
+
 ==================================
 композиция это когда один объект становится частью другого.
 class A:
