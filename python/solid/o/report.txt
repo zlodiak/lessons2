@@ -1,0 +1,54 @@
+классы нужно конструировать так чтобы при их расширении не было необходимости изменять существующий код. вот неправильный пример:
+
+class Employee:
+  def __init__(self, name):
+    self.name = name
+
+  def generateReport(self, type):
+    if type == 'pdf':
+      print('report pdf', self.name)
+    if type == 'excel':
+      print('report excel', self.name)
+
+employee = Employee('sergey')
+employee.generateReport('pdf')
+employee.generateReport('excel')
+
+
+
+вот правильный код:
+
+from abc import ABCMeta, abstractmethod
+
+class Employee:
+  def __init__(self, name):
+    self.name = name
+
+employee = Employee('sergey')
+
+class IReport(metaclass=ABCMeta):
+  @abstractmethod
+  def generateReport(self):
+    pass
+
+class PdfReport(IReport):
+  def __init__(self, employee):
+    self.employee = employee
+
+  def generateReport(self):
+    print('pdf report for:', self.employee.name)
+
+class ExcelReport(IReport):
+  def __init__(self, employee):
+    self.employee = employee
+
+  def generateReport(self):
+    print('excel report for:', self.employee.name)    
+
+pdfReport = PdfReport(employee)
+pdfReport.generateReport()
+
+excelReport = ExcelReport(employee)
+excelReport.generateReport()
+
+таким образом, если потребуется добавить ещё один тип отчёта, то достаточноч написать новый класс, не трогая существующий код
