@@ -1,0 +1,85 @@
+принцип отделения интерфейсов заключается в том, что клиенты не должны принудительно внедрять интерфейсы, которые они не используют
+
+вот неправильный пример, в результате которого рабочий может увеличивать себе зарплату:
+
+from abc import ABCMeta, abstractmethod
+
+class Person(metaclass=ABCMeta):
+  def __init__(self, pay):
+    self.pay = pay
+
+  @abstractmethod
+  def getPay(self):
+    pass
+
+  @abstractmethod
+  def setPay(self):
+    pass    
+
+class Boss(Person):
+  def getPay(self):
+    print('i am boss. my pay is: ', self.pay)
+
+  def setPay(self, pay):
+    self.pay = pay
+
+class Worker(Person):
+  def getPay(self):
+    print('i am worker. my pay is: ', self.pay)
+
+  def setPay(self, pay):
+    self.pay = pay    
+
+boss = Boss(100)
+boss.getPay()
+boss.setPay(120)
+boss.getPay()
+
+worker = Worker(10)
+worker.getPay()
+worker.setPay(20)
+worker.getPay()
+
+
+
+вот правильный пример,в котром интерфейсы разделены. в результате, при попытке рабочего изменить свою зарплату появляется ошибка:
+
+
+
+from abc import ABCMeta, abstractmethod
+
+class Person(metaclass=ABCMeta):
+  def __init__(self, pay):
+    self.pay = pay
+
+  @abstractmethod
+  def getPay(self):
+    pass
+
+
+class Person_(metaclass=ABCMeta):
+  @abstractmethod
+  def setPay(self):
+    pass    
+
+
+class Boss(Person, Person_):
+  def getPay(self):
+    print('i am boss. my pay is: ', self.pay)
+
+  def setPay(self, pay):
+    self.pay = pay
+
+class Worker(Person):
+  def getPay(self):
+    print('i am worker. my pay is: ', self.pay) 
+
+boss = Boss(100)
+boss.getPay()
+boss.setPay(120)
+boss.getPay()
+
+worker = Worker(10)
+worker.getPay()
+worker.setPay(20)   # error
+worker.getPay()
