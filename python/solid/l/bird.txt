@@ -1,0 +1,51 @@
+неправильный пример:
+
+from abc import ABCMeta, abstractmethod
+
+class Bird(metaclass=ABCMeta):
+  @abstractmethod
+  def fly(self):
+    pass
+
+class Duck(Bird):
+  def fly(self, speed):
+    print('я лечу со скоростью ', speed)
+
+class Pinguin(Bird):
+  def fly(self, speed):
+    print('я устал, я ухожу')    
+
+duck = Duck()
+duck.fly(10)
+
+pinguin = Pinguin()
+pinguin.fly(10)
+
+
+
+правильный пример:
+
+from abc import ABCMeta, abstractmethod
+
+class Bird(metaclass=ABCMeta):
+  @abstractmethod
+  def fly(self):
+    pass
+
+class Duck(Bird):
+  def fly(self, speed):
+    print('я лечу со скоростью ', speed)
+
+class Pinguin(Bird):
+  def fly(self, speed):
+    print('я лечу со скоростью ', speed)
+
+  def go(self):
+    print('я устал, я ухожу')    
+
+duck = Duck()
+duck.fly(10)
+
+pinguin = Pinguin()
+pinguin.fly(0)
+pinguin.go()
