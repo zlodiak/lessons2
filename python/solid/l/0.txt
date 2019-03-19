@@ -1,0 +1,68 @@
+Наследующий класс должен дополнять, а не замещать поведение базового класса.
+
+подклассы должны переопределять методы базового класса так, чтобы не нарушалась функциональность с точки зрения клиента.
+
+вот пример, нарушающий этот принцип:
+
+
+from abc import ABCMeta, abstractmethod
+import time
+import datetime
+
+class Clock(metaclass=ABCMeta):
+  @abstractmethod
+  def displayUnix(self):
+    pass
+
+class Clock1(Clock):
+  def displayUnix(self):
+    print('i am display UNIX: ', time.time())
+
+class Clock2(Clock):
+  def displayUnix(self):
+    print('but i am display ISO: ', datetime.datetime.now().isoformat())    
+
+clock1 = Clock1()
+clock1.displayUnix()
+
+clock2 = Clock2()
+clock2.displayUnix()
+
+
+вот пример, не нарушающий принцип:
+
+from abc import ABCMeta, abstractmethod
+import time
+import datetime
+
+class Clock(metaclass=ABCMeta):
+  @abstractmethod
+  def displayUnix(self):
+    pass
+
+class Clock_(metaclass=ABCMeta):
+  @abstractmethod
+  def displayIso(self):
+    pass
+
+class Clock1(Clock, Clock_):
+  def displayUnix(self):
+    print('i am display UNIX: ', time.time())
+
+  def displayIso(self):
+    print('i am display ISO: ', datetime.datetime.now().isoformat())     
+
+class Clock2(Clock, Clock_):
+  def displayUnix(self):
+    print('i am display UNIX: ', time.time())
+
+  def displayIso(self):
+    print('i am display ISO: ', datetime.datetime.now().isoformat())      
+
+clock1 = Clock1()
+clock1.displayUnix()
+clock1.displayIso()
+
+clock2 = Clock2()
+clock2.displayUnix()
+clock2.displayIso()
