@@ -1,0 +1,79 @@
+принцип инверсии зависимостей гласит, что классы высокого уровня не должны зависеть от низкоуровневых классов. При этом оба должны зависеть от абстракций. 
+
+неправильный пример:
+
+class Husband:
+  def eat(self):
+    wife = Wife()
+    food = wife.getFood()
+    if food:
+      print('i am eat', food)
+    else:
+      print('i am hungry')
+
+class Wife:
+  def getFood(self):
+    return 'tasty food'
+
+husband = Husband()
+husband.eat()
+
+
+тоже неправльный пример:
+
+class Husband:
+  def __init__(self, wife):
+    self.wife = wife
+
+  def eat(self):
+    food = self.wife.getFood()
+    if food:
+      print('i am eat', food)
+    else:
+      print('i am hungry')
+
+class Wife:
+  def getFood(self):
+    return 'tasty food'
+
+husband = Husband(Wife())
+husband.eat()
+
+
+
+правильный пример:
+
+from abc import ABCMeta, abstractmethod
+
+class Food_maker(metaclass=ABCMeta):
+  @abstractmethod
+  def getFood(slef):
+    pass
+
+class Husband:
+  def __init__(self, food_maker: Food_maker):
+    self.food_maker = food_maker
+
+  def eat(self):
+    food = self.food_maker.getFood()
+    if food:
+      print('i am eat', food)
+    else:
+      print('i am hungry')
+
+class Wife(Food_maker):
+  def getFood(self):
+    return 'tasty food'
+
+class Grand_mother(Food_maker):
+  def getFood(self):
+    return 'a lot tasty food'    
+
+husband = Husband(Wife())
+husband.eat()
+
+husband = Husband(Grand_mother())
+husband.eat()
+
+
+видно, что поставщие еды может быть любым, если выполняет условие соответствия интерфейсу.
