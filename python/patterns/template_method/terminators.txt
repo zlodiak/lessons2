@@ -1,0 +1,61 @@
+суть паттерна Шаблонный метод в том, что при помощи метода абстрактного класса можно создать набор объектов, которые в чём-то походи, но в чём-то нет.
+
+в частности можно создать двух терминаторов из фильма. они имеют одинаковые части(руки, ноги) и уникальные(жидкое тело, скелет)
+
+#!/usr/bin/env python3
+
+from abc import ABCMeta, abstractmethod
+
+class Terminator(metaclass=ABCMeta):
+    def __init__(self):
+        self.props = {}
+
+    def template_method(self):
+        self.legs_cnt()
+        self.hands_cnt()
+        self.liquid_body()
+        self.steel_skeleton()
+        return self
+
+    @abstractmethod
+    def legs_cnt(self):
+        pass
+
+    @abstractmethod
+    def hands_cnt(self):
+        pass
+
+    def liquid_body(self):
+        pass
+
+    def steel_skeleton(self):
+        pass
+
+
+class T_800(Terminator):
+    def legs_cnt(self):
+        self.props['legs_cnt'] = 2
+
+    def hands_cnt(self):
+        self.props['hands_cnt'] = 2
+
+    def steel_skeleton(self):
+        self.props['steel_skeleton'] = True
+
+class T_1000(Terminator):
+    def legs_cnt(self):
+        self.props['legs'] = 2
+
+    def hands_cnt(self):
+        self.props['hands_cnt'] = 2
+
+    def liquid_body(self):
+        self.props['liquid_body'] = True
+
+
+t_800 = T_800().template_method()
+print(t_800.__class__, t_800.props)
+
+t_1000 = T_1000().template_method()
+print(t_1000.__class__, t_1000.props)
+
