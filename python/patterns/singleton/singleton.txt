@@ -24,28 +24,26 @@ class Singleton:
         return Singleton._instance
 
     def some_business_logic(self):
-        with open('test.txt', 'r') as file:
-            for line in file:
-                print(line)
+        print('useful actions')
 
-if __name__ == "__main__":
-    s1 = Singleton.get_instance()
-    s2 = Singleton.get_instance()
-    # s3 = Singleton() # error
+s1 = Singleton.get_instance()
+s2 = Singleton.get_instance()
+# s3 = Singleton() # error
 
-    if id(s1) == id(s2):
-        print("Singleton works", id(s1), id(s2))
-    else:
-        print("Singleton failed.", id(s1), id(s2))
+if id(s1) == id(s2):
+    print("Singleton works", id(s1), id(s2))
+else:
+    print("Singleton failed.", id(s1), id(s2))
 
-    s1.some_business_logic()
-
+s1.some_business_logic()
 
 
 суть в том, что инстанс хранится в статическом свойстве класса. класс также имеет статический метод для создания инстанса. при попытке создания не через этот метод генерируется ошибка.
 кроме того инстанс имеет метод с бизнес-логикой по доступу к ресурсу.
 
 
-этот паттерн может пригодится в игре, в котрой существует только один объект игрока. при этом в этом объекте есть бизнес-логика для показа состояния игрока и для изменения состояния.
+этот паттерн может пригодиться в игре, в котрой существует только один объект игрока. при этом в этом объекте есть бизнес-логика для показа состояния игрока и для изменения состояния.
 
 минус синглтона в том, что он является глобальным объектом, а это всегда плохо.
+
+в приведённом пример инстанс можно создать обычным способом, но только один раз
