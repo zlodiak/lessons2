@@ -2,60 +2,39 @@
 
 в примере ниже объекты создаются без указания медиатора. а вот при инициализации медиатора объектами происходит запись указателя на медиатор в свойство объекта. соответственно каждый объект имеет геттер и сеттер для свойства mediator.
 
-class ConcreteMediator:
-    def __init__(self, component1, component2):
-        self._component1 = component1
-        self._component1.mediator = self
-        self._component2 = component2
-        self._component2.mediator = self
- 
-    def notify(self, sender, event):
-        if event == "A":
-            print("Mediator reacts on A and triggers following operations:")
-            self._component2.do_c()
-        elif event == "D":
-            print("Mediator reacts on D and triggers following operations:")
-            self._component1.do_b()
-            self._component2.do_c()
- 
-class BaseComponent:
-    def __init__(self, mediator = None):
-        self._mediator = mediator
- 
-    @property
-    def mediator(self):
-        return self._mediator
- 
-    @mediator.setter
-    def mediator(self, mediator):
-        self._mediator = mediator
- 
-class Component1(BaseComponent):
-    def do_a(self):
-        print("Component 1 does A.")
-        self.mediator.notify(self, "A")
- 
-    def do_b(self):
-        print("Component 1 does B.")
-        self.mediator.notify(self, "B")
- 
-class Component2(BaseComponent):
-    def do_c(self):
-        print("Component 2 does C.")
-        self.mediator.notify(self, "C")
- 
-    def do_d(self):
-        print("Component 2 does D.")
-        self.mediator.notify(self, "D")
- 
-c1 = Component1()
-c2 = Component2()
-mediator = ConcreteMediator(c1, c2)
- 
-print("Client triggers operation A.")
-c1.do_a()
- 
-print("\n", end="")
- 
-print("Client triggers operation D.")
-c2.do_d()
+class M:
+    def __init__(self, c1, c2):
+        self.c1 = c1
+        self.c2 = c2
+        self.c1.mediator = self
+        self.c2.mediator = self
+
+    def notify(self, type):
+        if type == 'c1_a':
+            self.c2.result()
+        else:
+            self.c1.result()
+
+class C1:
+    def action(self):
+        print('c1_a')
+        self.mediator.notify('c1_a')
+
+    def result(self):
+        print('result_c1')        
+
+class C2:
+    def action(self):
+        print('c2_a')
+        self.mediator.notify('c2_a') 
+
+    def result(self):
+        print('result_c2')
+
+
+c1 = C1()
+c2 = C2()
+m = M(c1, c2)
+
+c1.action()
+c2.action()

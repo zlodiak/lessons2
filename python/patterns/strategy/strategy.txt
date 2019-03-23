@@ -89,43 +89,25 @@ sasha.write(u'Рисую иллюстрацию к паттерну Страте
 ======================
 допустим, завод выпускает градусники, кторые могут показывать температуру в кельвинах и градусах фаренгейта. после покупки градусник единожды настраивается на нужные единицы, после чего может производить измерение температуры. в этом случае можно систему описать так:
 
-from abc import ABC, abstractmethod
+class Farenheit:
+    def action(self):
+        return 'Farenheit'
 
-class Termometer():
-    def __init__(self, strategy):
-        self.strategy = strategy()
+class Kelvin:
+    def action(self):
+        return 'Kelvin'     
 
-    def calculate(self):
-        try:
-            print(self.strategy.calculate())
-        except:
-            print('no straregy error')
+class Termo:
+    def __init__(self, strategy=None):   
+        self.strategy = strategy
 
-class Gradus(ABC):
-    @abstractmethod
-    def calculate(self):
-        pass
+    def action(self):
+        return self.strategy.action()
 
-class Farenheit(Gradus):
-    def calculate(self):
-        return 'farenheit value'
-
-class Kelvin(Gradus):
-    def calculate(self):
-        return 'kelvin value'   
-
-class Celsius(Gradus):
-      pass
-
-termometer1 = Termometer(Farenheit)     
-termometer1.calculate()
-
-termometer2 = Termometer(Kelvin)     
-termometer2.calculate()
-
-# error
-# termometer3 = Termometer(Celsius)     
-# termometer3.calculate()
+f = Farenheit()
+k = Kelvin()
+print(Termo(f).action())
+print(Termo(k).action())
 
 ======================
 ======================

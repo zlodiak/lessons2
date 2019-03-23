@@ -1,5 +1,55 @@
 composite применяется для формирования древовидной структуры. например, она может понадобиться для построения дерева-меню.
 
+class Leaf():
+    def is_composite(self):
+        return False
+
+    def action(self):
+        return 'LEAF'
+
+class Branch():
+    def __init__(self):
+        self.children = []
+
+    def add(self, child):
+        self.children.append(child)
+
+    def is_composite(self):
+        return True
+
+    def action(self):
+        result = []
+        for ch in self.children:
+            result.append(ch.action())
+        return 'Branch: ' + '+'.join(result)
+
+
+leaf = Leaf()
+print(leaf.action())
+
+tree = Branch()
+
+b1 = Branch()
+b2 = Branch()
+
+l1 = Leaf()
+l2 = Leaf()
+l3 = Leaf()
+
+b1.add(l1)
+b1.add(l2)
+b2.add(l3)
+
+tree.add(b1)
+tree.add(b2)
+
+print(tree.action())
+
+
+
+=================================
+ещё один пример:
+
 class Component():
     @property
     def parent(self):

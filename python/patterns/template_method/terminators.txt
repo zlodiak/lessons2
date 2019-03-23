@@ -2,6 +2,46 @@
 
 в частности можно создать двух терминаторов из фильма. они имеют одинаковые части(руки, ноги) и уникальные(жидкое тело, скелет)
 
+class Terminator:
+    def __init__(self):
+        self.props = {}
+
+    def template_method(self):
+        self.hands()
+        self.legs()
+        self.skeleton()
+        self.liquid()
+        return self
+
+    def hands(self):
+        self.props['hands'] = 2
+
+    def legs(self):
+        self.props['legs'] = 2  
+
+    def skeleton(self):      
+        pass
+
+    def liquid(self):      
+        pass  
+
+class T_800(Terminator):
+    def skeleton(self):
+        self.props['skeleton'] = True
+
+class T_1000(Terminator):
+    def liquid(self):
+        self.props['liquid'] = True   
+
+t_800 = T_800().template_method()
+t_1000 = T_1000().template_method()
+
+print(t_800.__class__, t_800.props)
+print(t_1000.__class__, t_1000.props)
+
+====================================
+или так:
+
 #!/usr/bin/env python3
 
 from abc import ABCMeta, abstractmethod

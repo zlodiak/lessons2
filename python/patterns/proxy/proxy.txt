@@ -46,3 +46,30 @@ proxy = Proxy(db)
 user2 = User(proxy)
 print(user2.requestData())
 
+=====================
+вот пример проще:
+
+class DB:
+    def get_data(self):
+        return 'private data'
+
+class Proxy:
+    def __init__(self, db):
+        self.db = db
+
+    def get_data(self):
+        print('write in log')
+        return self.db.get_data()
+
+class User:
+    def __init__(self, db):
+        self.db = db
+
+    def action(self):
+        print(self.db.get_data())
+
+db = DB()
+proxy = Proxy(DB())
+User(db).action()
+User(proxy).action()
+

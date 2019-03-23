@@ -52,3 +52,20 @@ https://pythonworld.ru/osnovy/dekoratory.html
 ============================
 
 декораторы можно применять последовательно по несколько штук
+
+==============================
+короткий вариант:
+
+def func():
+    return 10
+
+def decor(f):
+    def inner():
+        return f() + 3
+    return inner
+
+print(func())
+print(decor(func)())
+
+func = decor(func)
+print(func())
