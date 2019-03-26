@@ -1,0 +1,141 @@
+CREATE TABLE students(
+  s_id integer PRIMARY KEY,
+  name text,
+  start_year integer
+);
+
+
+INSERT INTO students(s_id, name, start_year)
+  VALUES 
+    (1451, 'Анна', 2014),
+    (1432, 'Виктор', 2014),
+    (1556, 'Нина', 2015);
+
+=======================================
+можно извлекать записи:
+SELECT * Salespeople;
+SELECT snum, sname, sity, comm FROM Salespeople;
+
+при этом есть возможность переупорядочть столбцы.
+
+можно делать выборку без дубликатов:
+SELECT DISTINCT snum FROM Orders;
+
+=======================================
+условная выборка:
+SELECT *  FROM  Customers WHERE rating > 200; 
+или:
+SELECT *  FROM  Customers WHERE rating > 200 AND rating < 400;; 
+
+=======================================
+IN определяет вхождение в множество:
+SELECT * FROM Salespeople WHERE city = 'Barcelona' OR city = 'London';
+или:
+SELECT * FROM Salespeople  WHERE city IN ( 'Barcelona', 'London' )
+
+можно указывать значение типа МЕЖДУ:
+SELECT * FROM Salespeople WHERE comm BETWEEN .10 AND .13
+
+можно искать по вхождению:
+SELECT * FROM Customers WHERE cname LIKE 'G%';
+или:
+SELECT * FROM Customers WHERE cname LIKE 'G_';
+
+=======================================
+агрегатные функции берут группы значений из поля и сводят их до одиночного значения.
+
+Агрегатные функции используются подобно именам полей  в  предложении SELECT запроса, но с одним сключением, они берут имена поля как аргу менты:
+SELECT SUM ((amt)) FROM Orders;
+
+COUNT считает число строк в столбце.
+
+=======================================
+можно ограничивать количество элеменов в выборке и смещать положение первого элемента:
+SELECT title FROM movies
+ORDER BY title ASC
+LIMIT 5 OFFSET 5;
+
+=======================================
+group by появляется когда сделана сборка при помощи поля и агрегатной функции. 
+
+SELECT snum, MAX (amt) FROM Orders GROUP BY snum;
+
+having это аналог where для group by:
+
+SELECT snum, odate, MAX ((amt))
+                     FROM Orders
+                     GROUP BY snum, odate
+                     HAVING MAX ((amt)) > 3000.00;
+
+=======================================
+можно выборку упорядочить по одному или по нескольким полям:
+SELECT * FROM Orders ORDER BY cnum DESC, amt DESC;
+
+=======================================
+можно объединять несколько таблиц:
+SELECT Customers.cname, Salespeople.sname,
+            Salespeople.city
+              FROM Salespeople, Customers
+              WHERE Salespeople.city = Customers.city;
+
+ а так же таблицу саму с собой посредством псевдонимов(но значения будут дублироваться):
+ SELECT first.cname, second.cname, first.rating
+                FROM Customers first, Customers second
+                WHERE first.rating = second.rating;
+
+=======================================
+можно помещать запрос внутрь другого запроса. при этом важно чтобы вложенный запрос возвращал не набор, а единичное значение:
+SELECT *
+        FROM Orders
+        WHERE snum =
+            ( SELECT snum
+                 FROM Salespeople
+                 WHERE sname = 'Motika');
+
+=======================================
+можно объединять запросы:
+                   SELECT snum, sname
+                      FROM Salespeople
+                      WHERE city = 'London'
+ 
+                      UNION
+ 
+                   SELECT cnum, cname
+                      FROM Customers
+                      WHERE city = 'London';
+
+=======================================
+создать таблицу:
+   CREATE TABLE Saleepeople
+       ( snum    integer,
+         sname   char (10),
+         city     char (10),
+         comm   declmal );
+
+=======================================
+добавить запись можно так:
+INSERT INTO Salespeople VALUES (1001, 'Peel', 'London', .12);
+
+но можно явно укзать набор полей:
+INSERT INTO Customers (city, cnamе, cnum) VALUES ('London', 'Honman', 2001);
+
+=======================================
+удаление записи:
+DELETE FROM Salespeople WHERE snum = 1003;
+
+=======================================
+обновить значение для всех строк можно так:
+UPDATE Customers SET rating = 200;
+
+для конкретных строк так:
+UPDATE Customers SET rating = 200 where rating < 0;
+
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
