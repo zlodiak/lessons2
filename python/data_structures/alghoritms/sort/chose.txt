@@ -7,3 +7,15 @@
 первый сравнивается с вторым, если он больше, то они меняются местами.
 первый сравнивается с третьим, ....
 и т.д.
+
+
+def choise_sort(A):
+    for pos in range(0, len(A)-1):
+        for k in range(pos+1, len(A)):
+            if A[k] < A[pos]:
+                A[k], A[pos] = A[pos], A[k]
+
+A = [5, 3, 4, 1, 2]
+print(A)
+choise_sort(A)
+print(A)
