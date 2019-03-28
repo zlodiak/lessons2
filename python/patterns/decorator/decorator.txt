@@ -69,3 +69,17 @@ print(decor(func)())
 
 func = decor(func)
 print(func())
+
+
+вот пример встроенного декоратора:
+
+def decor(f):
+  def inner():
+    return f() + 1
+  return inner
+
+@decor
+def func():
+  return 10  
+
+print(func())
