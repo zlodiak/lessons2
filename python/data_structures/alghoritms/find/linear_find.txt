@@ -1,0 +1,18 @@
+линейный поиск.
+
+не трубуется чтобы массив был упорядочен. поиск проходит по каждому элементу. важно прекратить поиск сразу, если найдётся совпадение.
+
+a = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']
+
+def linear_search_3(lst, x):
+  i = 0
+  try:
+    while lst[i] != x:
+      print(i, lst[i])
+      i += 1
+  except:
+    return 'None'
+  else:
+    return (i, lst[i])
+
+print('finded! ', linear_search_3(a, 'y'))
