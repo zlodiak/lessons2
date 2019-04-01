@@ -1,0 +1,34 @@
+допустим есть два набора элементов управления: для виндоуз и для макос. в этом случае фабрика должна получать при инициализации фабрику для конкретной платформы.
+
+class WinFactory:
+  def getButton(self):
+    return 'win button object mock'
+
+  def getScroll(self):
+    return 'win scroll object mock'    
+
+class MacFactory:
+  def getButton(self):
+    return 'mac button object mock'
+
+  def getScroll(self):
+    return 'mac scroll object mock'        
+
+class AbstractFactory():
+  def __init__(self, factory):
+    self.factory = factory
+
+  def createButton(self):
+    return self.factory.getButton()
+
+  def createScroll(self):
+    return self.factory.getScroll()    
+
+if True:
+  factory = WinFactory()
+else:
+  factory = MacFactory()
+
+abstractFactory = AbstractFactory(factory)
+print(abstractFactory.createButton())
+print(abstractFactory.createScroll())
