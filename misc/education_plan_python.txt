@@ -1,0 +1,6 @@
+1.  изучить отдельно docker
+2.  изучить gitlab CI
+3.  написать парсер JobaFinder
+4.  практика с  git rebase
+5.  повторить REST
+6.  
