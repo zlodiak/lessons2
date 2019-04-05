@@ -4,6 +4,9 @@ service postgresql start
 войти в cli-режим:
 sudo -u postgres psql
 
+узнать версию postgrees:
+select version();
+
 создать БД:
 CREATE DATABASE joba_finder;
 
@@ -35,7 +38,10 @@ CREATE USER jf_user WITH PASSWORD 'qwerty';
 список пользователей:
 \du
 
-GRANT ALL PRIVILEGES ON DATABASE joba_finder to jf_user
+GRANT ALL PRIVILEGES ON DATABASE joba_finder to jf_user;
+
+вывести содержимое таблицы:
+select * from parse_results;
 
 =============================
 =============================
