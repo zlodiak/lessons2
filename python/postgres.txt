@@ -1,5 +1,12 @@
+установка:
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+
 старт сервиса:
 service postgresql start
+
+войти под суперюзером:
+sudo su postgres
 
 войти в cli-режим:
 sudo -u postgres psql
@@ -14,8 +21,8 @@ CREATE DATABASE joba_finder;
 \l
 
 создать таблицу:
-CREATE TABLE parse_results (
-id INTEGER PRIMARY KEY,
+CREATE TABLE parse_results2 (
+id serial PRIMARY KEY,
 public_date VARCHAR (100),
 position VARCHAR (100),
 company VARCHAR (100),
@@ -43,11 +50,68 @@ GRANT ALL PRIVILEGES ON DATABASE joba_finder to jf_user;
 вывести содержимое таблицы:
 select * from parse_results;
 
+изменить собственника таблицы:
+alter table test_table owner to test
+
+
 =============================
+CREATE DATABASE db_test;
+CREATE USER user_test WITH PASSWORD 'qwerty';
+GRANT ALL PRIVILEGES ON DATABASE "db_test" to user_test;
+
+
 =============================
+создать пользователя,
+сделать его суперюзером,
+поставить ему пароль.
+в pgadmin ввести его реквизиты.(localhost, 127.0.0.1)
+
 =============================
+если нужен первичный ключ автоинкрементный, то его тип при создании должен быть serial.
+при записи в таблицу из скрипта название столбца для первичного ключа и соответствующее значение просто не указывать. в результате первичный ключ будет сам увеличиваться.
+
 =============================
+если запись в таблицу происходит из скрипта, то после оператции записи нужно выполнить коммит:
+
+try:
+    req = 'INSERT INTO test_table (id, description) VALUES (%s,%s)'
+    vals = (3, "aaaa")
+    db_cursor.execute(req, vals);
+    db_conn.commit()     #совершить запись
+
+или заранее прописать настройку:
+
+db_conn = psycopg2.connect(
+    database='db_test', 
+    user='test', 
+    password='qwerty', 
+    # user='postgres', 
+    # password='postgres',         
+    host='localhost'
+)
+db_conn.autocommit = True  # записи добавляютсяв БД по мере поступления
+
 =============================
+select from python:
+
+   connection = psycopg2.connect(user="sysadmin",
+                                  password="pynative@#29",
+                                  host="127.0.0.1",
+                                  port="5432",
+                                  database="postgres_db")
+   cursor = connection.cursor()
+   postgreSQL_select_Query = "select * from mobile"
+   cursor.execute(postgreSQL_select_Query)
+   print("Selecting rows from mobile table using cursor.fetchall")
+   mobile_records = cursor.fetchall() 
+   
+   print("Print each row and it's columns values")
+   for row in mobile_records:
+       print("Id = ", row[0], )
+       print("Model = ", row[1])
+       print("Price  = ", row[2], "\n")
+       
+
 =============================
 =============================
 =============================

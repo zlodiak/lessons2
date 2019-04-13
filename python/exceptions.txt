@@ -96,7 +96,7 @@ else:
   print('okk')
 
 =========================+
-можно определитьсвои классы исключений:
+можно определить свои классы исключений:
 class SpecialErrorOne(Exception):
     def __init__(self):
         print('Call SpecialErrorOne')

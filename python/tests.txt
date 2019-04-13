@@ -1,0 +1,61 @@
+тестирование делается при помощи import unittest . она ест ьв стандартной библиотеке.
+
+
+важно имя файла начинатьс test_.py
+
+важно наследоваться от unittest.TestCase и каждый метод начинать с def test_
+
+в конце файла для вызова тестов писать:
+if __name__ == '__main__':
+    unittest.main()   
+
+=============================    
+
+вот пример:
+
+	import unittest
+
+	import psycopg2
+
+	from classes.logger import *
+	import credentials
+	import classes.exceptions
+	from classes.db_connection import DB_connection
+
+	 
+	class TestDB_conectionCase(unittest.TestCase):
+	    def setUp(self):
+	        logger = Logger(HumanFormatStrategy)
+	        self.db_connection = DB_connection(credentials, classes.exceptions, logger)   
+
+	    def test_db_connection(self):
+	        enter = self.db_connection.__enter__()
+	        self.assertNotEqual(enter, None)
+
+
+	if __name__ == '__main__':
+	    unittest.main()        
+
+=============================
+пример запуска всех файлов с тестами из каталога:
+python3 -m unittest discover -v tests/classes
+
+
+пример запуска конкретного файла:
+python3 -m unittest tests/classes/test_db_connection.py
+
+
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
