@@ -87,7 +87,72 @@ flask run
 pip freeze > requirements.txt
 
 =============================
+подключим postgres и используем её:
+
+pip install flask-sqlalchemy
+pip install Flask-Migrate
+
+в конфиг добавить:
+    SQLALCHEMY_DATABASE_URI='postgresql://cr_user:qwerty@localhost:5432/crazy_run'
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+в инит добавить:
+    from flask_sqlalchemy import SQLAlchemy
+    from flask_migrate import Migrate
+    db = SQLAlchemy(app)
+    migrate = Migrate(app, db)
+
+установим библиотеку для взаимодействия с postgres:
+sudo apt-get install python3-setuptools
+pip install psycopg2-binary
+
+
+вот пример models.py. по нему создастря таблица
+from app import db
+import datetime
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id =            db.Column(db.Integer, primary_key=True)
+    username =      db.Column(db.String(40), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    reg_date_unix = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    upd_date_unix = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    email =         db.Column(db.String(40))
+    desc =          db.Column(db.Text)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+flask db init
+flask db migrate
+flask db upgrade
+
+
+
+если миграции уже существуют, то восстановить по ним БД можно так:
+flask shell
+>>> from app import db
+>>> db
+<SQLAlchemy engine=postgresql://cr_user:***@localhost:5432/crazy_run>
+>>> db.create_all()
+
+
 =============================
+импортируем в flask shell некоторые объекты:
+
+(venv) kalinin@md ~/python/crazy_run $ export FLASK_APP=index.py
+
+в файле index.py:
+    from app import app, db
+    from app.models import User
+
+    @app.shell_context_processor
+    def make_shell_context():
+        return {'db': db, 'User': User}
+
+в результате можем в шелле использовать объекты приложения. в частности это нужно чтобы сгенерировать данные для заполнения таблиц в Бд.
+
 =============================
 =============================
 =============================
