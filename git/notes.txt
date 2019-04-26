@@ -187,7 +187,7 @@ git push origin --delete <branchName>
 
 =========================================
 чтобы не вводить авторизационные данные каждый раз, то нужно задействовать кеш:
-git config --global credential.helper "cache --timeout=36000000"
+git config --global credential.helper "cache --timeout=360000"
 
 =========================================
 =========================================

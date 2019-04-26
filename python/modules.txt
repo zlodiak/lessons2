@@ -43,5 +43,34 @@ from imp import reload
 а импортировать так: 
 import пакет.модуль
 
+пример:
+
+----geometry
+--------__init__.py
+--------plainmetry.py
+--------stereometry.py
+----index.py
+
+
+index.py:
+import geometry.planimetry, geometry.stereometry
+
+a = geometry.planimetry.Rectangle(3, 4)
+b = geometry.stereometry.Ball(5)
+
+print(a.square())
+print(b.V())
+
+
+plainmetry.py:
+from math import pi, pow
+class Rectangle:
+
+__init__.py:
+пустой
+
+
+
+
 ==================================
 ==================================

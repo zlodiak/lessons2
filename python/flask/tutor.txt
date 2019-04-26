@@ -1,0 +1,111 @@
+создаём такую структуру каталогов:
+
+app
+----__init__.py
+----models.py
+----routes.py
+----forms.py
+----templates
+--------base.html
+--------index.html
+venv
+index.py
+.gitignore
+.git
+config.py
+
+не забываем вирт контейнер и СКВ:
+
+git init
+python3 -m pip unstall flask
+
+содежримое .gitignore:
+*.pyc
+/venv
+/__pycache__
+/app/__pycache__
+/app/templates/__pycache__
+
+
+содержимое init.py:
+from flask import Flask
+from config import Config
+app = Flask(__name__)
+app.config.from_object(Config)
+from app import routes, models
+
+
+содержимое index.py:
+from app import app
+
+
+содержимое routes.py:
+from app import app
+from flask import render_template
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html', title='Home')
+
+
+содержимое config.py:
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+class Config(object):
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'skldnfkui3489ywsefkfhnkrl45'
+
+
+содержимое index.html:
+{% extends "base.html" %}
+{% block content %}
+    <h1>Hi</h1>
+{% endblock %}
+
+
+содержимое base.html:
+<html>
+    <head>
+        {% if title %}
+            <title>{{ title }}</title>
+        {% endif %}
+    </head>
+
+    <body>
+        <h1>Hello!</h1>
+        {% block content %}{% endblock %}
+    </body>
+</html>
+
+
+вкл. режим отладки в консоли:
+export DEBUG=1
+
+запуск приложения:
+flask run
+
+импорт зависимостей для развёртывания на другой машине:
+pip freeze > requirements.txt
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
