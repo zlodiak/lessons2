@@ -10,6 +10,9 @@ select version();
 создать БД:
 CREATE DATABASE joba_finder;
 
+подключиться к ДБ:
+psql -U name_of_user -d name_of_database
+
 список баз:
 \l
 
@@ -33,11 +36,12 @@ SELECT current_database();
 \dt
 
 создать пользователя:
-CREATE USER jf_user WITH PASSWORD 'qwerty';
+CREATE USER cr_user WITH PASSWORD 'qwerty';
 
 список пользователей:
 \du
 
+дать привилегии пользователю:
 GRANT ALL PRIVILEGES ON DATABASE joba_finder to jf_user;
 
 вывести содержимое таблицы:
