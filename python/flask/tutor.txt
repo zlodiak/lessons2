@@ -154,6 +154,44 @@ flask shell
 в результате можем в шелле использовать объекты приложения. в частности это нужно чтобы сгенерировать данные для заполнения таблиц в Бд.
 
 =============================
+заполнение БД тестовыми данными. для этого нужно установить пакет nimesis и добавить статический метод в модель:
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id =            db.Column(db.Integer, primary_key=True)
+    username =      db.Column(db.String(40), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    reg_date_unix = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    upd_date_unix = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    email =         db.Column(db.String(40))
+    desc =          db.Column(db.Text)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+    @staticmethod
+    def _bootstrap(count=10, locale='ru'):
+        from mimesis import Generic
+
+        generic = Generic(locale)
+
+        for _ in range(count):
+            user = User(
+                username=generic.full_name(gender='female'),
+                password_hash=generic.text(quantity=100),
+                reg_date_unix=generic.datetime.timestamp(posix=False),
+                upd_date_unix=generic.datetime.timestamp(posix=False),
+                email=generic.email(),
+                desc=generic.numbers.gender()
+            )
+
+            db.session.add(user)
+            try:
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
+
 =============================
 =============================
 =============================
