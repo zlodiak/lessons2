@@ -1,3 +1,9 @@
+создаём виртуальную среду:
+$ sudo apt-get install python-virtualenv
+$ virtualenv --python=python3.6 venv
+
+=========================================
+
 создаём такую структуру каталогов:
 
 app
@@ -78,7 +84,7 @@ class Config(object):
 
 
 вкл. режим отладки в консоли:
-export DEBUG=1
+export FLASK_DEBUG=1
 
 запуск приложения:
 flask run
@@ -162,35 +168,53 @@ class User(db.Model):
     id =            db.Column(db.Integer, primary_key=True)
     username =      db.Column(db.String(40), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    reg_date_unix = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    upd_date_unix = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    reg_date_utc =  db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow())
+    upd_date_utc =  db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow())
     email =         db.Column(db.String(40))
     desc =          db.Column(db.Text)
+    is_active =     db.Column(db.Boolean, unique=False, default=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
     @staticmethod
     def _bootstrap(count=10, locale='ru'):
-        from mimesis import Generic
+        from mimesis import Generic, Person, Text
 
         generic = Generic(locale)
+        person = Person(locale)
+        text = Text(locale)
 
         for _ in range(count):
             user = User(
-                username=generic.full_name(gender='female'),
-                password_hash=generic.text(quantity=100),
-                reg_date_unix=generic.datetime.timestamp(posix=False),
-                upd_date_unix=generic.datetime.timestamp(posix=False),
-                email=generic.email(),
-                desc=generic.numbers.gender()
+                username=person.full_name(),
+                password_hash=generate_password_hash(generic.text.word()),
+                reg_date_utc=datetime.datetime.utcnow(),
+                upd_date_utc=datetime.datetime.utcnow(),
+                email=person.email(),
+                desc=text.text(5), 
+                is_active=True
             )
 
             db.session.add(user)
+
             try:
                 db.session.commit()
             except Exception:
                 db.session.rollback()
+
+После этого в режиме flask shell нужно выполнить команду:
+User()._bootstrap()
+
+при этом в index.py нужно разрешить доступ к User из шелла:
+    from app import app, db
+    from app.models import User
+    @app.shell_context_processor
+    def make_shell_context():
+        return {'db': db, 'User': User}
+
+если таблица не заполняется, то нужно смотреть логи постгреса здесь:
+/var/log/postgresql
 
 =============================
 =============================
