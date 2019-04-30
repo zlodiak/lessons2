@@ -1,0 +1,96 @@
+допустим, есть несколько видов двигателей. нужно заполнить ими склад.
+
+
+petrol_engine_cnt = input('сколько двигателей типа pertol загрузить на склад?')
+electro_engine_cnt = input('сколько двигателей типа electro загрузить на склад?')
+
+storage = Storage()
+storage.load_petrol_engines(int(petrol_engine_cnt), PetrolEngine)
+storage.load_electro_engines(int(electro_engine_cnt), ElectroEngine)
+print(storage.get_engines())
+
+
+================================
+
+
+class Storage:
+    def __init__(self):
+        self.engines = []
+
+    def load_petrol_engines(self, cnt, Engine):
+        for i in range(cnt):
+            self.engines.append(Engine())
+
+    def load_electro_engines(self, cnt, Engine):
+        for i in range(cnt):
+            self.engines.append(Engine())            
+
+    def get_engines(self):
+        return self.engines
+
+
+================================
+
+
+class IEngine(metaclass=ABCMeta):
+    @abstractmethod
+    def get_type(self):
+        pass
+
+    @abstractmethod
+    def get_weight(self):
+        pass        
+
+
+class PetrolEngine(IEngine):
+    def __init__(self):
+        self.type = 'petrol'
+        self.weight = 100
+        self.serial_num = random.randint(1000000, 9999999)
+
+    def get_type(self):
+        return self.type
+
+    def get_weight(self):
+        return self.weight
+
+    def __repr__(self):
+        return '<Engine_raw: {}/{}>'.format(self.type, self.weight)
+
+
+class ElectroEngine(IEngine):
+    def __init__(self):
+        self.type = 'electro'
+        self.weight = 50
+        self.serial_num = random.randint(1000000, 9999999)
+
+    def get_type(self):
+        return self.type
+
+    def get_weight(self):
+        return self.weight
+
+    def __repr__(self):
+        return '<Engine_raw: {}/{}>'.format(self.type, self.weight)
+
+================================
+Если я добавлю двигатель третьего типа, то мне не придётся менять существующий код. А придётся просто добавить метод load_diesel_engines() в класс Storage. 
+
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
