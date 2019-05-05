@@ -1,0 +1,14 @@
+
+classes: 
+    AutoPlant
+    Storage
+    Documentation
+    Car: ford, jeep, tesla
+    Wheels: round, square
+    Engine: petrol, diesel, electro
+
+
+docs:
+    tesla: electro, round
+    jeep: diesel/petrol, round
+    ford: diesel/petrol, square
