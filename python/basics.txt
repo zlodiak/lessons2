@@ -290,7 +290,14 @@ sudo lsof -t -i tcp:8000 | xargs kill -9
 $ python3 -m venv venv
 
 ==============================================
+установить конкретную версию питона для virtualenv:
+$ sudo apt-get install python-virtualenv
+$ virtualenv --python=python3.6 myvenv
+
 ==============================================
+собрать python3.6 из исходников:
+https://tecadmin.net/install-python-3-6-ubuntu-linuxmint/
+
 ==============================================
 ==============================================
 ==============================================
