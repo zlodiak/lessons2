@@ -29,25 +29,6 @@ except Exception as e:
     raise
 
 =========================+
-если есть вложенность, то исключение всплывает:
-try:
-  q = [1, 2, 3]
-  try:
-    a = q[10]
-  except:
-    print('errorr')
-  else:
-    print('okk')
-except:
-  print('error out')
-else:
-  print('ok out')
-
-# errorr
-# ok out
-
-
-=========================+
 если исключение не отлавливается внутренним блоком, то оно высплывает:
 try:
   q = [1, 2, 3]
