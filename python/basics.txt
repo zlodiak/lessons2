@@ -292,7 +292,7 @@ $ python3 -m venv venv
 ==============================================
 установить конкретную версию питона для virtualenv:
 $ sudo apt-get install python-virtualenv
-$ virtualenv --python=python3.6 myvenv
+$ virtualenv --python=python3.6 venv
 
 ==============================================
 собрать python3.6 из исходников:
