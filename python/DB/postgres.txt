@@ -8,7 +8,7 @@ service postgresql start
 войти под суперюзером:
 sudo su postgres
 
-войти в cli-режим:
+войти в cli-режим под суперюзером:
 sudo -u postgres psql
 
 узнать версию postgrees:
@@ -43,19 +43,23 @@ SELECT current_database();
 \dt
 
 создать пользователя:
-CREATE USER cr_user WITH PASSWORD 'qwerty';
+CREATE USER ba_user WITH PASSWORD 'bark';
 
 список пользователей:
 \du
 
 дать привилегии пользователю:
-GRANT ALL PRIVILEGES ON DATABASE joba_finder to jf_user;
+GRANT ALL PRIVILEGES ON DATABASE bottle_auth to ba_user;
 
 вывести содержимое таблицы:
 select * from parse_results;
 
 изменить собственника таблицы:
-alter table test_table owner to test
+alter table users owner to ba_user;
+
+
+сделать поле уникальным(возможно, перед этим стоит почистить таблицу):
+alter table users ADD UNIQUE (email);
 
 
 =============================

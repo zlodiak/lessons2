@@ -1,0 +1,106 @@
+чтобы создать класс потока нужно унаследоваться от Thread:
+
+from threading import Thread
+ 
+ 
+class MyThread(Thread): 
+    def __init__(self, name, saver, parser):
+        Thread.__init__(self)
+        self.name = name
+        self.saver = saver
+        self.parser = parser
+    
+    def run(self):
+        print('start thread with nme: '+self.name)
+        content = self.parser.get_content(self.name)
+        self.saver.save(self.name, content)
+
+============================
+далее создаём пустой список и в цикле создаём потоки, помещая каждый из них в этот список
+
+    threads = []
+
+    for phrase in config.search_phrases:
+        threads.append(MyThread(phrase, saver, parser))
+
+============================
+а затем каждый поток опять через списко запускаем:
+    for thread in threads:
+        thread.start()
+
+
+============================
+если нужно измерить время выполнения, то можно отследить момент завершения каждого потока:
+
+    for thread in threads:
+        thread.join()
+
+
+print("Total elapsed: {:g} secs".format(timer() - start_time))
+
+============================
+============================
+https://gitlab.com/zlodiak1/parser_threads
+
+============================
+============================
+from timeit import default_timer as timer
+
+from classes.parser import Parser
+from classes.saver import Saver
+from classes.thread import MyThread
+import config
+
+
+def main():
+    content = parser.get_content(phrase)
+    saver.save(phrase, content)
+
+start_time = timer()
+
+parser = Parser(config.url, config.headers)
+saver = Saver()
+
+saver.clear(config.search_phrases)
+
+parse_type = input('enter parse type: 1 - serial parsing, 2 - threads parsing')
+
+if parse_type == '1':
+    for phrase in config.search_phrases:
+        main()
+elif parse_type == '2':
+    threads = []
+
+    for phrase in config.search_phrases:
+        threads.append(MyThread(phrase, saver, parser))
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+
+print("Total elapsed: {:g} secs".format(timer() - start_time))
+
+
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
