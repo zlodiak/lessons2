@@ -54,5 +54,29 @@ print(next(g))
 print(next(g))
 
 ======================
+def generate_nums(number):
+    print('Start of generation')
+    yield number
+    print('Next number')
+    yield number+1
+    print('The end')
+
+
+n = generate_nums(100)
+next(n)
+next(n)
+next(n)
+next(n)
+next(n)
+
+
+Start of generation
+Next number
+The end
+Traceback (most recent call last):
+  File "index.py", line 12, in <module>
+    next(n)
+StopIteration
+
 ======================
 ======================

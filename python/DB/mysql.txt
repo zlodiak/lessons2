@@ -1,0 +1,100 @@
+Установка MySQL на Debian/Ubuntu/Linux Mint
+
+sudo apt-get install mysql-server mysql-client
+
+sudo service mysql start
+
+в ходе установки запросят пароль для кутоа. если этого не рпоизошло, то:
+mysqladmin -u root password your_passwd_from_mysql
+
+подключиться к mysql из шелла:
+$ mysql -u root -p
+
+
+установим GUI-клиент, который позволяет выполнять только запросы:
+sudo apt-get install emma
+
+порт
+3306
+
+тут более продвинутый клиент, но триальная версия 30 дней:
+https://www.razorsql.com/download_linux.html
+устанавливается так:
+https://razorsql.com/help/installation.html
+
+==============================
+CREATE DATABASE BucketList;
+
+
+CREATE TABLE `BucketList`.`tbl_user` (
+  `user_id` BIGINT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(45) NULL,
+  `user_username` VARCHAR(45) NULL,
+  `user_password` VARCHAR(45) NULL,
+  PRIMARY KEY (`user_id`));
+
+==============================
+    
+pip install flask-mysql
+from flaskext.mysql import MySQL
+
+mysql = MySQL()
+ 
+# MySQL configurations
+app.config['MYSQL_DATABASE_USER'] = 'jay'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'jay'
+app.config['MYSQL_DATABASE_DB'] = 'BucketList'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
+
+при этом в конфиге:
+class Config(object):
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'skldnfkui3489ywsefkfhnkrl45'
+    SQLALCHEMY_DATABASE_URI='mysql+pymysql://root:root@localhost/books_api2'
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+app.config.from_object(Config)
+
+==============================
+вывести в шелл все базы данных:
+show databases;
+
+переключиться на БД:
+use mysql;
+
+текущая БД:
+SELECT DATABASE();
+
+вывести список таблиц в текущей БД:
+show tables;
+
+удалить таблицу:
+drop table books;
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================

@@ -86,6 +86,8 @@ class Config(object):
 вкл. режим отладки в консоли:
 export FLASK_DEBUG=1
 
+export FLASK_APP=index.py
+
 запуск приложения:
 flask run
 
