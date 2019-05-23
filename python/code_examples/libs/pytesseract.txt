@@ -1,0 +1,26 @@
+для пакета, который распознаёт текст с картинок нужно подключить 
+
+sudo apt install tesseract-ocr
+
+
+а так же 
+
+python3 -m pip install pytesseract
+
+
+
+
+
+
+from PIL import Image
+import pytesseract
+  
+import io
+import requests
+  
+image_bytes = requests.get('http://placehold.it/200x100').content
+image = Image.open(io.BytesIO(image_bytes))
+print(image)
+
+text = pytesseract.image_to_string(image)
+print(text)  # 200x100
