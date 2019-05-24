@@ -294,7 +294,6 @@ $ python3 -m venv venv
 $ sudo apt-get install python-virtualenv
 $ virtualenv --python=python3.6 venv
 
-
 ==============================================
 собрать python3.6 из исходников:
 https://tecadmin.net/install-python-3-6-ubuntu-linuxmint/
@@ -324,6 +323,20 @@ Race condition. Другое название: гонки данных (data rac
 не стогая типизация позволяет не явно преобразовывать переменные
 
 ==============================================
+установка tesseract для распознавания текста на картинке:
+
+pip install pytesseract
+
+sudo apt install tesseract-ocr
+sudo apt-get -f install
+
+sudo apt update
+sudo apt install tesseract-ocr
+sudo apt install libtesseract-dev
+
+https://stackoverflow.com/questions/50951955/pytesseract-tesseractnotfound-error-tesseract-is-not-installed-or-its-not-i?rq=1
+
+
 ==============================================
 ==============================================
 ==============================================
