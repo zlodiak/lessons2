@@ -1,0 +1,80 @@
+нужно ли заворачивать в блок try контекстный менеджер open?
+def write_result(self, phone_num):
+        try:
+            with open(self.result_filename, 'a', encoding='utf-8') as f:
+                f.write(phone_num + '\n')   
+        except IOError as e:
+            self.logger.write_into_error_log('Error write results for filename: ' + str(self.result_filename) + ' :: ' + str(e))
+        except Exception as e:
+            self.logger.write_into_error_log('Some error for: ' + str(self.result_filename) + ' :: ' + str(e))
+
+
+https://toster.ru/q/633997
+
+==================================
+является ли хорошей практикой заворачивать в блок try/except инициализацию класса?
+
+ class Resulter:
+    def __init__(self, results_path, logger):
+        try:
+            self.logger = logger
+            self.results_path = results_path
+        except Exception as e:
+            error_msg = 'Resulter is not init: ' + ' :: ' + str(e)
+            raise Exception(error_msg)
+
+с одной стороны - всё правильно, ведь ошибка может произойти в любом месте. но с другой стороны это избыточность и параноя
+
+==================================
+зачем инициализировать конструкторы родительского класса?
+
+class ImgRecognizer(threading.Thread):
+    def __init__(self, driver_path, delay_sec, selectors, base64_converter, link, logger, resulter):
+        threading.Thread.__init__(self)
+        
+
+==================================
+почему плохая практика - использовать Exception() после перечисления всех возможных конкретных видов исключений?
+
+def write_result(self, phone_num):
+        try:
+            with open(self.result_filename, 'a', encoding='utf-8') as f:
+                f.write(phone_num + '\n')   
+        except IOError as e:
+            self.logger.write_into_error_log('Error write results for filename: ' + str(self.result_filename) + ' :: ' + str(e))
+        except Exception as e:
+            self.logger.write_into_error_log('Some error for: ' + str(self.result_filename) + ' :: ' + str(e))
+
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
