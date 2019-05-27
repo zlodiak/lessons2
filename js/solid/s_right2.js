@@ -22,9 +22,9 @@ class Circle {
 
 
 class Summator {
-    constructor(objects, logger) {
+    constructor(objects, outputer) {
         this.objects = objects;
-        this.logger = logger;
+        this.outputer = outputer;
     }
 
     getSum() {
@@ -32,7 +32,7 @@ class Summator {
         this.objects.forEach(obj => {
             sum += obj.calcArea();
         })
-        this.logger.write_in_log('sum is calculated') 
+        this.outputer.output(sum)
         return sum;
     }
 }
@@ -45,19 +45,10 @@ class Outputer {
 }
 
 
-class Logger {
-    write_in_log(text) {
-        console.log('LOG:', text)
-    }
-}
-
-
 rectangle = new Rectangle(3, 4);
 circle = new Circle(5);
-logger = new Logger()
-summator = new Summator([rectangle, circle], logger);
-
-sum = summator.getSum();
 
 outputer = new Outputer();
-outputer.output(sum);
+summator = new Summator([rectangle, circle], outputer);
+
+sum = summator.getSum();
