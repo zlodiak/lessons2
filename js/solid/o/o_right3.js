@@ -46,11 +46,11 @@ customer = new Customer(pizzaStorage);
 batman = new Batman(pizzaStorage);
 
 main = new Main;
-main.action(customer);
+main.action(customer);  // если аргумент заменить на batman, то результат не изменится
 console.log(pizzaStorage.count);
 
 main = new Main;
-main.action(batman);
+main.action(batman);    // если аргумент заменить на customer, то результат не изменится
 console.log(pizzaStorage.count);
 
 
