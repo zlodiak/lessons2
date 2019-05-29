@@ -47,10 +47,10 @@ batman = new Batman(pizzaStorage);
 
 main = new Main;
 main.action(customer);  // если аргумент заменить на batman, то результат не изменится
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count); // минус 1 пицца
 
 main = new Main;
 main.action(batman);    // если аргумент заменить на customer, то результат не изменится
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count);  // минус 1 пицца
 
 

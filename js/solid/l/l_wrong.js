@@ -34,7 +34,7 @@ customer = new Customer('bill', pizzaStorage);
 fatCustomer = new FatCustomer('bob', pizzaStorage);
 
 customer.eat();
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count);  // 9
 
 fatCustomer.eat();
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count);  // 6

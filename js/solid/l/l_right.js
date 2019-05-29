@@ -22,9 +22,8 @@ class Customer {
 
 
 class FatCustomer extends Customer {
-  constructor(name, storage, logger) {
+  constructor(name, storage) {
     super(name, storage);
-    this.logger = logger;
   }
 
   sayThanks() {
@@ -33,19 +32,12 @@ class FatCustomer extends Customer {
 }
 
 
-class Logger {
-  write_to_log(text) {
-    console.log('LOG: ', text);
-  }
-}
-
-
 pizzaStorage = new PizzaStorage();
 customer = new Customer('bill', pizzaStorage);
-fatCustomer = new FatCustomer('bob', pizzaStorage, new Logger());
+fatCustomer = new FatCustomer('bob', pizzaStorage);
 
 customer.eat();
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count);  // 9
 
 fatCustomer.eat();
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count);    // 8
