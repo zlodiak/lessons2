@@ -338,6 +338,30 @@ https://stackoverflow.com/questions/50951955/pytesseract-tesseractnotfound-error
 
 
 ==============================================
+эмуляция switch при помощи объекта:
+
+def __handle_input(self, symbol):
+    jump_table_1 = {
+        self.PLAIN_TEXT: self.__set_pre_bold,
+        self.PRE_BOLD: self.__set_bold,
+        self.BOLD: self.__set_pre_end_bold,
+        self.ITALIC: self.__set_end_italic,
+        self.PRE_END_BOLD: self.__set_end_bold
+    }
+
+    jump_table_2 = {
+        self.PLAIN_TEXT: self.__update_buffer,
+        self.PRE_BOLD: self.__set_italic,
+        self.BOLD: self.__update_buffer,
+        self.ITALIC: self.__update_buffer,
+        self.PRE_END_BOLD: self.__update_buffer
+    }
+
+    if symbol == '*':
+        jump_table_1[self.__state]()
+    else:
+        jump_table_2[self.__state](symbol)
+
 ==============================================
 ==============================================
 ==============================================
