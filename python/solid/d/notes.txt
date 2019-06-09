@@ -16,9 +16,98 @@
 http://www.skipy.ru/architecture/module_design.html#srp
 
 ====================
+dependency injection делится на 3 вида:
+
+1. constructor injection. в этом случае зависимость передаётся через конструктор класса и далее присваивается свойству класса
+
+class A:
+	def __init__(self, logger):
+		self.logger = logger
+
+2. method injection. в этом случае зависимость передаётся через метод класса и в большинстве случаев на присваивается свойству класса, но присваивается локальной переменной метода
+
+class A:
+	def set_logger(self, logger):
+		logger_obj = logger
+		logger_obj.write('blabla')
+
+3. property injection. в этом случае зависимость приравнивается свойству объекта
+
+a = A()
+a.prop = B()
+
 ====================
 ====================
+Разница между композицией и агрегацией заключается в том, что в случае композиции целое явно контролирует время жизни своей составной части (часть не существует без целого), а в случае агрегации целое хоть и содержит свою составную часть, время их жизни не связано (например, составная часть передается через параметры конструктора).
+
+class CompositeCustomService
+{
+    // Композиция
+    private readonly CustomRepository _repository = new CustomRepository();
+}
+
+class AggregatedCustomService
+{ 
+    // Агрегация
+    private readonly AbstractRepository _repository; 
+    public AggregatedCustomService(AbstractRepository repository) 
+    { 
+        _repository = repository; 
+    } 
+}
+
+
+ассоциация это общее понятие для:
+наследования,
+композиции,
+агрегации
+
 ====================
+шаблон делегирования - объект передаёт ответственность за выполнение связанному объекту
+
+class A:
+    def f(self):
+        print 'A : вызываем метод f'
+    def g(self):
+        print 'A : вызываем метод g'
+class C:
+    def __init__(self):
+        self.A = A()
+    def f(self):
+        return self.A.f()
+    def g(self):
+        return self.A.g()
+c = C()
+c.f() #A: вызываем метод f
+c.g() #A: вызываем метод g
+
+
+---------
+js:
+
+function A() {
+	this.f = function() {
+		alert("A: вызываем метод f()");
+	};
+	this.g = function() {
+		alert("A: вызываем метод g()");
+	};
+}
+
+function C() {
+	var a = new A();
+	this.f = function() {
+		a.f();
+	};
+	this.g = function() {
+		a.g();
+	};
+}
+
+var c = new C();
+c.f(); // "A: вызываем метод f()"
+c.g(); // "A: вызываем метод g()"
+
 ====================
 ====================
 ====================
