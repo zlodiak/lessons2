@@ -20,17 +20,10 @@ class Customer {
 }
 
 
-class Batman {
-  constructor(storage) {
-    this.storage = storage;
-  }
-
+class FatCustomer extends Customer{
   eat() {
     this.storage.minus(1);
-  }
-
-  useBumerang() {
-    console.log('бдыщь!')
+    // this.storage.minus(3);   // wrong!
   }
 }
 
@@ -43,14 +36,14 @@ class Main {
 
 pizzaStorage = new PizzaStorage();
 customer = new Customer(pizzaStorage);
-batman = new Batman(pizzaStorage);
+FatCustomer = new FatCustomer(pizzaStorage);
 
 main = new Main;
-main.action(customer);  // если аргумент заменить на batman, то результат не изменится
+main.action(customer);  // если аргумент заменить на FatCustomer, то результат не изменится
 console.log(pizzaStorage.count); // минус 1 пицца
 
 main = new Main;
-main.action(batman);    // если аргумент заменить на customer, то результат не изменится
+main.action(FatCustomer);    // если аргумент заменить на Customer, то результат не изменится
 console.log(pizzaStorage.count);  // минус 1 пицца
 
 

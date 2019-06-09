@@ -22,10 +22,6 @@ class Customer {
 
 
 class FatCustomer extends Customer {
-  constructor(name, storage) {
-    super(name, storage);
-  }
-
   sayThanks() {
     console.log('thanks!')
   }

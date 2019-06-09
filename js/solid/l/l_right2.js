@@ -49,8 +49,8 @@ pizzaStorage = new PizzaStorage();
 customer = new Customer('bill', pizzaStorage);
 fatCustomer = new FatCustomer('bob', pizzaStorage, new Logger());
 
-customer.eat();
-console.log(pizzaStorage.count);
+customer.eat();                         
+console.log(pizzaStorage.count);      // 9
 
 fatCustomer.eat();
-console.log(pizzaStorage.count);
+console.log(pizzaStorage.count);      // 8
