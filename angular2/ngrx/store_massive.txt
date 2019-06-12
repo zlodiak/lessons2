@@ -1,0 +1,123 @@
+в сторе можно хранить много значений. например в виде объекта.
+для этого нужно подключить стор в модуле:
+
+import { StoreModule } from '@ngrx/store';
+import { counterReducer } from './counter.reducer';
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot({ count: counterReducer })
+  ],
+
+===============================
+редюсер будет имет значения для инициализации и использовать его по умолчанию.
+кроме того в редюсер пеердаётся кастомный экшен:
+
+import { ActionTypes, CounterAction } from './counter.actions';
+
+export const initialState = {
+  first: 0,
+  second: 0,
+  third: 0
+};
+
+export function counterReducer(state = initialState, action: CounterAction) {
+  switch (action.type) {
+    case ActionTypes.Increment:
+      return {
+        ...state,
+        [action.payload]: state[action.payload] + 1,
+      };
+
+    case ActionTypes.Decrement:
+      return {
+        ...state,
+        [action.payload]: state[action.payload] - 1,
+      };
+
+    case ActionTypes.Reset:
+      return {
+        ...state,
+        [action.payload]: 0,
+      };
+
+    default:
+      return state;
+  }
+}
+
+
+===============================
+экшен существует только одни, но он принимает дополнительный параметр полезной нагрузки:
+
+import { Action } from '@ngrx/store';
+
+
+export enum ActionTypes {
+  Increment = 'Increment',
+  Decrement = 'Decrement',
+  Reset = 'Reset',
+}
+
+export class CounterAction implements Action {
+  constructor(public type: ActionTypes, public payload: string) {}
+}
+
+в данном случае полезная нагрузка это имя ключа в сторе-объекте. первым агрументом он принимает тип экшена, который используется в свитче редючера
+
+===============================
+шаблон компонента:
+
+<div *ngFor="let item of count$ | async | keyvalue">
+  <button (click)="increment(item.key)">Increment</button>
+  <div>Current Count: {{ item.value }}</div>
+  <button (click)="decrement(item.key)">Decrement</button>
+  <button (click)="reset(item.key)">Reset Counter</button>
+  <hr>
+</div>
+
+===============================
+соответствующие ему обработчики в контроллера компонента:
+
+  count$: Observable<number>;
+
+  constructor(
+    private store: Store<{ count: number }>
+  ) {
+    this.count$ = store.pipe(select('count'));
+  }
+
+  increment(key) {
+    this.store.dispatch(new CounterAction(ActionTypes.Increment, key));
+  }
+
+  decrement(key) {
+    this.store.dispatch(new CounterAction(ActionTypes.Decrement, key));
+  }
+
+  reset(key) {
+    this.store.dispatch(new CounterAction(ActionTypes.Reset, key));
+  }
+
+===============================
+в результате.
+1. нажимаем  н кнопку в шаблоне.
+2. создаётся экшен, в который поступает тип события и полезная нагрузка
+3. созданный экшен передаётся редюсеру
+4. в редюсере отрабатывает соответствующий типу события блок свитча.
+5. в этом блоке меняетсязначение объекта с ключом, переданным в полезной нагрузке
+6. в резуотате стейт изменён, причём через единственный универсальный механизм ngrx
+
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================

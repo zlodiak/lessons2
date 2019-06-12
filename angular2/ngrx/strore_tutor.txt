@@ -1,0 +1,148 @@
+установить angular.
+установить store: 
+ng add @ngrx/store
+
+===========================================
+создать файл counter.actions.ts:
+
+import { Action } from '@ngrx/store';
+
+export enum ActionTypes {
+  Increment = '[Counter Component] Increment',
+  Decrement = '[Counter Component] Decrement',
+  Reset = '[Counter Component] Reset',
+}
+
+export class Increment implements Action {
+  readonly type = ActionTypes.Increment;
+}
+
+export class Decrement implements Action {
+  readonly type = ActionTypes.Decrement;
+}
+
+export class Reset implements Action {
+  readonly type = ActionTypes.Reset;
+}
+
+===========================================
+создать файл reducer.actions.ts:
+
+import { Action } from '@ngrx/store';
+import { ActionTypes } from './counter.actions';
+
+export const initialState = 0;
+
+export function counterReducer(state = initialState, action: Action) {
+  switch (action.type) {
+    case ActionTypes.Increment:
+      return state + 1;
+
+    case ActionTypes.Decrement:
+      return state - 1;
+
+    case ActionTypes.Reset:
+      return 0;
+
+    default:
+      return state;
+  }
+}
+
+
+===========================================
+подключить их так:
+
+  imports: [
+    BrowserModule,
+    StoreModule.forRoot({ count: counterReducer }, { metaReducers })
+  ],
+
+===========================================
+в компонент импортируем сторе и actions
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Increment, Decrement, Reset } from './counter.actions';
+
+затем пробрасываем в шаблон вывод стора и пишем процедуры для изменения стора(связываем их с кнопками шаблона):
+
+  count$: Observable<number>;
+
+  constructor(private store: Store<{ count: number }>) {
+    this.count$ = store.pipe(select('count'));
+  }
+
+  increment() {
+    this.store.dispatch(new Increment());
+  }
+
+  decrement() {
+    this.store.dispatch(new Decrement());
+  }
+
+  reset() {
+    this.store.dispatch(new Reset());
+  }
+
+
+сам шаблон выглядит так:
+
+<button (click)="increment()">Increment</button>
+ 
+<div>Current Count: {{ count$ | async }}</div>
+
+<button (click)="decrement()">Decrement</button>
+
+<button (click)="reset()">Reset Counter</button>
+
+===========================================
+в итоге имеем:
+стор - хранилище данных,
+редюсер - данные изменяются ТОЛЬКО через него
+экшены - набор операций для изменения стора(передаются редюсеру)
+
+в модуле нужно объявить редюсер и стор. а экшены импортировать перед тем как послать команду на изменение стора в редюсер.
+
+важно, что редюсер по дефолту должен возвращать стор. это даёт возможность запросить стор и в будущем вывести его:
+  count$: Observable<number>;
+  constructor(private store: Store<{ count: number }>) {
+    this.count$ = store.pipe(select('count'));
+  }
+
+
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
