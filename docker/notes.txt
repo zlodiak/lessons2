@@ -3,15 +3,35 @@
 контейнер это набор незафиксированных слоёв(их можно менять). например образ из предыдущего пункта + проект на django. у одного образа может быть несколько контейнеров, то есть несколько программ могут работать в одном окружении.
 
 ====================================
-echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+# echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
 
 sudo apt-get install docker.io
+sudo apt-get install cgroup-lite
+# sudo apt install apparmor
 
 docker --version
 
 sudo service docker start
 
 sudo docker info
+
+
+--------------
+
+One way to upgrade to the latest version (without installing from source) is to use the instructions here provided by Digital Ocean:
+
+Add docker repository key to apt-key for package verification
+
+sudo sh -c "wget -qO- https://get.docker.io/gpg | apt-key add -"
+Add the docker repository to aptitude sources:
+
+sudo sh -c "echo deb http://get.docker.io/ubuntu docker main\ > /etc/apt/sources.list.d/docker.list"
+Update the repository with the new addition:
+
+sudo aptitude update
+Finally, download and install docker:
+
+sudo aptitude install lxc-docker
 
 ====================================
 добавим докер-пользователя:
@@ -105,6 +125,120 @@ docker push docktor888/ubuntu-htop:latest
 docker rmi -f 7b275fda0e52
 id брать из списка docker images
 
+====================================
+запустить образ и выполнить команду вывода на экран:
+docker run ubuntu /bin/echo 'Hello world'
+
+или запустить образ с CLI в интерактивном режиме:
+docker run -t -i ubuntu /bin/bash
+
+выход из интерактивного режима:
+exit
+
+можно запустить контейнер в виде демона:
+docker run -d ubuntu /bin/sh -c "while true; do echo hello world; sleep 1; done"
+
+посмотреть что сейчас делает контейнер:
+docker logs modest_einstein
+
+остановить контейнер:
+docker stop modest_einstein
+
+
+==================================== 
+существуют 2 типа образов: официальный и пользовательский.
+официальный состоит из одного слова, он поддерживается владельцами докера.
+пользовательский состоит из двух слов через слэш.
+
+====================================
+создавать образы можно двумя способами: командамии докерфайлом:
+
+1. 
+запускаем контейнер: docker run -t -i training/sinatra /bin/bash
+
+устанавливаем что нужно: 
+root@0b2616b0e5a8:/# apt-get install -y ruby2.0-dev
+root@0b2616b0e5a8:/# gem2.0 install json
+
+выходим: exit
+
+коммитим:
+docker commit -m "Added json gem" -a "Kate Smith" 0b2616b0e5a8 ouruser/sinatra:v2
+-m для комментария
+-a для автора
+
+теперь образ есть: docker images
+его можно даже запустить: docker run -t -i ouruser/sinatra:v2 /bin/bash
+
+2.
+создаём в отдельном каталоге файл Dockerfile
+
+пишем в нём инструкцию типа такой:
+FROM ubuntu:14.04
+MAINTAINER Kate Smith <ksmith@example.com>
+RUN apt-get update && apt-get install -y ruby ruby-dev
+RUN gem install sinatra
+
+билдим: docker build -t ouruser/sinatra:v2 .
+точка в конце говорит о том, что действия производятся в текущем каталоге
+
+если всё прошло хорошо, то опять же контейнер можно запустить:
+docker run -t -i ouruser/sinatra:v2 /bin/bash
+
+====================================
+можно выгрузить образ в приватный или в общий репозиторий:
+docker push ouruser/sinatra
+
+====================================
+сеть нужна чтобы несколько контейнеров были изолированы от остальных и работали согласованно.
+
+Сетевой мост(bridge) ограничен хостом на котором запущен Docker Engine. 
+Наложенная сеть(overlay) может включать в себя несколько хостов и является более продвинутой.
+
+можно создать свою сеть типа bridge:
+docker network create -d bridge my-bridge-network
+
+запустим контейнер с постгрес в отдельной сети:
+docker run -d --net=my-bridge-network --name db training/postgres
+
+проинспектируем сеть:
+docker network inspect my-bridge-network
+или можно проинспектировать контейнер:
+docker inspect db
+
+====================================
+если контейнеры запущены в одной и той же сети, то они могут пинговаться. иначе - нет.
+
+запустим два контейнера в разных сетях:
+docker run -d --net=my-bridge-network --name db training/postgres
+docker run -d --name web training/webapp python app.py
+
+зайдём интерактивно во второй контейнер:
+docker network connect my-bridge-network web
+
+и попробуем из него пингануть первый:
+md@md ~ $ docker exec -it db bash
+root@ce5c13db2295:/# ping 172.17.0.1
+при этом, вязв ip так: docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' web
+в результате увидим, что он не пингуется
+
+тепреь подключим контейнер web к сети my-bridge-network:
+docker network connect my-bridge-network web
+
+теперь пингуется!
+
+====================================
+Тома данных разработаны для сохранения данных, не зависимо от жизненного цикла контейнера. По этому Docker никогда не удаляет тома при удалении контейнера и не убирает их в мусор если ни один контейнер больше не ссылается на них .
+
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
 ====================================
 ====================================
 ====================================
