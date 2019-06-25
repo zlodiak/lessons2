@@ -4,7 +4,7 @@ sudo apt install virtualenv
 
 virtualenv --version
 
-virtualenv --python=python3.5 myvenv
+virtualenv --python=python3.6 venv
 
 source myvenv/bin/activate
 
@@ -13,7 +13,7 @@ source myvenv/bin/activate
 ==========================
 если не установлен, то установить pip. это менеджер пакетов. затем установить джанго:
 
-pip install django==1.8
+pip install django==2.2
 
 
 
@@ -58,7 +58,7 @@ from django.db import models
 from django.utils import timezone
 
 class Post(models.Model):
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(
@@ -105,7 +105,7 @@ admin.site.register(Post)
 python manage.py createsuperuser
 
 ==========================
-  install in firefox sqlite manager
+install in firefox sqlite manager
 
 ==========================
 git init
@@ -127,27 +127,21 @@ db.sqlite3
 теперь настроим адреса, которые отдают json:
 
 роутинг в корне приложения:
-from django.conf.urls import include, url
 from django.contrib import admin
-
+from django.urls import path, include
+from results import views
 urlpatterns = [
-    # Examples:
-    # url(r'^$', 'observer1.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'users/', include('users.urls')),
+    path('admin/', admin.site.urls),
+    path('', include('results.urls')),
 ]
 
 
 роутинг в приложении:
-from django.conf.urls import url
+from django.urls import path
 from . import views
-
 urlpatterns = [
-    url(r'^users_list$', views.users_list, name='users_list'),
+    path('results', views.results, name='results'),
 ]
-
 
 
 ==========================

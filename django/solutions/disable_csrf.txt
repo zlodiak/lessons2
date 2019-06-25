@@ -1,0 +1,9 @@
+csrf_exempt(view)
+Этот декоратор позволяет исключить представление из процесса проверки CSRF. Например:
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+@csrf_exempt
+def my_view(request):
+    return HttpResponse('Hello world'

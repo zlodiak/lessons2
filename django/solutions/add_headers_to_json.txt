@@ -1,0 +1,19 @@
+если представление возвращает json, но нужно добавить заголовки
+def result(request, date_from, date_to, user_id):
+    results = Result.objects.filter(
+        user_id=user_id, 
+        created_date__gte=date_from[0:10], 
+        created_date__lte=date_to[0:10],
+    )   
+    results_serialized = serializers.serialize('json', results)
+    return JsonResponse(results_serialized, safe=False)
+
+=============
+то поступать так:
+response = JsonResponse(results_serialized, safe=False)
+response['some-header'] = 42
+return response
+
+=============
+=============
+=============
