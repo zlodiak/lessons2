@@ -43,19 +43,19 @@ SELECT current_database();
 \dt
 
 создать пользователя:
-CREATE USER ba_user WITH PASSWORD 'bark';
+CREATE USER bo_user WITH PASSWORD 'qwerty';
 
 список пользователей:
 \du
 
 дать привилегии пользователю:
-GRANT ALL PRIVILEGES ON DATABASE bottle_auth to ba_user;
+GRANT ALL PRIVILEGES ON DATABASE bottle_out to bo_user;
 
 вывести содержимое таблицы:
 select * from parse_results;
 
 изменить собственника таблицы:
-alter table users owner to ba_user;
+alter table names owner to bo_user;
 
 
 сделать поле уникальным(возможно, перед этим стоит почистить таблицу):
@@ -65,7 +65,7 @@ alter table users ADD UNIQUE (email);
 =============================
 CREATE DATABASE db_test;
 CREATE USER user_test WITH PASSWORD 'qwerty';
-GRANT ALL PRIVILEGES ON DATABASE "db_test" to user_test;
+GRANT ALL PRIVILEGES ON DATABASE "names" to bo_user;
 
 
 =============================
@@ -126,6 +126,30 @@ select from python:
 
 =============================
 =============================
+sudo -u postgres psql
+
+create database bottle_out;
+
+CREATE USER bo_user WITH PASSWORD 'qwerty';
+
+GRANT ALL PRIVILEGES ON DATABASE "bottle_out" to bo_user;
+
+\c bottle_out;
+
+CREATE TABLE names (
+id serial PRIMARY KEY,
+name VARCHAR (100)
+);
+
+alter table names owner to bo_user;
+
+INSERT INTO names (name) VALUES ('sergey');
+INSERT INTO names (name) VALUES ('alex');
+INSERT INTO names (name) VALUES ('andrew');
+
+
+
+
 =============================
 =============================
 =============================
