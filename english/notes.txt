@@ -4,19 +4,25 @@ do i drive? / does she drive?
 i do not drive / she does not drive
 
 i am fat / she is fat
-i am fat? / she is fat?
+am i fat? / is she fat?
 i am not fat / she is not fat
 
 present continuous:
 i am running
 am i running?
 i am not running
+с глаголом do не используется
 
 past simple:
 i worked on a computer / she worked on a computer
 worked i on a computer? / worked she on a computer?
 i do not worked on a computer / she does not worked on a computer
 но существуют неправильные глаголы (see/saw)
+
+i was naive / they were naive
+was i naive? / were they naive?
+i waas not naive / they were not naive
+
 
 past continuous:
 you were playing / she was playing

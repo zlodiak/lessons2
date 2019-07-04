@@ -6,6 +6,8 @@
 
 установить: apt-get install timidity
 
+sudo apt-get install freepats
+
 запустить: timidity -iA -Os
 
 запустить tux guitar
@@ -31,6 +33,8 @@ kalinin@lenovo ~/misc $ timidity /home/kalinin/misc/led_zeppelin-the_rover.mid
 
 ===========================
 ===========================
+https://sandalov.org/blog/962/
+
 ===========================
 ===========================
 ===========================
