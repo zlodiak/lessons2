@@ -1,37 +1,55 @@
 используется для обозначения действия, которое произошло в определенное время в прошлом и время совершения которого уже истекло.
 
-утвердительные предложения: -ed.
-вопросительные и отрицательные: did + infinitive
+утвердительные предложения: -ed. 
+если глагол неправильный, то окончание -ed не используется
+
+вопросительные и отрицательные: did + infinitive.
+
+в предложениях с to be нет глагола
+
+---
+если есть did, то используется inf. в противном случае используется -ed или вторая форма
 
 ======================
 Утвердительные предложения:
-I played	We played
-You played	You played
-He / she / it played	They played
+    I played	We played
+    You played	You played
+    He / she / it played	They played
+
+    i was an actor / we were actors
 
 Вопросительные предложения:
-Did I play?	Did we play?
-Did you play?	Did you play?
-Did he / she / it play?	Did they play?
+    Did I play?	Did we play?
+    Did you play?	Did you play?
+    Did he / she / it play?	Did they play?
+
+    was i an actor? / were we actors?
 
 Отрицательные предложения:
-I did not play	We did not play
-You did not play	You did not play
-He / she / it did not play	They did not play
+    I did not play	We did not play
+    You did not play	You did not play
+    He / she / it did not play	They did not play
+
+    i was not an actor / we were not actors
 
 ======================
 примеры:
-Mary wanted to apologize for her bad mood yesterday.
-Tom waited a train.
-I slept for two hours.
-I went to Italy last month.
-We played football.
-The boys stayed at home.
-I went to the cinema yesterday evening.
-She didn’t help me.
+    Mary wanted to apologize for her bad mood yesterday.
+    Tom waited a train.
+    I slept for two hours.
+    I went to Italy last month.
+    We played football.
+    The boys stayed at home.
+    I went to the cinema yesterday evening.
+    She didn’t help me.
 
 =====================
+слова маркеры:
+yesterday, last week (month, year, autumn), in 2013, 3 days ago, When? и Where? 
+
 =====================
+
+
 =====================
 =====================
 =====================
