@@ -1,0 +1,94 @@
+добавим новое приложение в архитектуру, которое будет в либах
+
+angular console install:
+@nrwl/workspace library
+там создаём модуль test4
+в результате сгенерируется модуль в либах
+
+====================================
+в libs/test4/src/lib создаём модуль и роутинг. здесь же генерируем компоненты components/index/index.component
+
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IndexComponent } from './components/index/index.component';
+import { Test4RoutingModule } from './test4-routing.module';
+
+@NgModule({
+  declarations: [IndexComponent],
+  imports: [
+    Test4RoutingModule,
+    CommonModule
+  ], 
+  exports: [
+    IndexComponent
+  ]
+})
+export class Test4Module { }
+
+-------------
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Route } from '@angular/router';
+
+import {
+    IndexComponent
+} from './components/index/index.component';
+
+export const ORDERS_TABLE_ROUTES: Route[] = [
+  {
+    path: '',
+    component: IndexComponent
+  }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forChild(ORDERS_TABLE_ROUTES)
+  ],
+  exports: [
+    RouterModule
+  ]
+})
+export class Test4RoutingModule {}
+
+
+====================================
+импортируем всё в index.ts:
+export * from './lib/test4.module';
+
+====================================
+в корневом tsconfig появилось: 
+"@transport/test4": ["libs/test4/src/index.ts"]
+будем это использовать чтобы встроить модуль в другой модуль.
+соответственно роутинг внешнего модуля дополнится:
+const APP_ROUTES: Route[] = [
+  {
+    path: 'test4',
+    loadChildren: () => Test4Module
+  },  
+  ...
+  ....
+  ..
+
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
