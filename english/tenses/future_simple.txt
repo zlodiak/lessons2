@@ -22,6 +22,9 @@ I will go to Paris next summer.
 Will we go to the beach?
 
 =========================
+вместо future simple нужно использовать present simple, если встречаются слова:
+if, when, as soon as, before, after, until
+
 =========================
 =========================
 =========================

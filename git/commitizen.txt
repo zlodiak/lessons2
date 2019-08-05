@@ -1,0 +1,30 @@
+утилита чтобы формализовать опиания коммитов.
+
+install:
+npm install commitizen -g
+
+Next, initialize your project to use the cz-conventional-changelog adapter by typing:
+commitizen init cz-conventional-changelog --save-dev --save-exact
+
+make changes,
+git add .
+git cz
+
+enter: type, component, action(in imperative mood)
+
+
+
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============
+==============

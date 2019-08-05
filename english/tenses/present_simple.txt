@@ -59,50 +59,6 @@ I do not like black coffee.
 She doesn't smoke.
 
 
-===============================
-I go to work
-I went to work
-I will go to work
-	i don't go to work
-	I did not go to work
-	I will not go to work
-		do I go to work?
-		did i go to work?
-		will i go to work?
-
-he goes to work.
-he went to work.
-he will go to work.
-	he does not go to work
-	he did not go to work
-	he will not go to work
-		does he go to work?
-		did he go to work?
-		will he go to work?
-
-i am a developer
-i was a developer		
-i will be a developer
-she is a developer
-she was a developer
-she will be a developer
-	she is not a developer
-	she was not a developer
-	she will not be a developer
-		is she a developer?
-		was she a developer?
-		will she be a developer? 
-
-i have a car
-i had a car		
-i will have a car
-	i do not have a car
-	i did not have a car
-	i will not have a car
-		do i have a car?
-		did i have a car?
-		will i have a car?
-
 
 ===============================
 ===============================

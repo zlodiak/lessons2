@@ -1,0 +1,10 @@
+утвердительное:
+i will BE sittING
+
+
+вопросительное:
+will i BE sittING?
+
+
+отрицательное:
+i will not BE sittING
