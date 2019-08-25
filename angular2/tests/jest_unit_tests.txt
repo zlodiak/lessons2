@@ -1,0 +1,110 @@
+//импорты испульзующихся сущностей
+
+// блок тестирования
+describe('CarriersTableComponent', () => {
+
+	// инектирование сервисов и пр.
+	let service: OwnerDirectoryCarriersService;	
+
+	// блок, который воплняется перед всем набором тестов
+	beforeAll(async(() => {
+		// конфигурируем модуль
+		TestBed.configureTestingModule({
+			// imports
+			// providers
+			// declarations
+		})
+		.compileComponents()	// собираем html, css, ts файлы в бандл
+		.then(() => {			// так как предыдущая операция асинхронна, то дальнейшие действия будут в блоке .then()
+			// присваиваем свойствам класса компонента инжектированные сущности
+			emitter = TestBed.get(EventEmitterService);		// this.emitter = new OwnerDirectoryCarriersService()
+		})
+
+		// блок выполняется перед каждым отдельным юнит-тестом этого набора тестов
+		beforeEach(() => {
+			fixture = TestBed.createComponent(CarriersTableComponent);		// создаём целевой компонент
+			component = fixture.componentInstance;
+			fixture.detectChanges();
+		});
+
+		// блок выполняется после каждого отдельного юнит-теста этого набора тестов
+		afterEach(() => {
+		});
+
+		// один юнит-тест из этого набора набора 
+		it('should be defined', () => {
+			expect(component).toBeTruthy();		// проверка существования целевого компонента. проверяет, что компонент успешно создался
+		});
+
+	})
+
+})
+
+
+============================================
+простейшие примеры тестирования сервиса и компонента:
+https://dev.to/wescopeland/easier-angular-unit-testing-4aic 
+https://alligator.io/angular/introduction-unit-testing/ 
+
+
+============================================
+пример проверки существования надписи в шаблоне:
+  it('should render Доставка', () => {
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1').textContent)
+      .toContain('Доставка');
+  });
+
+   beforeEach(() => {
+    fixture = TestBed.createComponent(LoadingPlacesTableComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+============================================
+проверка наличия класса в шаблоне:
+  it('should allBtns button has border class', () => {
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.config-btns .all-places').classList.contains('border')).toBe(true);
+  });
+
+============================================
+проверка наличия класса у кнопки после клика по ней:
+  it('should replace border class after click by loading btn', () => {
+    fixture.debugElement
+      .query(By.css('.config-btns .loading'))
+      .triggerEventHandler('click', null);
+
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.config-btns .loading').classList.contains('border')).toBe(true);
+  });
+
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================

@@ -222,15 +222,14 @@ GIT_EDITOR=nano git rebase -i HEAD~1
 	А эта — сколько их:
 	git cherry -v master | wc -l
 
-верхний pick, остальные squash.
+git rebase -i HEAD~5
+или
+EDITOR=/usr/bin/nano git rebase -i HEAD~3
+или для всех коммитов(включая первый)
+EDITOR=/usr/bin/nano git rebase -i --root
+  верхний pick, остальные squash.
 
 затем откроется файл, в котром нужно закомментировать названия остальных коммитов и оставить название будущего коммита.
-=======
-если с локальной машины не видно удалённой ветки:
-git remote update
-git fetch 
-git checkout --track origin/<BRANCH-NAME>
->>>>>>> 4e13a8a7010243351ed1a38afe68b5d06639be73
 
 =========================================
 использование forcepush:
@@ -240,6 +239,18 @@ git checkout --track origin/<BRANCH-NAME>
 git push origin name_branch --force
 
 =========================================
+@ означет HEAD
+~ означает родитель
+
+когда перемещается указатель ветки(ветка), то хеш коммита, с котрого уходим записывается в ORIG_HEAD 
+
+=======
+если с локальной машины не видно удалённой ветки:
+git remote update
+git fetch 
+git checkout --track origin/<BRANCH-NAME>
+>>>>>>> 4e13a8a7010243351ed1a38afe68b5d06639be73
+
 =========================================
 =========================================
 =========================================
