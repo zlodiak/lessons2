@@ -1,0 +1,185 @@
+не чистая функция, которая получает объект и сранивает его с глбальным объектом:
+
+  it('should fint existing con', () => {
+    component.ngOnInit();
+    component.cons = [
+      {
+        fn: 'qwerty',
+        ln: 'qwerty',
+        ph: 'qwerty'
+      },
+      {
+        fn: 'qwerty2',
+        ln: 'qwerty2',
+        ph: 'qwerty2'
+      }
+    ];
+
+    const con = {
+      fn: 'qwerty2',
+      ln: 'qwerty2',
+      ph: 'qwerty2'
+    };
+
+    expect(component.isExists(con)).toBe(true);
+  });
+
+  public isExists(con: Icon): boolean {
+    let result = false;
+    this.cons.forEach(c => {
+      if(c.fn === con.fn && c.ln === con.ln && c.ph === con.ph) { result = true; }
+    });
+    return result;
+  }
+
+=====================================
+не чистая функция, которая проверяет инвертирование глбальной переменной:
+
+  it('should toggle var', () => {
+    [true, false].forEach(state => {
+      component.isViz = state;
+      component.toggler();
+      expect(component.isViz).toBe(!state);
+    });
+  });
+
+  public toggler(): void {
+    this.isViz = !this.isViz;
+  }
+
+=====================================
+функция, которая перенаправляет на новый адрес:
+
+  it('should navTo', () => {
+    const routerSpy = jest.spyOn((component as any).router, 'navigate');
+    component.ngOnInit();
+    component.navTo();
+    component.ngOnDestroy();
+    expect(routerSpy).toHaveBeenCalledWith(['/ddd/f/l-p']);
+  });
+
+  public navTo(): void {
+    this.router.navigate(['/ddd/f/l-p']);
+  }
+
+=====================================
+функция вызывается без аргумента и функция вызывается с аргуменом:
+
+  it('should action fu', () => {
+    const enblMock = jest.spyOn(component, 'enbl');
+    const calcMock = jest.spyOn(component, 'calc');
+    component.ngOnInit();
+    const mode = 'edit';
+    component.action(mode);
+    expect(enblMock).toHaveBeenCalled();
+    expect(calcMock).toHaveBeenCalledWith(mode);
+  });
+
+  public enbl() {
+    // some action
+  }  
+
+   public calc(mode) {
+    // some action
+  }
+
+  public action(action) {
+   	this.enbl()
+   	this.calc(action)
+  }
+
+=====================================
+функция, которая асинхронно получает данные из сервиса и перенаправляет:
+
+  it('should e', fakeAsync(() => {	// важно обернуть блок с асинхронным вызовом в fakeAsync
+    const routerSpy = jest.spyOn((component as any).router, 'navigate');
+    const editSpy = jest.spyOn(service1, 'dit').mockReturnValue(of({ dit: {qwe: 123} } as any));
+    activatedRouteStub.testParams = { id: '1', action: 'edit' };
+    component.ngOnInit();
+    component.sp();	// вызов процедуры
+    expect(editSpy).toHaveBeenCalled();		// вызов асинхронного сервиса
+    tick();			// ожидание результата subscribe()
+    component.ngOnDestroy();
+    expect(routerSpy).toHaveBeenCalledWith(['/directory/owner/loading-places']);
+  }));
+
+   public sp() {
+      const qwerty = {id: 1};
+      this.service1.dit(qwerty)
+      .subscribe(res => {
+        this.func(res.dit.id, res.dit.poi);  // полезное действие
+        this.navigateToTable();				// перенаправление
+      });
+  }
+
+=====================================
+модельное окно, в котором пользователь выбирает OK:
+
+  it('should modal request when archive click', fakeAsync(() => {
+    const routerSpy = jest.spyOn((component as any).router, 'navigate');
+    const modalSpy = jest.spyOn(modal, 'openn').mockReturnValue(of(true));  // ответ модального окна подменяем моками
+    const archiveMock = jest.spyOn(someService, 'send').mockReturnValue(of({id: 1} as any));  // какой-то сервис, который вызывает модальное окно
+    activatedRouteStub.testParams = { id: 1 };
+    component.ngOnInit();
+    tick();
+    component.archivePlace();
+    expect(modalSpy).toHaveBeenCalled();
+    expect(archiveMock).toHaveBeenCalledWith(1);
+    discardPeriodicTasks();
+    tick();
+  }));
+
+   public archivePlace(): void {
+    this.modal.openn('shared.directory.loading.modals.archive').subscribe(result => {
+      if (result === true) {
+        this.someService.send(+this.pageData.loadingPlace.id)
+        .pipe(untilDestroyed(this))
+        .subscribe((res: any) => {
+          this.pageData.loadingPlace.isArchived = true;
+        });
+      }
+    });
+  }
+
+=====================================
+проверка получения асинхронных данных:
+
+  it('should return', fakeAsync(() => {
+    const routerSpy = jest.spyOn((component as any).router, 'navigate');
+    activatedRouteStub.testParams = { id: 'null', action: 'create' };
+    component.inputs()
+      .subscribe(data => {
+        expect(data.place).toEqual({id: 1});
+        discardPeriodicTasks();
+        component.ngOnDestroy();
+    })
+  }));
+
+   public ngOnInit() {
+    this.inputs()
+    .subscribe(data => {
+      this.place = data.place;
+    });
+  }
+
+  public inputs() {
+    return this.service.getSome(1)
+  }
+
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================

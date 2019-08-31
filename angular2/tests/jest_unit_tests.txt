@@ -1,10 +1,10 @@
 //импорты испульзующихся сущностей
 
 // блок тестирования
-describe('CarriersTableComponent', () => {
+describe('CarTableComponent', () => {
 
 	// инектирование сервисов и пр.
-	let service: OwnerDirectoryCarriersService;	
+	let service: OwnerCarService;	
 
 	// блок, который воплняется перед всем набором тестов
 	beforeAll(async(() => {
@@ -22,7 +22,7 @@ describe('CarriersTableComponent', () => {
 
 		// блок выполняется перед каждым отдельным юнит-тестом этого набора тестов
 		beforeEach(() => {
-			fixture = TestBed.createComponent(CarriersTableComponent);		// создаём целевой компонент
+			fixture = TestBed.createComponent(CarTableComponent);		// создаём целевой компонент
 			component = fixture.componentInstance;
 			fixture.detectChanges();
 		});

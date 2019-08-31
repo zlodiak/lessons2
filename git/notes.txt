@@ -224,7 +224,7 @@ GIT_EDITOR=nano git rebase -i HEAD~1
 
 git rebase -i HEAD~5
 или
-EDITOR=/usr/bin/nano git rebase -i HEAD~3
+EDITOR=/usr/bin/nano git rebase -i HEAD~5
 или для всех коммитов(включая первый)
 EDITOR=/usr/bin/nano git rebase -i --root
   верхний pick, остальные squash.
