@@ -1,0 +1,72 @@
+PR_SIMPLE
+I work in a factory. / He works at the factory.
+I dont work in a factory. / He does not work in the factory.
+Do I work in a factory? / He works at the factory?
+
+PR_CONT
+I'm driving a taxi. / He is driving a taxi
+I'm not driving a taxi. / He is not driving a taxi
+Am I driving a taxi? / Is he driving a taxi?
+
+	PR_PERF
+	I have worked at a factory. / He have drove a taxi.
+	I have not work at a factory. / He have not drive a taxi.
+	Have i worked at a factory? / Have he drove a taxi?
+
+===============================
+PAST_SIMPLE
+I worked at a factory. / He drove a taxi.
+I did not work at the factory. / He did not drive a taxi.
+Did I work in a factory? / Did he drive a taxi?
+
+	PAST_CONT
+	I was listening to the music when he came back. / We were listening to the music when he came back.
+	i was not listening to the music when he came back. / We were not listening to the music when he came back.
+	was i listening to the music when he came back. / were we listening to the music when he came back.
+
+	PAST_PERF
+	I went to the cinema because I already saw this movie. / -
+	I didn’t go to the cinema because I already saw this movie. / -
+	I went to the movies because I already saw this movie? / -
+
+===============================
+FUT_SIMPLE
+I will work at the factory./ -
+I will not work at the factory. / -
+Will I work in a factory? / -
+
+	FUT_CONT
+	I will be playing. / -
+	I will not be playing. / -
+	Will I be playing? / -
+
+	FUT_PERF
+	I will have played. / -
+	I will not have played. / -
+	Will I have played? / -
+
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
