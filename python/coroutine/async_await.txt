@@ -1,0 +1,56 @@
+корутина в синтаксисе async/await представляет из себя генератор, запущенный в отдельном потоке. 
+при помощи await он возвращает управление в эвент луп и тем самым реализует кооперативную многозадачность.
+async говорит, что функция содержит асинхронный код.
+
+import asyncio
+
+async def foo():
+    print('Running in foo')
+    await asyncio.sleep(0)
+    print('Explicit context switch to foo again')
+
+
+async def bar():
+    print('Explicit context to bar')
+    await asyncio.sleep(0)
+    print('Implicit context switch back to bar')
+
+
+ioloop = asyncio.get_event_loop()
+tasks = [ioloop.create_task(foo()), ioloop.create_task(bar())]
+wait_tasks = asyncio.wait(tasks)
+ioloop.run_until_complete(wait_tasks)
+ioloop.close()
+
+
+$ python3 1-sync-async-execution-asyncio-await.py
+Running in foo
+Explicit context to bar
+Explicit context switch to foo again
+Implicit context switch back to bar
+
+============================
+если точно не известно когда программа вернёт управление в эвент луп(например ожидание ответа http), то можно создать future и вернуть его. future это аналог промиса в js.
+futures используются для создания конкурентной многозадачности.
+
+
+
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
