@@ -1,0 +1,148 @@
+итераторы бывают встроенные и кастомные. встроенные имеют тот же набор методов, что и кастомные, но получают их через наследование от вышестоящих объектов.
+
+следует различать понятия итерируемого объекта и итератора. последний представляет из себя ссылку на общий механизм, который будет делать всё работу по итерированию.
+
+==============================
+кастомный итератор сам определяет механизм итерирования:
+
+class IterObj {
+  constructor(word) {
+    this.word = word;
+  }
+
+  iter() { return new Iterator(this.word); }
+}
+
+
+class Iterator {
+  constructor(word) {
+    this.word = word;
+    this.index = 0;
+  }
+
+  next() {
+    try {
+      let letter = this.word[this.index];
+      this.index += 1;
+      return letter;
+    } catch (err) {
+      throw "StopIteration";
+    }
+  }
+
+  iter() { return this; }
+}
+
+const iterObj = new IterObj('sergey');
+it = iterObj.iter();
+
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+
+console.log('iter obj', IterObj);
+console.log('iterator', it);
+
+
+// OUTPUT:
+
+// s
+// e
+// r
+// g
+// e
+// y
+
+// iter obj class IterObj {
+//   constructor(word) {
+//     this.word = word;
+//   }
+//   iter() { return new Iterator(this.word); }
+// }
+
+// iterator Iterator { word: 'sergey', index: 6 }
+
+
+==============================
+встроенный итератор имеет тот же набор методов, что и кастомный
+
+const s = 'sergey';
+
+it = s[Symbol.iterator]();
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+console.log(it.next());
+
+console.log('iter obj:', s);
+console.log('iterator:', it);
+
+
+// OUTPUT:
+
+// { value: 's', done: false }
+// { value: 'e', done: false }
+// { value: 'r', done: false }
+// { value: 'g', done: false }
+// { value: 'e', done: false }
+// { value: 'y', done: false }
+
+// iter obj: sergey
+// iterator Object: [String Iterator] {}
+
+==============================
+в контексте цикла for вызываются те же методы, но неявно:
+
+const s = 'sergey';
+
+for (let char of s) {
+  console.log(char);
+}
+
+console.log('iter obj:', s);
+console.log('iterator:', s[Symbol.iterator]());
+
+
+// OUTPUT:
+
+// s
+// e
+// r
+// g
+// e
+// y
+
+// iter obj: sergey
+// iterator: Object [String Iterator] {}
+
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================

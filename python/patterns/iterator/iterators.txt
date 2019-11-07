@@ -32,6 +32,7 @@ print(next(it))
 
 #!/usr/bin/env python3
 
+# бъект
 class Obj():
   def __init__(self, word):
     self.word = word
@@ -59,12 +60,114 @@ class Iterator:                 # наследуется от абстрактн
 obj = Obj('sergey')
 it = iter(obj)
 
-for l in obj:
-  print(l)
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+
+
+
 
 
 ==============================
 ==============================
+1. следует чётко различать понятия: итерируемый объект, итератор; функция-генератор, генератор.
+2. итератор и генератор реализуют интерфейс итератора. То есть имеют методы __iter__(), __next__().
+3. итерируемый объект и функция генератор обязательно имеют функцию __iter__(), которая возвращает итератор и генератор соответственно.
+4. итерируемый объект содержит коллекцию, к элементам которой можно обратиться по индексу.
+5. функция-генератор содержит "формулу", по которой генерируются элементы коллекции.
+6. итерируемый объект можно перебирать при помощи итератора много раз.
+7. функцию-генератор можно перебрать при помощи генератора только один раз.
+8. генератор в отличие от итератора экономит оперативную память потому что не хранит всю коллекцию в ней.
+9. если генератору вместо "формулы" передать коллекцию, то он будет перебирать её как итератор(не экономя оперативную память).
+10. каждая итериция в итераторе и в генераторе совершается явным вызовом __next__().
+11. цикл for при каждом проходе неявно вызывает __next__().
+12. генераторное выражение является синтаксическим сахаром для функции-генератора. оно тоже имеет "формулу" и __iter__().
+
+Пример кастомного итератора:
+
+class Obj():  # Итерируемый объект
+  def __init__(self, word):
+    self.word = word
+ 
+  def __iter__(self):
+    return Iterator(self.word)
+ 
+class Iterator:   # Итератор
+  def __init__(self, word):
+    self.word = word
+    self.index = 0
+ 
+  def __next__(self):
+    try:
+      letter = self.word[self.index]
+      self.index += 1
+      return letter  
+    except IndexError:
+      raise StopIteration()    
+ 
+  def __iter__(self):
+    return self
+ 
+ 
+obj = Obj('sergey')
+it = iter(obj)
+ 
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+ 
+print(it.__iter__())
+
+
+пример встроенного итератора:
+s = 'sergey'
+it = iter(s)
+print('it: ', it)
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+
+
+пример встроенного итератора в контексте цикла:
+s = 'sergey'
+for letter in s:
+  print(letter)
+
+
+Пример генератора:
+
+import random
+
+def gen_func():
+  while True:
+    yield random.random()
+
+generator = gen_func()
+
+print('generator function', gen_func) # генераторная функция
+print('generator', generator)     # генератор
+
+print('value: ', generator.__next__())
+print('value: ', generator.__next__())
+print('value: ', generator.__next__())
+
+# OUTPUT:
+# generator function <function gen_func at 0x7fe71d848c80>
+# generator <generator object gen_func at 0x7fe71d7732d0>
+# value:  0.5982845385357144
+# value:  0.3308434359315522
+# value:  0.3165169253705432
+
+
 ==============================
 ==============================
 ==============================
