@@ -104,6 +104,35 @@ print(z)
 
 =============================
 =============================
+list comprehension может заменить вложенные циклы. ниже пример кода, обе его части делают одно и тоже:
+
+vec = 	[
+			[
+				[1, 2, 3], 
+				[4, 5, 6], 
+				[7, 8, 9]
+			], 
+			[
+				[10, 11, 12], 
+				[13, 14, 15], 
+				[16, 17, 18]
+			]
+		]
+
+
+res = [digit 	for lst in vec 			# lst = [[*, *, *], [*, *, *], [*, *, *]]
+				for elem in lst 		# elem = [*, *, *]
+				for digit in elem]		# digit = *
+
+print(res)
+# [digit for lst in vec for elem in lst for digit in elem]
+
+
+for lst in vec:
+	for elem in lst:
+		for digit in elem:
+			print(digit)
+
 =============================
 =============================
 =============================

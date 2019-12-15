@@ -1,0 +1,85 @@
+чтобы создать пользователей и дать им доступ к базам данных нужно войти под суперпользователем(после установки postgresql он уже существует с логином postgres), создать БД, создать пользователя, назначить права на БД пользователю.
+
+sudo -u postgres psql
+
+postgres=# CREATE USER user1 WITH PASSWORD 'qwerty1';
+CREATE ROLE
+
+postgres=# CREATE DATABASE database1;
+CREATE DATABASE
+
+postgres=# GRANT ALL PRIVILEGES ON DATABASE database1 to user1;
+GRANT
+
+результат будет такой:
+
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ database1 | postgres | UTF8     | ru_RU.UTF-8 | ru_RU.UTF-8 | =Tc/postgres         +
+           |          |          |             |             | postgres=CTc/postgres+
+           |          |          |             |             | user1=CTc/postgres
+
+==================================
+затем в файле /etc/postgresql/9.5/main/pg_hba.conf 
+нужно прописать:
+local 	database1	user1	trust
+и закомментировать:
+# local   all             all                                     peer
+
+==================================
+после этого перезапустить сервер и авторизоваться:
+md@md /etc/postgresql/9.5/main $ sudo service postgresql restart
+md@md /etc/postgresql/9.5/main $ psql -U user1 database1
+psql (9.5.19)
+Type "help" for help.
+
+
+==================================
+пароли для всех пользователей хранятся в ~/.pgpass
+
+==================================
+важно понимать, что суперпользователь postgresql это пользователь линукса. он прописан в файле /etc/passwd 
+
+==================================
+==================================
+можно проверить работу из скрипта так:
+
+import psycopg2
+
+db_conn = psycopg2.connect(
+    database='database1', 
+    user='user1', 
+    password='qwerty1',        
+    host='localhost'
+)
+db_conn.autocommit = True  # записи добавляютсяв БД по мере поступления
+db_cursor = db_conn.cursor()
+
+# req = 'INSERT INTO table1 (id, company, description) VALUES (%s,%s,%s)'
+# vals = (3, "simbir", "aaaa")
+# db_cursor.execute(req, vals);
+# db_conn.commit()     #совершить запись
+
+db_cursor.execute("select * from table1")
+records = db_cursor.fetchall() 
+for row in records:
+   print("Id = ", row[0], )
+   print("company = ", row[1])
+   print("desc  = ", row[2], "\n")
+
+==================================
+==================================
+pgadmin3 ставится через synaptic.
+
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
+==================================
