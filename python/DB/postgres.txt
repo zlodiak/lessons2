@@ -15,7 +15,7 @@ sudo -u postgres psql
 select version();
 
 создать БД:
-CREATE DATABASE joba_finder;
+CREATE DATABASE database1;
 
 подключиться к ДБ:
 psql -U name_of_user -d name_of_database
@@ -24,12 +24,9 @@ psql -U name_of_user -d name_of_database
 \l
 
 создать таблицу:
-CREATE TABLE parse_results2 (
+CREATE TABLE table1 (
 id serial PRIMARY KEY,
-public_date VARCHAR (100),
-position VARCHAR (100),
 company VARCHAR (100),
-pay VARCHAR (100),
 description TEXT
 );
 
@@ -44,12 +41,13 @@ SELECT current_database();
 
 создать пользователя:
 CREATE USER bo_user WITH PASSWORD 'qwerty';
+CREATE USER user1 WITH PASSWORD 'qwerty1';
 
 список пользователей:
 \du
 
 дать привилегии пользователю:
-GRANT ALL PRIVILEGES ON DATABASE bottle_out to bo_user;
+GRANT ALL PRIVILEGES ON DATABASE database1 to user1;
 
 вывести содержимое таблицы:
 select * from parse_results;
@@ -152,6 +150,9 @@ INSERT INTO names (name) VALUES ('andrew');
 
 =============================
 =============================
+чтобы сделать колоку автоинкрементной нужно сначала создать последовательность через pgaadmin. а затем добавить её:
+ALTER TABLE public.parts ALTER COLUMN part_id SET DEFAULT nextval('autoincrement');
+
 =============================
 =============================
 =============================
