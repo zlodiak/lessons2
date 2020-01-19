@@ -23,7 +23,69 @@ Event loop позволяет организовать логику "когда 
 ======================================
 ======================================
 ======================================
+примеры:
+
+блокирующий:
+
+    import asyncio
+
+    async def callee():
+        print('Hello')
+
+    async def caller():
+        await callee()
+        print('World')
+
+    asyncio.run(caller())
+
+
+неблокирующий:
+
+    import asyncio
+
+    async def callee():
+        print('Hello')
+
+    async def caller():
+        asyncio.create_task(callee())
+        print('World')
+
+    asyncio.run(caller())
+
+
+неблокирующий с несколькими задачами:
+
+    import asyncio
+
+    async def callee():
+        print('Hello')
+
+    async def caller():
+        await callee()
+        print('World')
+
+    async def callee2():
+        print('Hello2')
+
+    async def caller2():
+        await callee2()
+        print('World2')
+
+    async def main():
+        asyncio.gather(
+            asyncio.create_task(caller()),
+            asyncio.create_task(caller2()),
+        )
+
+    asyncio.run(main())
+
+
+
 ======================================
+======================================
+про футуры здесь:
+https://ru.stackoverflow.com/questions/902586/asyncio-%D0%9E%D1%82%D0%BB%D0%B8%D1%87%D0%B8%D0%B5-tasks-%D0%BE%D1%82-future
+
 ======================================
 ======================================
 ======================================

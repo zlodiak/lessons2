@@ -51,6 +51,35 @@ psycopg2:
 python3 -m pip install psycopg2-binary
 
 ===========================================
+argparse
+
+два примера, в которых имена переменных задаются в скрипте:
+
+----------------
+
+import argparse
+parser = argparse.ArgumentParser(description='Ping script')
+parser.add_argument('-a', action="store", dest="ip")
+parser.add_argument('-c', action="store", dest="count", default=2, type=int)
+args = parser.parse_args()
+print(args.ip)
+
+# (asyncio) md@md ~/.MINT18/code/python/asyncio $ python index.py -a 8.8.8.8 -c 5
+# Namespace(count=5, ip='8.8.8.8')
+
+---------------
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--nprod", type=int, default=5)
+parser.add_argument("-c", "--ncon", type=int, default=10)
+ns = parser.parse_args()
+print(ns)
+print('-----', ns.__dict__)
+
+# (asyncio) md@md ~/.MINT18/code/python/asyncio $ python index.py -p 123 -c 456
+# Namespace(ncon=456, nprod=123)
+# ----- {'nprod': 123, 'ncon': 456}
+
 ===========================================
 ===========================================
 ===========================================
