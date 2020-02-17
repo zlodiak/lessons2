@@ -61,9 +61,9 @@ alter table users ADD UNIQUE (email);
 
 
 =============================
-CREATE DATABASE db_test;
-CREATE USER user_test WITH PASSWORD 'qwerty';
-GRANT ALL PRIVILEGES ON DATABASE "names" to bo_user;
+CREATE DATABASE db_alchemy;
+CREATE USER alchemy_user WITH PASSWORD 'qwerty';
+GRANT ALL PRIVILEGES ON DATABASE "db_alchemy" to alchemy_user;
 
 
 =============================

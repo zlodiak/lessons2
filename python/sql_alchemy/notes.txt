@@ -1,0 +1,205 @@
+через графический клиент создать БД, таблицу. заполнить таблицу.
+теперь из скрипта данные можно получить так:
+
+	from sqlalchemy import create_engine
+
+	engine = create_engine('sqlite:///census_nyc.sqlite')
+	connection = engine.connect()
+	stmt = 'select * from people'
+	result_proxy = connection.execute(stmt)
+	results = result_proxy.fetchall()
+
+	print(results[0].keys())		# id, login
+	print(results[0])
+	print(results[0].login)
+
+======================================
+запишем то же самое, но используя ORM:
+
+	from sqlalchemy import create_engine, Table, MetaData, select
+
+	engine = create_engine('sqlite:///census_nyc.sqlite')
+	connection = engine.connect()
+	metadata = MetaData()
+
+	people = Table('people', metadata, autoload=True, autoload_with=engine)
+
+	stmt = select([people])
+
+	results = connection.execute(stmt).fetchall()
+
+	print(results[0].keys())		# id, login
+	print(results[0])
+	print(results[0].login)
+
+======================================
+из скрипта можно создать БД и таблицы в ней:
+
+	from sqlalchemy import create_engine, Table, MetaData, select, Column, Integer, String, ForeignKey
+
+
+	engine = create_engine('sqlite:///:memory.sqlite3')
+	metadata = MetaData()
+
+	user = Table('user', metadata,
+	    Column('user_id', Integer, primary_key=True),
+	    Column('user_name', String(16), nullable=False),
+	    Column('email_address', String(60), key='email'),
+	    Column('nickname', String(50), nullable=False)
+	)
+
+	user_prefs = Table('user_prefs', metadata,
+	    Column('pref_id', Integer, primary_key=True),
+	    Column('user_id', Integer, ForeignKey("user.user_id"), nullable=False),
+	    Column('pref_name', String(40), nullable=False),
+	    Column('pref_value', String(100))
+	)
+
+	metadata.create_all(engine)
+
+======================================
+в случае записи в уже существующую таблицу, модель этой таблицы необходимо описать в metadata:
+
+	from sqlalchemy import create_engine, Table, MetaData, select, Column, String, Integer
+
+	engine = create_engine('sqlite:///:memory.sqlite3')
+	connection = engine.connect()
+
+	meta = MetaData()
+
+	user = Table(
+	   'user', meta, 
+	   Column('id', Integer, primary_key = True), 
+	   Column('user_name', String), 
+	   Column('email_address', String), 
+	   Column('nickname', String), 
+	)
+
+	ins = user.insert().values(user_name='jack', email_address='admin@ad.ad', nickname='qwerty')
+	connection.execute(ins)
+
+----------------------------------------
+пример вставки нескольких строк:
+
+	from sqlalchemy import create_engine, Table, MetaData, select, Column, String, Integer
+
+	engine = create_engine('sqlite:///:memory.sqlite3')
+	connection = engine.connect()
+
+	meta = MetaData()
+
+	user = Table(
+	   'user', meta, 
+	   Column('id', Integer, primary_key = True), 
+	   Column('user_name', String), 
+	   Column('email_address', String), 
+	   Column('nickname', String), 
+	)
+
+	connection.execute(user.insert(), [
+	    {'user_name': 'jack22', 'email_address': 'admin@ad.ad22', 'nickname': 'qwerty22'},
+	    {'user_name': 'jack33', 'email_address': 'admin@ad.ad33', 'nickname': 'qwerty33'},
+	    {'user_name': 'jack44', 'email_address': 'admin@ad.ad44', 'nickname': 'qwerty44'},
+	])
+
+======================================
+вот пример того как из скрипта создаётся таблица и делается запись в неё:
+
+	from sqlalchemy import create_engine, Table, MetaData, select, Column, String, Integer
+
+	engine = create_engine('sqlite:///:memory.sqlite3')
+	connection = engine.connect()
+	metadata = MetaData()
+
+	test = Table('test', metadata,
+	    Column('user_id', Integer, primary_key=True),
+	    Column('user_name', String(16), nullable=False),
+	    Column('email_address', String(60), nullable=False),
+	    Column('nickname', String(50), nullable=False)
+	)
+
+	metadata.create_all(engine)
+	ins = test.insert().values(user_name='jack2', email_address='admin@ad.ad2', nickname='qwerty2')
+	connection.execute(ins)
+
+
+======================================
+пример извлечения записей:
+
+	from sqlalchemy import create_engine, Table, MetaData, select, Column, String, Integer
+
+	engine = create_engine('sqlite:///:memory.sqlite3')
+	connection = engine.connect()
+
+	meta = MetaData()
+
+	user = Table(
+	   'user', meta, 
+	   Column('user_id', Integer, primary_key = True), 
+	   Column('user_name', String), 
+	   Column('email_address', String), 
+	   Column('nickname', String), 
+	)
+
+	s = select([user])
+	print(str(s))
+	result = connection.execute(s)
+
+	for i in result:
+	    print(i)
+
+	result.close()
+
+======================================
+пример использования операторов сравнения.
+важно понимать почему добавляется "с" в user.c.user_id == 1
+
+	from sqlalchemy import create_engine, Table, MetaData, select, Column, String, Integer
+	from sqlalchemy.sql import and_, or_, not_
+
+	engine = create_engine('sqlite:///:memory.sqlite3')
+	connection = engine.connect()
+
+	meta = MetaData()
+
+	user = Table(
+	   'user', meta, 
+	   Column('user_id', Integer, primary_key = True), 
+	   Column('user_name', String), 
+	   Column('email_address', String), 
+	   Column('nickname', String), 
+	)
+
+	s = select([user]).where(or_(user.c.user_id == 1, user.c.user_id == 2))
+	result = connection.execute(s)
+
+	for i in result:
+	    print(i)
+
+
+======================================
+примеры есть в https://github.com/zlodiak , в репозиториях, имеющих префикс sql_alchemy
+
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================
+======================================

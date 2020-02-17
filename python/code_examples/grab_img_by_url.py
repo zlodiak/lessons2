@@ -31,7 +31,7 @@ with open('image_out.png', 'wb') as f:
 
 
 
-
+# pipenv install lxml
 
 # url = 'https://www.avito.ru/saransk/kvartiry/1-k_kvartira_47_m_25_et._1610295577'
 # headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36'}
