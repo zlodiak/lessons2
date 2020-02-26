@@ -1,0 +1,22 @@
+если нужно автоматически проскроллить экран вниз после изменения высоты(наапример появления ещё одной формы), то нужно пользоваться средстваи ангуляра:
+
+в разметке пометить элементы через #
+
+
+
+import { Component, Input, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+
+
+@ViewChild('scrollableContainer') public scrollableContainer: ElementRef;
+@ViewChild('contactsForm') public contactsForm: ElementRef;
+
+
+  public scrolldownScreen(): void {
+    setTimeout(() => {
+      const scrollableContainerElem = this.scrollableContainer.nativeElement;
+      const scrollVerticalOffset = scrollableContainerElem.scrollHeight;
+      const contactsFormHeight = this.contactsForm.nativeElement.offsetHeight;
+      // tslint:disable-next-line: restrict-plus-operands
+      scrollableContainerElem.scrollTop = scrollVerticalOffset + contactsFormHeight;
+    });
+  }
