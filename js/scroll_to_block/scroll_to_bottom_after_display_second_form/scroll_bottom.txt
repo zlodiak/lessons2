@@ -1,0 +1,14 @@
+чтобы после появления блока проскроллить страницу вниз автоматически нужно вычислить смещение скролла от верха.
+затем установить большую величину этого смещения. например на величину высоты открывшегося блока.
+обязательно использовать задержку.
+
+
+
+  public scrolldownScreen(): void {
+    setTimeout(() => {
+      const intElemScrollHeight = document.getElementById('scrollableContainer').scrollHeight;
+      const contactsFormHeight = document.getElementById('contactsForm').offsetHeight;
+      document.getElementById('scrollableContainer').scrollTop =
+        intElemScrollHeight + contactsFormHeight;
+    });
+  }
