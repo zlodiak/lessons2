@@ -1,0 +1,24 @@
+<form [formGroup]="galaxyForm" (ngSubmit)="onSubmit()">
+  <h1>Galaxy Rating App</h1>
+  <div class="form-group">
+    <label>
+      Galaxy:
+      <gr-typeahead [data]="galaxies" formControlName="galaxy"></gr-typeahead>
+    </label>
+  </div>
+  <div class="form-group">
+    <label>
+      Rating:
+      <gr-star-rater formControlName="rating"></gr-star-rater>
+    </label>
+  </div>
+  <div class="form-group">
+    <label>
+      Name:
+      <input type="text" class="form-control" formControlName="name" />
+    </label>
+  </div>
+  <div class="form-group">
+    <button type="submit">Submit</button>
+  </div>
+</form>
