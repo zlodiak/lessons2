@@ -1,0 +1,52 @@
+реактивные формы представляют собой класс, поля которого описывают форму. они выводятся в шаблоне при помощи атрибутов.
+
+есть возможность динамически добавлять поля в фору по событию. для этого при инициализации одно одно из полей объявляется массивом:
+  createContactForm(){
+    this.contactForm = this.formBuilder.group({
+      fullName: [''],  
+      email: [''],
+      messages: new FormArray([new FormControl(''), new FormControl('')])
+    });
+  }
+
+в него изначально добавляются несколько безымянных полей. далее по событию тоже добавляются безымянные поля:
+  addMessage() {
+    const messages = <FormArray>this.contactForm.get('messages');
+    messages.push(new FormControl(''))
+  }
+
+этот массив безымянных полей в шаблоне выводится через индекс:
+  <div
+    formArrayName="messages"
+    *ngFor="let item of contactForm.get('messages').controls; let i = index;"
+  >
+    <input type="text" [formControlName]="i" />
+  </div>
+
+==========================
+если нужно динамически добавлять именованные поля или группу именованных полей, то используется this.fb.group, внутри когорого добавляются именованные поля:
+  initGroup() {
+    let rows = this.addForm.get('rows') as FormArray;
+    rows.push(this.fb.group({
+      description: [null, Validators.required],
+      pickup_area: [null, Validators.required],
+    }));
+  }
+
+в шаблоне через индексы цикла выводится набор групп:
+<tr *ngFor="let row of addForm.controls.rows.controls; let i = index" [formGroupName]="i"></tr>
+
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
+==========================
