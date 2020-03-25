@@ -1,0 +1,43 @@
+empty() это поток, который сразу завершается, не произведя ни одного next:
+
+const subscribe = empty().subscribe({
+  next: () => console.log('Next'),
+  complete: () => console.log('Complete!')
+});
+
+// OUTPUT:
+// Complete!
+
+==============================
+throwError это поток, который сразу генерирует ошибку. ни одного next не выполняется.
+
+const source = throwError('This is an error!');
+const subscribe = source.subscribe(
+  d => { console.log(d) },
+  err => { console.log(err) },
+  () => { console.log('complete') }
+);
+
+
+// OUTPUT:
+// This is an error!
+
+
+альтернативаня форма записи(в ней важно правильно написать названия ключей):
+const source = throwError('This is an error!');
+const subscribe = source.subscribe({
+  next: val => console.log(val),
+  complete: () => console.log('Complete!'),
+  error: val => console.log(`Error: ${val}`)
+});
+
+
+
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
