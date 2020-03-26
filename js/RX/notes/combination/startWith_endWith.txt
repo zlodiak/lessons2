@@ -1,0 +1,12 @@
+startWith и endWith начинают и завершают поток определённым значением(в блоке next).
+
+	const source$ = of('Hello', 'Friend', 'Goodbye');
+	source$
+	  .pipe(endWith('Friend'))
+	  // 'Hello', 'Friend', 'Goodbye', 'Friend'
+	  .subscribe(console.log(val));
+
+
+=============================
+=============================
+=============================

@@ -57,6 +57,31 @@
 
 
 =========================================
+forkJoin может отправлять результат в subscribe или в виде объекта, 
+
+	const example = forkJoin(
+	  {
+	    q: of('Hello'),
+	    w: of('World').pipe(delay(1000)),
+	    e: interval(1000).pipe(take(3)),    
+	  }
+	);
+	const subscribe = example.subscribe(val => console.log(val));
+	// OUTPUT: {q: "Hello", w: "World", e: 2}
+
+или в виде массива:
+
+	const example = forkJoin(
+	  of('Hello'),
+	  of('World').pipe(delay(1000)),
+	  interval(1000).pipe(take(3)),
+	);
+	const subscribe = example.subscribe(val => console.log(val));
+	// OUTPUT: ["Hello", "World", 2]
+
+
+
+
 =========================================
 =========================================
 =========================================
