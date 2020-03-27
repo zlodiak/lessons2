@@ -1,0 +1,27 @@
+take берёт из потока только указанное количество первых значений
+
+=======================
+takeLast берёт из потока только указанное количество последних значений
+
+=======================
+takeUntil берёт значения до тех пока пока не закомплитится другой поток
+
+	const source = interval(1000);
+	const timer$ = timer(5000);
+	const example = source.pipe(takeUntil(timer$));
+	//output: 0,1,2,3
+	const subscribe = example.subscribe(val => console.log(val));
+
+=======================
+takeWhile берёт значения пока выполняется определённое условие
+
+	const source$ = of(1, 2, 3, 4, 5);
+	source$
+	  .pipe(takeWhile(val => val <= 4))
+	  // log: 1,2,3,4
+	  .subscribe(val => console.log(val));
+
+=======================
+=======================
+=======================
+=======================

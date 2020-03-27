@@ -1,0 +1,27 @@
+first берёт только первое значение
+
+	const source = from([2, 3, 4, 5]);
+	const example = source.pipe(first());
+	example.subscribe(v => console.log(v));
+	// 2
+
+================
+last берёт только последнее значение
+
+	const source = from([2, 3, 4, 5]);
+	const example = source.pipe(first());
+	example.subscribe(v => console.log(v));
+	// 5
+
+
+==================
+ignoreElements после получения всех значений потока сразу выполняет блок complete
+
+	const source = interval(100);
+	const example = source.pipe(take(5), ignoreElements());
+	//output: "COMPLETE!"
+	const subscribe = example.subscribe(
+	  val => console.log(`NEXT: ${val}`),
+	  val => console.log(`ERROR: ${val}`),
+	  () => console.log('COMPLETE!')
+	);

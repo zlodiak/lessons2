@@ -1,0 +1,6 @@
+sample отсевает значения, которые не соответсвуют временному ситу
+
+	const source = interval(1000);
+	const example = source.pipe(sample(interval(2000)));
+	//output: 2..4..6..8..
+	const subscribe = example.subscribe(val => console.log(val));

@@ -1,0 +1,6 @@
+delay откладывает передачу значения в subscribe или pipe на определённое время
+
+    of(3).pipe(
+     delay(2000),
+    ).subscribe(vl => console.log(vl));
+    //Результат (через 2 секунды): 3

@@ -1,0 +1,35 @@
+distinct исключает неуникальные значения
+
+    from([1, 3, 3, 7, 2, 7]).pipe(
+     distinct()
+    ).subscribe(vl => console.log(vl));
+    
+    //Результат: 1, 3, 7, 2
+
+
+
+=========================
+distinctUntilChanged делает то же самое, но только относительно предыдущего элемента
+
+	const source$ = from([1, 1, 2, 2, 3, 3, 1, 1]);
+	source$
+	  .pipe(distinctUntilChanged())
+	  // output: 1,2,3,1
+	  .subscribe(console.log);
+
+
+==========================
+distinctUntilKeyChanged делает то же самое, но относительно имени ключа предыдущего элемента
+
+	const source$ = from([
+	  { name: 'Brian' },
+	  { name: 'Joe' },
+	  { name: 'Joe' },
+	  { name: 'Sue' }
+	]);
+
+	source$
+	  // custom compare based on name property
+	  .pipe(distinctUntilKeyChanged('name'))
+	  // output: { name: 'Brian }, { name: 'Joe' }, { name: 'Sue' }
+	  .subscribe(console.log);

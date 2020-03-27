@@ -1,0 +1,28 @@
+skip пропускает несколько первых значений
+
+	const source = interval(1000);
+	const example = source.pipe(skip(5));
+	//output: 5...6...7...8........
+	const subscribe = example.subscribe(val => console.log(val));
+
+======================
+skipUntil пропускает несколько значений в течение определённого времени:
+
+	const source = interval(1000);
+	//skip emitted values from source until inner observable emits (6s)
+	const example = source.pipe(skipUntil(timer(6000)));
+	//output: 5...6...7...8........
+	const subscribe = example.subscribe(val => console.log(val));
+
+======================
+skipWhile пропускает значения пока невыполняется условие
+
+	const source = interval(1000);
+	//skip emitted values from source while value is less than 5
+	const example = source.pipe(skipWhile(val => val < 5));
+	//output: 5...6...7...8........
+	const subscribe = example.subscribe(val => console.log(val));
+
+======================
+======================
+======================
