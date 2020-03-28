@@ -1,0 +1,14 @@
+reduce накапливает значения из потока и отправляет в subscribe единственный результат
+
+	const source = of(1, 2, 3, 4);
+	const example = source.pipe(reduce((acc, val) => acc + val));
+	//output: Sum: 10'
+	const subscribe = example.subscribe(val => console.log('Sum:', val));
+
+===================
+scan делает то же самое, но результаты отправляет после каждой итерации
+
+	const source = of(1, 2, 3);
+	const example = source.pipe(scan((acc, curr) => acc + curr, 0));
+	// output: 1,3,6
+	const subscribe = example.subscribe(val => console.log(val));

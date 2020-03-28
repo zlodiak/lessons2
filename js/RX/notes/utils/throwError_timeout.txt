@@ -1,0 +1,24 @@
+ throwError() создает объект Observable и возвращает ошибку в качестве его значения. то ест ь поток сразу завершается с ошибкой
+
+     throwError(1).subscribe(
+     vl => console.log('Value is: ', vl),
+     err => console.log('Err: ', err)
+    );
+    
+    //Результат: 'Err: 1'
+
+
+
+    ===================
+
+    timeout() генерирует ошибку от исходного объекта Observable, если в течении заданного промежутка времени он не передал ни одного значения.
+
+	of(1, 2, 3).pipe(
+     delay(2000),
+     timeout(1500)
+    ).subscribe(
+     vl => console.log(vl), 
+     err => console.log('Err: ', err.message || err)
+    );
+    
+    //Результат: 'Err:  Timeout has occurred'

@@ -1,0 +1,9 @@
+pluck берёт значения по указанному ключу, если первичный поток генерирует последовательность объектов
+
+	const source = from([
+	  { name: 'Joe', age: 30 },
+	  { name: 'Sarah', age: 35 }
+	]);
+	const example = source.pipe(pluck('name'));
+	//output: "Joe", "Sarah"
+	const subscribe = example.subscribe(val => console.log(val));

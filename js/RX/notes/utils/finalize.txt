@@ -1,0 +1,10 @@
+finalize принимает аргументом функцию, которая выполнится когда observable перейдёт в статус error или complete
+
+	const source = interval(1000);
+	const example = source.pipe(
+	  take(5), 
+	  finalize(() => console.log('Sequence complete'))
+	)
+	const subscribe = example.subscribe(val => console.log(val));
+
+	// 1 2 3 4 5 'Sequence complete'

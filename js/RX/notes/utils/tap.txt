@@ -1,0 +1,9 @@
+выполняет побочное действие
+
+    from(['a', 'b', 'c']).pipe(
+     tap(
+       vl => console.log('tap - ', vl)
+     )
+    ).subscribe(vl => console.log(vl));
+    
+    //Результат: 'tap - a', 'a', 'tap - b', 'b', 'tap - c', 'c'

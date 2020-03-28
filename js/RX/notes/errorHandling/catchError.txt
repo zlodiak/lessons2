@@ -1,0 +1,7 @@
+catchError позволяет прописать функцию обработки ошибки в блоке pipe. в результате, если ошибк происходит, то в subscribe отправляется результат той функции, завёрнутый в observable
+
+
+	const source = throwError('This is an error!');
+	const example = source.pipe(catchError(val => of(`I caught: ${val}`)));
+	//output: 'I caught: This is an error'
+	const subscribe = example.subscribe(val => console.log(val));

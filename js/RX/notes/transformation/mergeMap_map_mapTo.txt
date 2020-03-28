@@ -1,0 +1,30 @@
+mergeMap существует для того чтобы избежать вложенных subscribe. то есть каждое значение из первичного потока заворачивается в observable
+
+	of(1, 2, 4).pipe(
+	  mergeMap(vl => of(vl).pipe(delay(1000 / vl)))
+	).subscribe(vl => console.log(vl));
+
+	// 4, 2, 1
+
+этот оператор особенно полезен для вложенных http-запросов
+
+================
+map преобразет кажое значение внутри observable в соответствии с правилом
+
+	const source = from([1, 2, 3, 4, 5]);
+	const example = source.pipe(map(val => val + 10));
+	const subscribe = example.subscribe(val => console.log(val));
+
+================
+mapTo преобразет кажое значение внутри observable к константе
+
+	const source = interval(2000);
+	const example = source.pipe(mapTo('HELLO WORLD!'));
+	//output: 'HELLO WORLD!'...'HELLO WORLD!'...'HELLO WORLD!'...
+	const subscribe = example.subscribe(val => console.log(val));
+
+================
+================
+================
+================
+================
