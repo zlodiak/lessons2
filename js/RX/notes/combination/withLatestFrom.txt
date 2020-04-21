@@ -16,6 +16,9 @@
 	*/
 	const subscribe = example.subscribe(val => console.log(val));
 
+
+по сути это combineLatest, но слушающий только первый поток
+
 =======================
 =======================
 =======================

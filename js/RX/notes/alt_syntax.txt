@@ -80,9 +80,38 @@ forkJoin может отправлять результат в subscribe или 
 	// OUTPUT: ["Hello", "World", 2]
 
 
-
-
 =========================================
+три равнозначных способа записать оператор combineLatest:
+
+const Game = combineLatest(StarStream, SpaceShip, Enemies, function(stars, spaceship, enemies) {
+  return { stars, spaceship, enemies };
+}).pipe(
+  sample(interval(SPEED))
+)
+
+const Game = combineLatest(StarStream, SpaceShip, Enemies).pipe(
+  map(v => {
+    return { 
+      stars: v[0], 
+      spaceship: v[1], 
+      enemies: v[2], 
+    };
+  }),
+  sample(interval(SPEED))
+)
+
+const Game = combineLatest(StarStream, SpaceShip, Enemies).pipe(
+  map(([stars, spaceship, enemies]) => {
+    return { 
+      stars: stars, 
+      spaceship: spaceship, 
+      enemies: enemies, 
+    };
+  }),
+  sample(interval(SPEED))
+)
+
+
 =========================================
 =========================================
 =========================================

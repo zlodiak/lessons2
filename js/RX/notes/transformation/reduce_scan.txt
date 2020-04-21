@@ -12,3 +12,81 @@ scan делает то же самое, но результаты отправл
 	const example = source.pipe(scan((acc, curr) => acc + curr, 0));
 	// output: 1,3,6
 	const subscribe = example.subscribe(val => console.log(val));
+
+==================
+scan всегда возвращает первый аргумент. при этом второго аргумента может вообще не быть
+
+	interval(1000).pipe(
+	  scan((acc) => {
+	    acc += 1;
+	    return acc;
+	  }),
+	).subscribe(console.log);
+	// 1 2 3 4 ...
+
+	interval(1000).pipe(
+	  scan((acc, val) => {
+	    acc += val + '';
+	    return acc;
+	  }),
+	).subscribe(console.log);
+	// 0 01 012 ...
+
+==================
+для игры типа "танки" scan можно заменить на map:
+
+	const keys$ = fromEvent(document, 'keydown').pipe(
+	  startWith({ key: '' }),
+	  map((e: KeyboardEvent) => e.key),
+	);
+
+	const game$ = combineLatest(
+	  interval(tick),
+	  keys$,
+	).pipe(
+	  scan((state: State, [_, key]) => {
+	    switch (key) {
+	      case 'ArrowUp':
+	        if(state.tank.y >= state.tank.step) { state.tank.y -= state.tank.step; }
+	        break;
+	      case 'ArrowRight':
+	        if(state.tank.x <= canvasWidthPx - tankSizePx - state.tank.step) { state.tank.x += state.tank.step; }
+	        break;
+	      case 'ArrowDown':
+	        if(state.tank.y <= canvasHeightPx - tankSizePx - state.tank.step) { state.tank.y += state.tank.step; }
+	        break;
+	      case 'ArrowLeft':
+	        if(state.tank.x >= state.tank.step) { state.tank.x -= state.tank.step; }
+	        break;    
+	    } 
+
+	    return state;
+	  }, stateInit)
+	);
+
+второй вариант:
+
+	const tank$ = of({ x: 0, y: 0, step: 5, });
+
+	const player$ = combineLatest(tank$, keys$).pipe(
+	  map(([tank, key]) => {
+	    switch (key) {
+	      case 'ArrowUp':
+	        if(tank.y >= tank.step) { tank.y -= tank.step; }
+	        break;
+	      case 'ArrowRight':
+	        if(tank.x <= canvasWidthPx - tankSizePx - tank.step) { tank.x += tank.step; }
+	        break;
+	      case 'ArrowDown':
+	        if(tank.y <= canvasHeightPx - tankSizePx - tank.step) { tank.y += tank.step; }
+	        break;
+	      case 'ArrowLeft':
+	        if(tank.x >= tank.step) { tank.x -= tank.step; }
+	        break;    
+	    } 
+
+	    return tank;
+	  })
+	);
+
+в результате по двумерному полю будет перемещаться танк после нажатия клавиш. причём не сможет выехать за границы.
