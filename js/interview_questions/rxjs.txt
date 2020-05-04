@@ -1,0 +1,133 @@
+================================
+================================
+в чём отличие merge и concat в rxjs?
+
+================================
+в чём отличие of и from в rxjs?
+
+================================
+в чём отличие subject и observable в rxjs?
+
+================================
+в чём отличие combineLatest и forkJoin в rxjs?
+
+================================
+какие спосбы отписки существуют в rxjs?
+
+================================
+в чём отличие timer и interval?
+
+================================
+в чём отличие scan и reduce?
+
+================================
+что делает оператор share?
+
+share() преобразует холодный поток в горячий.
+
+	import { of, from, interval } from 'rxjs'; 
+	import { map, switchMap, pluck, share, tap } from 'rxjs/operators';
+	import { ajax } from 'rxjs/ajax';
+
+
+	const endpoint = 'https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty';
+
+	const obs1 = interval(4000).pipe(
+	  switchMap(
+	    () => {
+	      return ajax({
+	        url: endpoint,
+	        responseType: 'json',
+	        method: 'GET',
+	      })
+	    }
+	  ),
+	  pluck('response'),
+	  map(res => res.filter((_, index) => index < 6)),
+	  tap((v) => {
+	    console.log('tap')
+	  }),
+	  share(),
+	)
+
+	obs1.subscribe(v => {
+	  console.log('sib1', v)
+	});
+
+	setTimeout(() => {
+	  obs1.subscribe(v => {
+	    console.log('sub2', v)
+	  });
+	}, 2000);
+
+если бы в этом примере не было оператора share(), то tap срабатывал бы для каждого подписчика. а сейчас тут он срабатывает один раз для обоих подписчиков.
+
+
+================================
+что такой холодные и горячие observables?
+
+холодные потоки производят всю последовательность данных сами. каждому новому подписчику отдаётся новая отдельная последовательность.
+
+	const s = interval(1000);
+	s.subscribe(v => { console.log('first', v); });
+	setTimeout(() => {
+		s.subscribe(v => { console.log('second', v); });
+	}, 2500)
+
+горячие потоки производят последовательность данных не сами, а просто получают их, например, при клике по экрану. горячие потоки отдают каждому новому подписчику одну и ту же последовательность.
+
+	const s = interval(1000);
+	s.subscribe(v => { console.log('first', v); });
+	setTimeout(() => {
+	  s.subscribe(v => { console.log('second', v); });
+	}, 2500)  
+
+================================
+что такое subject? какие виды subject существуют?
+
+subject это observable, который может не только отдавать значения, но и принимать. кроме того для каждого нового подписчика он отдаёт не новый поток, а тот же самый.
+
+behaviourSubject:
+его можно инициализировать значением. кроме того каждому новому подписчику он отдаём последнее значение.
+
+	const subject = new BehaviorSubject(0);
+	subject.subscribe(x => console.log(x)); // в консоли: 0
+	subject.next(1); // в консоли: 1
+	subject.next(2); // в консоли: 2
+	subject.subscribe(x => console.log(x)); // в консоли: 2
+	subject.complete();
+
+asyncSubject:
+отдаёт значения подписчикам только после того как перейдёт в статус complete. в вслучае, если произойдёт ошибка, то подписчики получат только информацию об ошибке.
+
+	const subject = new AsyncSubject();
+	subject.subscribe(x => console.log(x));
+	subject.next(1);
+	subject.next(2);
+	subject.complete(); // в консоли: 2
+
+replaySubject:
+каждому новому подписчику отдаёт все предыдущие значения. причём есть возможность ограничить количество предыдущих значений.
+
+	const subject = new ReplaySubject();
+	subject.subscribe(x => console.log(x));
+	subject.next(1); // в консоли: 1
+	subject.next(2); // в консоли: 2
+	subject.subscribe(x => console.log(x));
+	// в консоли:
+	// 1
+	// 2
+	subject.complete();
+
+
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+
+================================
+================================

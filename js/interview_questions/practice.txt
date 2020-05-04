@@ -1,0 +1,232 @@
+У нас есть 2 массива arr1 и arr2 с одинаковым содержимым [1, 2], то что выведет arr1 == arr2? Как сравнить массивы, чтобы в примере вывелось true?
+
+================================
+посчитать его сумму [5, 4, 3, 2, 1]
+
+================================
+Есть 5 горизонтальных блоков - они должны быть в одну линию (на одном уровне). Как это сделать? (Желательно с flex)
+
+	.wrap {
+	  display: flex;
+	  flex-wrap: nowrap;
+	  justify-content: space-between;
+	  align-items: center;
+	  background: red;
+	  height: 100px;
+	}
+
+	  .in {
+	     height: 50px;
+	     background: lime;
+	  }
+
+================================
+есть шапка, есть три колонки в центральной части (левая 200, правая 200, центральная резиновая) и футер. Как это сверстать?
+
+	<div class="wrapper">
+	  <div class="header">header</div>
+	  
+	    <div class="main">
+	      <div class="column column1">1</div>
+	      <div class="column column2">2</div>
+	      <div class="column column3">3</div>
+	    </div>
+	  
+	  <div class="footre">footer</div>
+	</div>
+
+
+	html,
+	body {
+	  height: 100%;
+	}
+
+	body {
+	  margin: 0;
+	}
+
+	.wrapper {
+	  display: flex;
+	  flex-direction: column;
+	  height: 100%;
+	}
+
+	.main {
+	  background: yellow;
+	  display: flex;
+	  flex-direction: row;
+	  flex-wrap: nowrap;
+	  flex-grow: 1;
+	}
+
+	.column1 {
+	  width: 200px;
+	}
+
+	.column2 {
+	  background: red;
+	  flex-grow: 1;
+	}
+
+
+	.column3 {
+	  width: 200px;
+	}	
+
+================================
+есть два блока, один внутри другого. как позиционировать внутренний блок по центру внешнего?
+
+	.wrap {
+	  	display: flex;
+		  justify-content: center;
+		  align-items: center;
+	    background: lime;
+	    width: 300px;
+	    height: 300px;    
+	}
+
+	  .in {
+	    background: red;
+	    width: 30px;
+	    height: 30px;
+	  }
+
+================================
+написать или описать скрипт палиндрома
+
+	const word = 'topot';
+	const w2rj = word.split('').reverse().join('');
+
+	console.log('word', word)
+	console.log('w2rj', w2rj)
+
+	if(word === w2rj) {
+	  console.log('is palyndrom')
+	} else {
+	  console.log('is not palyndrom')
+	} 	
+
+================================
+написать скрипт, эмулирующий  Object.create
+
+	function inherit(proto) {
+	  function F() {}
+	  F.prototype = proto;
+	  var object = new F;
+	  return object;
+	}
+
+
+================================
+Как проверить что элемент массив?
+Array.isArray(obj)
+
+================================
+как программно посчитать количество свойств в объекте?
+	var counter = 0;
+	for (let key in menu) {
+	  counter++;
+	}
+
+второй способ:
+
+	Object.keys(menu).length.
+
+
+================================
+написать пример функции, которая переполнить стек вызовов:
+
+	function foo() {
+	    foo();
+	}
+	foo();
+
+================================
+есть два объекта, связанные прототипом. написать функцию, которая выводит свойства только дочернего объекта
+
+	const obj1 = {
+	  prop1: true
+	};
+
+	const obj2 = {
+	  prop2: true,
+	  __proto__: obj1
+	};
+
+	for (let prop in obj2) {
+	  if (obj2.hasOwnProperty(prop)) {
+	  	console.log(prop);
+	  }
+	}
+
+
+================================
+есть массив, ножно преобразовать его в массив с уникальными значениями.
+
+	const arr1 = [1, 2, 3, 2, 4];
+	const arr2 = [];
+	const set1 = new Set();
+	arr1.forEach(v => set1.add(v));
+	set1.forEach(v => arr2.push(v));
+
+
+================================
+Обратить массив [3, 2, 1] и посчитать его сумму
+
+	const arr1 = [3, 2, 1];
+	const arr2 = arr1.reverse().reduce((sum, value) => sum + value);
+	console.log(arr3)
+
+================================
+при помощи rxjs написать код, который будет выводить в консоль название нажатой клавиши
+
+	import { fromEvent } from 'rxjs'; 
+	import { pluck, tap } from 'rxjs/operators';
+	fromEvent(document, 'keyup').pipe(
+	  pluck('code'),
+	).subscribe(console.log);
+
+================================
+написать скрипт, который делает неглубокую копию объекта
+
+	let user = {
+	  name: "Вася",
+	  age: 30,
+	  meth: function(a) { console.log(a, this.name); },
+	};
+
+	let clone = {};
+	for (let key in user) {
+	  clone[key] = user[key];
+	}
+
+	clone.name = "Петя"; 
+
+	console.log(user);
+	console.log(clone);
+
+	user.meth('us');
+	clone.meth('cl');
+
+второй способ:
+
+	let user = {
+	  name: "Вася",
+	  age: 30,
+	  meth: function(a) { console.log(a, this.name); },
+	};
+
+	let clone = Object.assign({}, user);
+
+	clone.name = "Петя"; 
+
+	console.log(user);
+	console.log(clone);
+
+	user.meth('us');
+	clone.meth('cl');
+
+================================
+================================
+================================
+================================
