@@ -1,0 +1,179 @@
+декоратор это функция, которая добавляет функциональности другой функции, не изменяя её
+
+	function f1() {
+		console.log('i am f1');
+	}
+
+	function f2(f) {
+		return function f3() {
+	  	console.log('extra action 1');
+	    f();
+	    console.log('extra action 2');
+	  }
+	}
+
+	f1 = f2(f1);
+	f1();
+
+===================================
+наблюдатель это паттерн, который позволяет объектам-подписчикам получать рассылки от объекта-издателя. 
+
+объект-издатель имеет массив для хранения подписавшихся, метод рассылающий в цикле сообщения подписчикам. а так же метод, который осуществляет подписку. и необязательный метод, который уничтожает подписку.
+
+	function Publisher(){
+	  this.subscribers = [];
+	  this.subscribe = function(onPublish){
+	    this.subscribers.push(onPublish);
+	  };
+	  this.publish = function(news){
+	  this.subscribers.forEach(function(subscriber){
+	    subscriber.action(news);
+	  });
+	};
+	}
+
+	const freedom = new Publisher();
+	const union = new Publisher();
+
+	const sasha = {
+	  action: function(news){
+	    console.log('OMG! Did you hear that ' + news);
+	  }
+	};
+
+	const masha = {
+	  action: function(news){
+	    console.log('My opinions about ' + news);
+	  }
+	};
+
+
+	freedom.subscribe(sasha);
+	freedom.subscribe(masha);
+	union.subscribe(masha);
+
+	freedom.publish('The winter is coming!');
+	union.publish("It's snowball time!");
+
+===================================
+стратегия это паттерн, который приимает различные способы выполнения действия.
+
+	class Script {
+	  strategy;
+	  constructor(strategy = null) {
+	    this.strategy = strategy;
+	  }
+	  start() {
+	    setInterval(() => {
+	      this.strategy.action(Math.random());
+	    }, 2000);
+	  }
+	}
+
+	class ConsoleLog {
+	  action(value) {
+	    console.log(value);
+	  }
+	}
+
+	class AlertLog {
+	  action(value) {
+	    alert(value);
+	  }
+	}
+
+	const consoleLog = new ConsoleLog();
+	const alertLog = new AlertLog();
+	const script = new Script(consoleLog);
+	script.start();
+
+===================================
+итератор. это механизм, который перебирает элементы коллекции, а когда они закончились посылает сигнал отстановки. 
+
+каждый итерируемый объект имеет ссылку на итератор, полученную через наследование. важно, что у каждого итерируемого объекта эта ссылка ведёт на уникальный итератор. потому что если один объект перебирается несколькими потоками одновременно, то порядковые номера возвращаемых значений не должны сбиваться.
+
+	class IterObj {
+	  constructor(word) {
+	    this.word = word;
+	  }
+
+	  iter() { return new Iterator(this.word); }
+	}
+
+
+	class Iterator {
+	  constructor(word) {
+	    this.word = word;
+	    this.index = 0;
+	  }
+
+	  next() {
+	    try {
+	      let letter = this.word[this.index];
+	      this.index += 1;
+	      return letter;
+	    } catch (err) {
+	      throw "StopIteration";
+	    }
+	  }
+
+	  iter() { return this; }
+	}
+
+	const iterObj = new IterObj('sergey');
+	it = iterObj.iter();
+
+	console.log(it.next());
+	console.log(it.next());
+	console.log(it.next());
+	console.log(it.next());
+	console.log(it.next());
+	console.log(it.next());
+
+===================================
+синглтон это порождающий паттерн, который гарантирует, что в программе существует только один экземпляр класса с глобальной точкой доступа.
+
+его можно реализовать в виде модуля(важно помнить, что модуль при импорте сначала выполняется, а затем предоставляет то, что экспортировано из него):
+
+	module Singleton {
+	  class Instance {
+		  constructor(public foo: number = 123) {}
+	  }
+	  
+	  let instance = new Instance;
+	  
+	  export function getInstance() :Instance {
+	     return instance;
+	  }
+	}
+
+можно реализовать в виде объектного литерала:
+
+	const Singleton = {
+	   foo: 123,
+	   getInstance() { return this }
+	};
+	let obj1 = Singleton.getInstance();
+	let obj2 = Singleton.getInstance();
+
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
