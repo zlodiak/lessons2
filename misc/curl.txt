@@ -24,3 +24,18 @@ $ curl -T test.html ftp://user:password@ftp.exampledomain.com/ftpdir/
                                  Dload  Upload    Total   Spent    Left    Speed
 100 43320    0     0  100 43320      0  38946   0:00:01 0:00:01  --:--:--    124k
 $
+
+
+
+
+
+===================
+
+md@md ~/.MINT18/EM/estimate-me-ui $ curl -d '{"email":"admin@ad.ad", "fio":"qqq", "password":"password"}' -H "Content-Type: application/json" -X POST https://estimate-me-cloud-dev.docker.simbirsoft/auth/logpass/registration
+
+md@md ~/.MINT18/EM/estimate-me-ui $ curl -d '{"email":"admin@ad.ad", "fio":"qqq", "password":"password"}' -H "Content-Type: application/json" -X POST https://estimate-me-cloud-dev.docker.simbirsoft/api/auth/logpass/registration
+
+тут больше:
+https://gist.github.com/subfuzion/08c5d85437d5d4f00e58
+
+
