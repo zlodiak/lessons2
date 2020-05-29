@@ -156,7 +156,8 @@ CD запускается при: браузерном событии, http-за
 
 	<input #someInput placeholder="Your favorite pizza toping">
 
-	@ViewChild('someInput') someInput: ElementRef;
+	@ViewChild('someInput') 
+	someInput: ElementRef;
 	ngAfterViewInit() {
 		this.someInput.nativeElement.value = "qwerty";
 	}	
@@ -228,7 +229,67 @@ ngrx предполагает наличие глобального стейта
 во втором случае необходимо перед каждым тестом создать сруду при помощи встроенного фреймворка testBed. создание среды предполагает эмуляцию компонента и установка зависимостей. в этом случае обычно сервисы, пайпы и прочие зависимости заменяют на моковые данные.
 
 ================================
+что такое control value accessor?
+
+CVA позволяет кастомный компонент связать с элементом реактивной формы и наладить двустороннюю связь между ними.
+
+в элементы input, select и т.д. CVA встроен изначально. но можно сделать рейтинг из 5 звёзд и привязать количество звёзд к полю реактивной формы:
+
+    this.galaxyForm = new FormGroup({
+      galaxy: new FormControl({value: null, disabled: false}, [Validators.required]),
+      rating: new FormControl({value: 2, disabled: true}, [Validators.required]),
+      name: new FormControl({value: null, disabled: false}, [Validators.required])
+    });
+
+------------
+в коде выше значение rating инициализируется двойкой. соответственно в кастомном компоненте сработает:
+
+  writeValue(val) {
+    console.log('writeValue', val)
+    this._value = val;
+  }
+
+ таким образом срабатывает связь от формы к компоненту.
+
+------------
+в кастомном компоненте есть обработчик события (click). после того как пользователь кликнет на звезду, он сработает:
+
+  setRating(star: any) {
+  	this._value = star.stars;
+  	this.ratingText = star.text
+  	this.onChanged(star.stars);
+  }
+
+  public _value: number;
+  onChanged: any = () => {}
+  
+  registerOnChange(fn: any){
+    this.onChanged = fn
+  }
+
+в результате значение star.stars будет отправлено в реактивную форму(при этом также сработает writeValue).
+
 ================================
+что такое динамический компонент?
+
+ДК это компоненты, которые при помощи фабрики создаются во время исполнения программы на основе единственного шаблона. при этом получают различающиеся данные инициализации. ДК создаются уже в скомпилированном приложении в момент его работы.
+
+шаблон представляет из себя обычный компоннет с опционально входящими переменными. он так же как и обычный компонент импортируется в модуль.
+
+далее в компонент, который управляет ДК испортируется фабрика ComponentFactoryResolver. ей скармливается шаблон ДК, после чего сгенерированный ДК можно инициализировать и встраивать в шаблон родителя. фабрика может таким образом генерировать множество однотипных ДК.
+
+  @ViewChild('container', { read: ViewContainerRef }) container: ViewContainerRef;
+  private _counter = 1;
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+  add(): void {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(DynamicComponent);
+    const componentRef = this.container.createComponent(componentFactory);
+    componentRef.instance.index = this._counter++;
+  }
+
+тут больше: 
+https://stackblitz.com/edit/angular-dynamic-components-example-f2fbvx
+
 ================================
 ================================
 ================================
