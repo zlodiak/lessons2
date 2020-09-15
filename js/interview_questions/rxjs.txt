@@ -14,6 +14,25 @@
 ================================
 какие спосбы отписки существуют в rxjs?
 
+1.	this.subscription.unsubscribe()
+
+2.	takeUntil(notifier)
+    notifier = new Subject();    
+    ngOnInit () {
+        const observable$ = Rx.Observable.interval(1000);
+        observable$.pipe(takeUntil(this.notifier)).subscribe(x => console.log(x));
+    }    
+    ngOnDestroy() {
+        this.notifier.next();
+        this.notifier.complete();
+    }
+
+3.	.pipe(first())
+
+4.	async pipe для angular
+	Interval: {{observable$ | async}}
+	
+
 ================================
 в чём отличие timer и interval?
 
