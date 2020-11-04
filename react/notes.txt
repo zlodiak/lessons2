@@ -6,9 +6,81 @@ Error: ENOSPC: System limit for number of file watchers reached,
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
 ==========================================
+вывод стейта в любой момент в консоли: window.state = store.getState
+нужно выполнить state() 
+важно, что в window.state находится функция, а не результат
 
 ==========================================
+В управляемом компоненте значение поля ввода всегда определяется состоянием React:
+
+
+  class EssayForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        value: 'Будьте любезны, напишите сочинение о вашем любимом DOM-элементе.'
+      };
+
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(event) {
+      this.setState({value: event.target.value});
+    }
+
+    handleSubmit(event) {
+      alert('Сочинение отправлено: ' + this.state.value);
+      event.preventDefault();
+    }
+
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <textarea value={this.state.value} onChange={this.handleChange} />
+          <input type="submit" value="Отправить" />
+        </form>
+      );
+    }
+
+
+
+неуправляемые компоненты хранят данные формы прямо в DOM:
+
+  class NameForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.input = React.createRef();
+    }
+
+    handleSubmit(event) {
+      alert('Отправленное имя: ' + this.input.current.value);
+      event.preventDefault();
+    }
+
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Имя:
+            <input type="text" ref={this.input} />
+          </label>
+          <input type="submit" value="Отправить" />
+        </form>
+      );
+    }
+  }
+
+
 ==========================================
+npm install -g json-server
+json-server --watch db.json --port 3001
+http://localhost:3001/employees
+не забыть создать db.json около .gitignore
+
+
+
 ==========================================
 ==========================================
 ==========================================

@@ -1,0 +1,87 @@
+чтобы организовать обновление в textarea значений после нажатия клавиши через redux нужно:
+
+	установить redux
+
+	в отдельном каталоге создать стор с набором редюсеров:
+
+		import { createStore, combineReducers } from 'redux';
+		import helloReducer from './helloReducer';
+		let reducers = combineReducers({
+		    helloReducer
+		});
+		const store = createStore(reducers);
+		export default store;
+
+
+	создать редюсеры с набором акшенов:
+
+		const helloReducer = function helloReducer(state = [], action) {
+		    switch(action.type) {
+		        case 'CHANGE_VALUE': {
+		            return {
+		                ...state,
+		                newHelloText: action.helloText
+		            };
+		        }
+		        default:
+		            return state;
+		    }
+		}
+		export const changeHelloTextCreator = helloText => {
+		    return { type: 'CHANGE_VALUE', helloText: helloText }
+		}
+		export default helloReducer;	
+
+
+	на целовой странице импортировать redux и reducers:
+
+		import store from '../../redux/redux-store';
+		import { changeHelloTextCreator } from '../../redux/helloReducer';	
+
+	в поле вывести нужную часть стора:
+
+		<textarea onChange={this.handleChange} value={store.getState().helloReducer.newHelloText}></textarea>
+
+	в обработчике клика диспатчить в стор нужный акшен:
+
+	    handleChange(e) {
+	        store.dispatch(changeHelloTextCreator(e.target.value));
+	    }
+
+===============================
+локальный стейт объявляется так:
+  const [state, setState] = useState({
+    present: '',
+    memorized: '',
+  });
+
+обновляется так:
+	setState({...state, present: '', memorized: textareaRef.current.value});
+
+выводится так:
+    <button onClick={ handleSet }>send</button>
+    <div>present: {state.present}</div>
+
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================

@@ -45,6 +45,48 @@
     console.log(message); 	
 
 ==========================================
+простейший роутинг.
+
+npm i react-router-dom
+
+app.js:
+
+	import { BrowserRouter, Route, Redirect, Link } from "react-router-dom";
+	import Page1 from './components/page1/Page1';
+	import Page2 from './components/page2/Page2';
+	function App() {
+	  return (
+	    <BrowserRouter>
+	      <header className="App">
+	        <Link to="/page1">page1</Link>
+	        <Link to="/page2">page2</Link>
+	      </header>
+	      <main>
+	        <Route exact path='/'         render={ () => <Page1/> }/>
+	        <Route exact path='/page1'    render={ () => <Page1/> }/>
+	        <Route exact path='/page2'    render={ () => <Page2/> }/>        
+	      </main>
+	    </BrowserRouter>
+	  );
+	}
+	export default App;
+
+
+componants/page1/Page1.jsx:
+
+	import React from 'react';
+	function Page1() {
+	    return(
+	        <div>
+	            111
+	        </div>
+	    );
+	}
+	export default Page1;
+
+
+
+
 ==========================================
 ==========================================
 ==========================================
