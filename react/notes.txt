@@ -80,10 +80,79 @@ http://localhost:3001/employees
 не забыть создать db.json около .gitignore
 
 
+==========================================
+если во вложенный компонент не приходят новые пропсы, то можно отменить его перерисовывание, которое запускается при изменениях в родителе.
+
+  import React, { memo } from 'react';
+  function Page1(props) {
+      return (
+          <>
+              page1
+          </>
+      );
+  }
+  export default memo(Page1);
+
 
 ==========================================
+вот пример кода, в котором асинхронная функция вызывается внутри другой асинхронной функции:
+
+  export const setGenderThunk = (gender, login) => {
+      return async dispatch => {
+          const users = await getUsers || [];
+          users.forEach(user => {
+              if(user.login === login) {
+                  const user_ = { ...user, gender: gender };
+                  ;(async () => {
+                      const result = await setUserF(user_, user.id);
+                      debugger
+                      if(result.ok) {
+                          dispatch(setGenderAC(user_.gender));
+                      }
+                  })();
+                  
+              }
+          });
+      }
+  }
+
+  async function setUserF(user, id) {
+      return await setUser(user, id);
+  }
+
+
+
+этот код можно записать в сокращённой форме так:
+
+  export const setGenderThunk = (gender, login) => {
+    return async dispatch => {
+      const users = await getUsers || [];     // там внутри fetch
+      for(let user of users) {
+        if(user.login === login) {
+          const user_ = { ...user, gender: gender };
+          await setUser(user_, user.id);      // там тоже внутри fetch
+          debugger
+          if(result.ok) {
+            dispatch(setGenderAC(user_.gender));
+          }
+
+        }
+      };
+    }
+  }
+
+
+Обычный цикл внутри асинхронной функции умеет работать асинхронно.
+forEach же - это просто метод, который синхронно и последовательно вызывает для каждого элемента массива переданную аргументом функцию. Асинхронна ли переданная функция или нет - не имеет значения, потому что сам forEach - синхронная функция
+
+
+ещё один вариант:
+
+  await Promise.all(users.map(async (user) => { ... })
+
 ==========================================
-==========================================
+
+
 ==========================================
 ==========================================
 ==========================================

@@ -1,0 +1,51 @@
+function Page2(): React.ReactNode {
+OR
+const Page1: React.FC = () => {
+
+=================================
+испортировать и использовать тип глобального стейта можно так:
+
+	const rootReducer = combineReducers({
+	    msgReducer
+	});
+	const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+	type rootReducerType = typeof rootReducer;
+	export type appStateType = ReturnType<rootReducerType>;
+
+
+	import { appStateType } from '../../redux/store';
+	const mapStateToProps = (state: appStateType) => {
+	    return {
+	        msgs: state.msgReducer.msgs,
+	    }
+	}
+	export default connect(mapStateToProps, { fillMsgsThunk })(Page4)
+
+
+=================================
+для справки, ReturnType<FUNC> возвращает тип возвращаемого функцией FUNC значения. 
+если FUNC не функция, то скорее всего в итогу вернётся void 
+
+function getInt(a: string) {
+  return parseInt(a);
+}
+
+type A = ReturnType<typeof getInt>; // => number
+Using typeof, we are able to able to get hold of the type signature of getInt, which in this case would mean (a: string) => number. ReturnType accepts a function and returns the return type that the function would return when being invoked. number in our getInt example.
+
+=================================
+типизировать событие, которое в элементе INPUT срабатывает по изменению можно так:
+
+	onChange={ (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value) } 
+
+=================================
+можно отключить проверку ошибок тайпскрипта для конкретной строки так:
+
+  // @ts-ignore
+  window.state = store.getState
+  
+=================================
+=================================
+=================================
+=================================
+=================================
