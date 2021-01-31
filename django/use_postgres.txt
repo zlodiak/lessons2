@@ -1,0 +1,82 @@
+если нужно sqlite заменить на postgres:
+
+установить postgres в систему. затем настроить:
+
+	service postgresql start
+
+	sudo -u postgres psql
+
+	CREATE DATABASE database1;
+
+	список баз:
+	\l
+
+	создать пользователя:
+	CREATE USER vkiller_user WITH PASSWORD 'vkiller';
+
+	список пользователей:
+	\du
+
+	дать привилегии пользователю:
+	GRANT ALL PRIVILEGES ON DATABASE database1 to vkiller_user;
+
+=================
+
+в джанго в settings заменить
+
+	# DATABASES = {
+	#     'default': {
+	#         'ENGINE': 'django.db.backends.sqlite3',
+	#         'NAME': BASE_DIR / 'db.sqlite3',
+	#     }
+	# }
+
+	DATABASES = {
+	    'default': {
+	        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+	        'NAME': 'vkiller',
+	        'USER': 'vkiller_user',
+	        'PASSWORD': 'vkiller',
+	        'HOST': 'localhost',
+	        'PORT': '5432',
+	    }
+	}
+
+
+=================
+зайти в venv и выполнить:
+	
+	sudo apt-get build-dep python-psycopg2
+	pip install psycopg2-binary
+
+=================
+пересоздать суперпользователя потому что старого почему-то не пускают в админку:
+
+	python manage.py createsuperuser
+
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================
+=================

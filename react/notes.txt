@@ -151,9 +151,28 @@ forEach же - это просто метод, который синхронно
   await Promise.all(users.map(async (user) => { ... })
 
 ==========================================
+если не создаётся приложение, то нужно удалить старую версию инсталлятора и установить новую:
 
+	Uninstalling Command:
+
+	npm uninstall -g create-react-app
+
+	installing Command:
+
+	npx create-react-app my-app
+
+	if you have an older npm version (npm version < 5.2) then use this command :
+
+	npm install -g create-react-app
+
+	it solved my problem I hope it will solve yours
 
 ==========================================
+yarn create react-app my-app
+
+yarn create react-app vkiller --template typescript
+
+
 ==========================================
 ==========================================
 ==========================================

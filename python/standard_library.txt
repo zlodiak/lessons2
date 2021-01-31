@@ -50,6 +50,11 @@ http://pythonlearn.ru/%D0%B1%D0%B5%D0%B7-%D1%80%D1%83%D0%B1%D1%80%D0%B8%D0%BA%D0
 psycopg2:
 python3 -m pip install psycopg2-binary
 
+или зайти в venv и выполнить:
+	
+	sudo apt-get build-dep python-psycopg2
+	pip install psycopg2-binary
+
 ===========================================
 argparse
 

@@ -45,6 +45,17 @@
     console.log(message); 	
 
 ==========================================
+переход внутри сайта:
+
+	import { useHistory } from "react-router-dom";
+
+	const history = useHistory();
+
+	function openCard(victimId: number) {
+		history.push('/victims/' + victimId)
+	}
+
+==========================================
 простейший роутинг.
 
 npm i react-router-dom

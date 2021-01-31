@@ -40,14 +40,14 @@ SELECT current_database();
 \dt
 
 создать пользователя:
-CREATE USER bo_user WITH PASSWORD 'qwerty';
+CREATE USER vkiller_user WITH PASSWORD 'vkiller';
 CREATE USER user1 WITH PASSWORD 'qwerty1';
 
 список пользователей:
 \du
 
 дать привилегии пользователю:
-GRANT ALL PRIVILEGES ON DATABASE database1 to user1;
+GRANT ALL PRIVILEGES ON DATABASE database1 to vkiller_user;
 
 вывести содержимое таблицы:
 select * from parse_results;

@@ -20,6 +20,7 @@ pip install django==2.2
 
 ==========================
 создадим проект:
+python -m pip install Django
 
 (myvenv) ~/djangogirls$ django-admin startproject mysite .
 
@@ -57,7 +58,7 @@ http://127.0.0.1:8000/
 from django.db import models
 from django.utils import timezone
 
-class Post(models.Model):
+class User(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200)
     text = models.TextField()
@@ -74,16 +75,22 @@ class Post(models.Model):
         return self.title
 
 ==========================
-Последним шагом будет добавление нашей модели в базу данных. Сначала мы должны дать Django знать, что сделали изменения в нашей модели (мы её только что создали!). Набери python manage.py makemigrations blog 
+Последним шагом будет добавление нашей модели в базу данных. Сначала мы должны дать Django знать, что сделали изменения в нашей модели (мы её только что создали!). Набери 
+
+    python manage.py makemigrations blog 
 
 Должно получиться примерно так:
 
 (myvenv) ~/djangogirls$ python manage.py makemigrations blog
 Migrations for 'blog':
   0001_initial.py:
-  - Create model Post
+  - Create model User
 
-Django создал для нас файл с миграцией для базы данных. Набери python manage.py migrate blog, результат должен быть следующим:
+Django создал для нас файл с миграцией для базы данных. Набери 
+
+    python manage.py migrate blog
+
+, результат должен быть следующим:
 
 (myvenv) ~/djangogirls$ python manage.py migrate blog
 Operations to perform:
@@ -97,9 +104,9 @@ Running migrations:
 откроем файл blog/admin.py и заменим его содержимое на:
 
 from django.contrib import admin
-from .models import Post
+from .models import User
 
-admin.site.register(Post)
+admin.site.register(User)
 
 ==========================
 python manage.py createsuperuser
@@ -129,10 +136,10 @@ db.sqlite3
 роутинг в корне приложения:
 from django.contrib import admin
 from django.urls import path, include
-from results import views
+from users import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('results.urls')),
+    path('', include('users.urls')),
 ]
 
 
@@ -140,7 +147,7 @@ urlpatterns = [
 from django.urls import path
 from . import views
 urlpatterns = [
-    path('results', views.results, name='results'),
+    path('users', views.users, name='users'),
 ]
 
 
@@ -177,7 +184,7 @@ import json
 
 from .models import User
 
-def users_list(request):
+def users(request):
     users = User.objects.all()   
     users_serialized = serializers.serialize('json', users)
     return JsonResponse(users_serialized, safe=False)       
