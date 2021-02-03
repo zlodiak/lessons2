@@ -127,6 +127,43 @@ useSelector используется для получения части сто
 	            })}
 
 ===================================
+useMemo работает только для случая вложенных функций. функция, обёрнутая в useMemo не будет запускаться, если во внешнюю её функцию приходят одни и те же значения. и наоборот.
+
+	import React, { useState, useMemo } from "react";
+	import { render } from "react-dom";
+
+	function upper(text) {
+	  return text.toUpperCase();
+	}
+
+	const UpperCase = ({ text }) => {
+	  console.log(text);
+	  return useMemo(() => upper(text));
+	};
+
+	function App() {
+	  const [text, setText] = useState("Hello");
+
+	  function onClick() {
+	    setText(Math.random(10));
+	    // setText(123);
+	  }
+
+	  return (
+	    <>
+	      <UpperCase text="manav pandya" />
+	      <button onClick={onClick}>send</button>
+	    </>
+	  );
+	}
+
+	render(<App />, document.getElementById("root"));
+
+
+в этом примере каждый раз после нажатия кнопки будет происходить вывод в консоль потому что в родительскую функцию приходит каждый раз случайное число setText(Math.random(10));.
+
+если вместо setText(Math.random(10)); использовать setText(123); , то вывода в консоль не будет после каждого нажатия на кнопку.
+
 ===================================
 ===================================
 ===================================
