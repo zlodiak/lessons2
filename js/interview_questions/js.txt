@@ -92,6 +92,8 @@ object
 	console.log('Z object after cloning: ', Z);
 	console.log('Y object: ', Y);
 
+6. lodash cloneDeep()
+
 ================================
 что такое замыкание?
 
