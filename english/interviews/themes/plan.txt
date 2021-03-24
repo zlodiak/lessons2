@@ -1,0 +1,6 @@
+0.	my hobbies
+1.	my day schedule
+2. 	my biography
+3.	my workplaces
+4.	my projects
+5.	my tech stack
