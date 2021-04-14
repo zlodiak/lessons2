@@ -81,7 +81,18 @@ Any: произвольный тип
 Null и undefined: соответствуют значениям null и undefined в javascript
 Void: отсутствие конкретного значения, используется в основном в качестве возвращаемого типа функций
 Never: возвращает функция, выход из которой никогда не происходит. например бесконечный цикл
-Unknown
+Unknown: подобен any, но невозможно присвоить произвольному типу
+
+================================
+let vAny: any = 10;          // We can assign anything to any
+let vUnknown: unknown =  10; // We can assign anything to unknown just like any 
+
+
+let s1: string = vAny;     // Any is assignable to anything 
+let s2: string = vUnknown; // Invalid we can't assign vUnknown to any other type (without an explicit assertion)
+
+vAny.method();     // ok anything goes with any
+vUnknown.method(); // not ok, we don't know anything about this variable
 
 ================================
 что такое литеральный тип в ts?
@@ -152,6 +163,20 @@ assertion это сигнал от разработчика к компилят�
 	let someAnyValue: any = "hello world!";
 	let strLength: number = (someAnyValue as string).length;
 	console.log(strLength); // 12	
+
+
+-------------
+
+assertion это сигнал разработчика компилятору о том, что два типа являются совместимыми. после компиляции в js-коде не остаётся информации об assertion.
+
+например querySelector возвращает тип element, но разработчик хочет его приравнять к переменной типа HTMLElement. при этом в element есть все свойства HTMLElement и даже больше. формально эти типы различаются, но практически нет.
+
+	const element: Element = document.querySelector( '#stage' );
+	const stage: HTMLElement = <HTMLElement> element // Ok
+
+альтернативная форма записи:
+
+	 let element = document.querySelector('#counter') as HTMLElement;
 
 ================================
 что такое перегрузка функций? приведите примеры.
