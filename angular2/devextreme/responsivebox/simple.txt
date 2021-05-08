@@ -57,7 +57,89 @@ dxTemplate сожержит содержимое блока в виде текс
 
 
 ===============================
+можно перемещать блоки в другие ячейки при разных размерах экрана. за это отвечает dxi-location. 
+каждый dxi-item содержит несколько dxi-location, видимость которых регулируется через атрибут screen.
+
+видимость dxi-col/row тоже регулируется через атрибут screen.
+
+
+
+<div id="page">
+  <dx-responsive-box>
+    <dxi-row [ratio]="1"></dxi-row>
+    <dxi-row [ratio]="1"></dxi-row>
+    <dxi-row [ratio]="1"></dxi-row>
+
+    <dxi-col [ratio]="1"></dxi-col>
+    <dxi-col [ratio]="1"></dxi-col>
+    <dxi-col [ratio]="1"></dxi-col>
+
+    <dxi-item>
+      <dxi-location [row]="0" [col]="1"></dxi-location>
+      <div *dxTemplate class="header item">
+        <p>Header</p>
+      </div>
+    </dxi-item>
+
+    <dxi-item>
+      <dxi-location [row]="0" [col]="0" screen="sm md lg"></dxi-location>
+      <dxi-location [row]="1" [col]="0" screen="xs"></dxi-location>
+      <div *dxTemplate class="left-side-bar item">
+        <p>Left Bar</p>
+      </div>
+    </dxi-item>
+
+    <dxi-item>
+      <dxi-location
+        [row]="1"
+        [col]="0"
+        [colspan]="3"
+        screen="sm md lg"
+      ></dxi-location>
+      <dxi-location [row]="1" [col]="1" [colspan]="2"></dxi-location>
+      <div *dxTemplate class="content item">
+        <p>Content</p>
+      </div>
+    </dxi-item>
+
+    <dxi-item>
+      <dxi-location [row]="0" [col]="2"></dxi-location>
+      <div *dxTemplate class="right-side-bar item">
+        <p>Right Bar</p>
+      </div>
+    </dxi-item>
+
+    <dxi-item>
+      <dxi-location [row]="2" [col]="0" [colspan]="2"></dxi-location>
+      <div *dxTemplate class="footer item">
+        <p>Footer</p>
+      </div>
+    </dxi-item>
+  </dx-responsive-box>
+</div>
+
+
 ===============================
+атрибут singleColumnScreen принимает значение ширины экрана, при котором игнорируется любые dxi-col/row в пользу одноколоночной сетки.
+
+screenByWidth нарушает стандартный набор квалификаторов lg md sm xs и ссылается на функцию, которая возвразает новый набор квалификаторов:
+
+<dx-responsive-box ...
+    [screenByWidth]="getSizeQualifier">
+    <!-- ... -->
+</dx-responsive-box>
+
+    getSizeQualifier(width) {
+        if (width < 640)
+            return 'xs';
+        if (width < 1280)
+            return 'sm';
+        if (width < 1920)
+            return 'md';
+        return 'lg';
+    }
+
+
 ===============================
 ===============================
 ===============================
