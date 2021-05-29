@@ -1,0 +1,34 @@
+    <i
+      class="dx-icon-menu"
+      *ngIf="data.value === 4"
+      id="product1"
+      (mouseenter)="toggleDefault()"
+      (mouseleave)="toggleDefault()"
+    >
+      <dx-tooltip target="#product1" [(visible)]="defaultVisible" [closeOnOutsideClick]="false">
+        <div *dxTemplate="let data = data; of: 'content'">ExcelRemote IR</div>
+      </dx-tooltip>
+    </i>
+
+=============================
+  defaultVisible = false;
+
+  toggleDefault() {
+    this.defaultVisible = !this.defaultVisible;
+  }
+
+=============================
+https://codesandbox.io/s/m5joy?file=/src/app/app.component.html:112-199
+https://js.devexpress.com/Demos/Widgetsgallery/Demo/Tooltip/Overview/Angular/Light/
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================

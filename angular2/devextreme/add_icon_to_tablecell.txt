@@ -1,0 +1,37 @@
+<dx-data-grid
+  id="gridContainer"
+  [dataSource]="dataSource"
+  keyExpr="ID"
+  [allowColumnReordering]="true"
+  [showBorders]="true"
+>
+
+  <dxi-column dataField="ID" caption="No" cellTemplate="cellTemplate"></dxi-column>
+  <dxi-column dataField="Prefix" caption="Код"></dxi-column>
+  <dxi-column dataField="FirstName" caption="Название"></dxi-column>
+  <dxi-column dataField="LastName" caption="Модуль"></dxi-column>
+  <dxi-column dataField="Position" caption="Описание"></dxi-column>
+  <dxi-column dataField="BirthDate" caption="Активность"> </dxi-column>
+
+  <div *dxTemplate="let data of 'cellTemplate'">
+    <span>{{ data.value }}</span>
+    <i
+      class="dx-icon-menu"
+      *ngIf="data.value === 4"
+    >
+    </i>
+  </div>
+</dx-data-grid>
+
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
