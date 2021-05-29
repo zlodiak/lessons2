@@ -1,0 +1,25 @@
+можно сокращать многоточием текст, который состоит из нескольких строк.
+
+
+
+
+<div class="review-text">
+	<p class="line-clamp">This product was not very satisfactory. I was disappointed with a lot of things. But the
+		biggest was its shoddy packaging. I received damaged goods. Please beware of sellers on this site, not all of
+		them are trustedThis product was not very satisfactory. I was disappointed with a lot of things. But the
+		biggest was its shoddy packaging. I received damaged goods. Please beware of sellers on this site, not all ofware of sellers on this site, not all of
+		them are trusted!</p>
+</div>
+
+
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    -webkit-box-orient: vertical;  
+    background: cyan;
+}
+
+
+https://jsfiddle.net/7nsx80f2/3/
