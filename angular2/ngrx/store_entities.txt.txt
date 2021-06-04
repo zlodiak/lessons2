@@ -1,0 +1,66 @@
+    StoreModule.forRoot(
+      {
+        entities: entitiesReducer,
+      },
+      { metaReducers }
+    ),
+
+============================
+import { createAction, props } from '@ngrx/store';
+import { Entity } from '@shared/models';
+
+export const addEntityAction = createAction('[entity] Add entity', props<{ entity: Entity }>());
+
+export const addImportExportAction = createAction('[impExp] Add impExp', props<any>());
+
+export const addEntityFKAction = createAction('[fk] Add entityFK', props<any>());
+
+============================
+export const entitiesReducer = createReducer(
+  { entities: [] },
+  on(addEntityAction, (state: any, { entity }) => {
+    return {
+      entities: [...state.entities, entity]
+    }
+  })
+);
+
+============================
+import { createSelector } from '@ngrx/store';
+
+const selectState = (state: any) => state;
+
+export const selectEntities = createSelector(
+  selectState,
+  (state: any) => state.entities
+);
+
+============================
+results[0].value.forEach((entity: Entity) => {
+	this.store.dispatch(addEntityAction({ entity: entity }));
+});
+
+const entities$ = this.store.pipe(select(selectEntities));
+entities$.subscribe(entities => {
+	console.log(entities)
+});
+
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
