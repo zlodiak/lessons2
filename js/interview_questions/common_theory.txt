@@ -50,6 +50,18 @@
 	[1, 2, 3, 4].length
 	4
 
+в TS инкапсуляция реализована при помощи модификаторов доступа: public, private, protected.
+В TypeScript наследование реализуется с помощью ключевого слова extends
+в TS полиморфизм доступен через несколько объявлений одной функции о одной реализации с максимально общим типом:
+	function add(x: string, y: string): string;
+	function add(x: number, y: number): number;
+	function add(x: any, y: any): any {
+	    return x + y;
+	}
+	 
+	let result1 = add(5, 4);      // 9
+	let result2 = add("5", "4");  // 54
+
 ================================
 чем отличаются функциональный и ОО-подход?
 
