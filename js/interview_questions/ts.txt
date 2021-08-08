@@ -398,7 +398,70 @@ TG это функция, которая проверяет тип и возвр
 	// fly
 
 ================================
+как используются дженерики при создании экземпляра класса?
+
+	class A<T> {
+	  a: T;
+
+	  constructor(a: T) {
+	    this.a = a;
+	  }
+
+	  action() {
+	    console.log('action', this.a, typeof this.a);
+	  }
+	}
+
+	const a = new A(123);
+	a.action();
+
+
 ================================
+как используются дженерики в механизме наследования классов?
+
+	class A<T> {
+	  a: T;
+
+	  constructor(a: T) {
+	    this.a = a;
+	  }
+
+	  action() {
+	    console.log('action', this.a, typeof this.a);
+	  }
+	}
+
+	class B extends A<string> {}
+	const b = new B('qwe');
+	b.action();
+
+или
+
+	class A<T, U> {
+	  a: T;
+	  v: U;
+
+	  constructor(a: T, v: U) {
+	    this.a = a;
+	    this.v = v;
+	  }
+
+	  action() {
+	    console.log('action', this.a, typeof this.a);
+	    console.log('action_', this.v, typeof this.v);
+	  }
+	}
+
+	class B extends A<string, number> {}
+	const b = new B('qwe', 123);
+	b.action();
+
+так тоже можно:
+
+	class B extends A<string, string> {}
+	const b = new B('qwe', '123');
+	b.action();
+
 ================================
 ================================
 ================================

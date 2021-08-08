@@ -97,23 +97,6 @@ a.prop = B()
 	let result2 = add("5", "4");  // 54
 
 ------------------------------------------------------
-внедрение зависимостей — это метод, с помощью которого объект получает другие объекты, от которых он зависит, называемые зависимостями, а не создает их сам.
-
-	import { Engine } from './Engine';
-
-	class Car {
-	    private engine: Engine;
-
-	    public constructor (engine: Engine) {
-	        this.engine = engine;
-	    }
-	    
-	    public startEngine(): void {
-	        this.engine.fireCylinders();
-	    }
-	}
-
-------------------------------------------------------
 mvvm
 
 model - сервисы. содержат данные
