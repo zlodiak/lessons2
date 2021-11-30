@@ -1,0 +1,69 @@
+чтобы написать валидатор, который проверяет два связанных поля необходимо функцию валидации прописывать не после поля, а после группы полей.
+
+
+  private initFormGroup() {
+    this.formGroup = this.builder.group(
+      {
+        boardNumber: [this.transport?.boardNumber, [Validators.required, Validators.min(0)]],
+        plateNumber: [this.transport?.plateNumber, [Validators.required, Validators.min(0)]],
+        commissioningDate: [
+          this.transport?.commissioningDate ? new Date(this.transport?.commissioningDate) : null,
+          [Validators.required]
+        ],
+        transportBrandId: [this.transport?.transportBrand?.id, [Validators.required]],
+        deactivationDate: [
+          this.transport?.deactivationDate ? new Date(this.transport?.deactivationDate) : null
+        ]
+      }
+    );
+ 
+    this.formGroup.setValidators(this.datesOrderValidator())
+  }
+ 
+  private datesOrderValidator() {
+    return (group: FormGroup): ValidationErrors => {
+      const controlComission = group.controls['commissioningDate'];
+      const controlDeactivation = group.controls['deactivationDate'];
+ 
+      const commissioningDate = controlComission?.value?.getTime();
+      const deactivationDate = controlDeactivation?.value?.getTime();
+ 
+      if (commissioningDate >= deactivationDate) {
+        controlComission.setErrors({datesOrderError: true});
+        controlDeactivation.setErrors({datesOrderError: true});
+      } else {
+        controlComission.setErrors(null);
+        controlDeactivation.setErrors(null);
+      }
+ 
+      return;
+    };
+  }
+
+============================
+
+  <div class="dates-order-error msg" *ngIf="formGroup.get('commissioningDate').errors?.datesOrderError">
+    Дата ввода должна быть меньше даты списания
+  </div>
+
+
+============================
+============================
+https://stackblitz.com/edit/angular-form-custom-validation?file=src/app/app.component.ts
+
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================
+============================

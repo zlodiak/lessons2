@@ -1,0 +1,179 @@
+during my life i worked for many companies and factories.
+my first job was ralated to my school.
+when i was a child i studied in that school.
+after a while i started to work as a watchman of that school.
+it was a funny position because i played drums every night.
+i quit this job 3 weeks later.
+it happened because i found a more profitable job.
+
+my new job was related to the factory.
+this plant produced various dairy products.
+my position was called a loader.
+it was pretty difficult work.
+unfortunately my physics condition didnt allow me to work for a long time.
+thats why i quit that job after ten month.
+right after that i bought a drum kit.
+i spent my savings entirely.
+nevertheless i was satisfied.
+
+after that i started looking for a new job.
+it was not an easy task because i didnt have any useful skills.
+thats why after a few months i started to work as a loader again.
+i worked for veda company.
+it produced alcoholic beverages.
+i worked for it for three months.
+after that i decided to change a factory.
+
+since then i started to looking for a new job.
+my new job was located next to Veda factory.
+it was factory too, it was called Orbita.
+that factory was very old.
+it was built about fifty years ago.
+there i worked as an assembler of electronic devices.
+in most cases i assembled electronic cabinets.
+also i assembled electronic meters and probes for Sarov enterprises.
+
+after a while i was employed by another factory.
+that's why I quit my current job.
+however it was a bad idea because my new employer cheated on me.
+as a result I lost my job.
+i spent all my savings for the next six months.
+it was a terrible period of time.
+
+one day i started to work for the biochemic factory.
+my position was called mechanic.
+my work was extremely dirty.
+nevertheless i worked there for 2 years.
+one day out workshop lost a programmer.
+after that I suggested to my boss to move me to this position.
+she agreed.
+as a result i started to work as a programmer.
+and did it for a year and a half.
+
+---------------------------------
+
+my work was extremely nervous.
+thats why after a while i quit that job.
+i started working for the biggest local provider.
+it was called volgatelecom.
+my office was located in the downtown.
+i used two programming languages daily.
+i mean pearl and php.
+at that time they were very popular languages.
+i also used SQL a little.
+unfortunately, i was faint programmer.
+thats why i was fired one and half year later.
+
+right after that i started to study web technologies diligently.
+i wanted to be a web pages layout designer.
+to do it i  study technologies such as: html, css, js, jquery.
+after short period of unemployment i found a new job.
+i started working for webparadox company.
+there i markuped web pages.
+unfortunately, i was fired after my trial period.
+it happened because i didnt have appropriate skills.
+
+after that a pretty long period of my uneployment began.
+sometimes i continued to study programming languages and markup technologies.
+howerver, sometimes i wanted to go back to less qualified activity like a loading of boxes of assorted products.
+one day i started working for PR Solution company.
+i created web sites.
+i used several CMS for this.
+i mean dupal, joomla, wordprees an so on.
+of course I made layout for these sites.
+as a result i made a few internet stores during 1 year of work for that company.
+it was pretty decent result, but i wanted more.
+one day my boss became extremely unfriendly so i decided to quit my current job.
+
+a long period of unemployment followed immediately after.
+during that period i continued studying web technologies.
+eventually i was hired by webparadox company again.
+there i worked as a web pages layout designer.
+it lasted for four months.
+once that company went bankrupt.
+as a result my boss cheated on me salary.
+
+right after that webparadox-related company offered me a job.
+i did markup for that company working for webparadox.
+in other words webparadox was mediator.
+i worked for that company for 1 year.
+i did the same work, but i was getting larger salary.
+however i dreamed of a programmer position.
+
+one day i found a new job.
+I passed the interview successfully.
+right after that i left my present job.
+next week i started to work as a JS programmer for  EPlatform company.
+i made mobile applications for banks and pharmateutical companies mainly.
+i used the following stack of technologies: js, angularjs, html, css.
+it was extremely stressful period of time because i didnt have free time.
+some of my projects have failed.
+i wanted to change my job.
+once i visited the interview to another company.
+hoverver i failed it.
+
+--------------
+
+i tried to interview the simbirsoft company again six month later.
+my second attempt was successfull.
+after that i must to learn new framework called angular2.
+my first project was related to this framework directly.
+i participated in creation of a web application for the bank.
+our team consisted of a few dozen developers.
+at the same time, the bank had other contractors besides us.
+the team included: developers, testers, analysts, team leaders, account managers, layout designers.
+in particular, I participated in the development of the login system. 
+in general, I worked on this project for three months.
+that was my probationary period.
+
+after that I was transferred to another project.
+it was a business consulting system.
+clients of this system got info about their partners and risks calculations.
+there was a web version of that system.
+it had a complex hierarchy of roles.
+however, I was just fixing bugs and making up tables.
+I was on that project for several months.
+after that i was taken out of the project.
+
+my next project was related to real estate agency.
+i created frontend for admin panel and widget for the managers of that agency.
+i used the following technologies: angular2, html, scss, d3, yandex maps.
+our team made this project for six months.
+As a result, the customer received a product.
+this product made it possible to save money on training low-skilled managers.
+that is, managers received analytics directly from the system, without using complex formulas.
+That system used machine learning algorithms.
+these algorithms were made by backenders.
+data for this system was taken from open sources.
+more precisely, they were collected by crawlers from numerous sites that contained real estate ads.
+
+after i left that project a pretty large free time period started.
+i participated in inner projects actively.
+one day i was taken to new project.
+it was called technonikol.
+this company delivers various buildings materials.
+the geography of this company is extensive.
+it works for foreign customers.
+our team had a task to create an admin panel.
+this panel will be used by managers, drivers and customers.
+each member had to have a role and appropriate permissions.
+the similar system was created by previous development team.
+it was so called MVP-system.
+it was created very quickly, but it didn’t work perfectly
+our team rewrote that system entirely.
+i actively used angular2 framework and rxjs library.
+unfortunately I didn't know rxjs library well.
+as a result i was taken out from that project six months later.
+
+after that i was directed to another project.
+my new project was related to a education system.
+i invented tests for students and imlements them.
+i mean online tests of course.
+it was tideous activity, but i worked with foreign customers.
+it was positive side of my work.
+i actively used english language.
+in addition i had personal english teacher who helped me correct texts.
+at that project i used only pure js language.
+it was not easy.
+however i have created many tests in 4 months.
+
