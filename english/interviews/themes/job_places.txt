@@ -177,3 +177,47 @@ at that project i used only pure js language.
 it was not easy.
 however i have created many tests in 4 months.
 
+
+---------------------
+i was directed to another project - я был направлен на другой проект.
+I was taken to another project - меня забрали на другой рпоект.
+I was transferred to another project - меня перевели на другой проект.
+I started working on another project - я начал работать на другом проекте.
+I successfully interviewed for another project - я успешно прошёл собеседование на другой проект.
+i passed the interview to another project successfully
+
+the project was associated(related) to a real estate agency - проект был связан с агенством недвижимости.
+I worked for a bank on my first project - я работал для банка на моём первом проекте.
+I was developing a payment system on my new project - я разрабатывал платёжную систему на моем новом проекте.
+on the next project, I took part in the development of an authorization system - на следующем проекте я принимал участие в разработке системы авторизации.
+I worked for a large customer, it was a bank - я работал для крупного заказчика, это был банк.
+
+I cannot name the company because I am bound by a nondisclosure agreement - я не могу назвать название компании потому что связан договором о неразглашении.
+our team consisted of: designers, managers and so on - наша команда состояла из: дизайнеров, менеджеров и так далее.
+we were one of the customer's contractors - мы были одним из подрядчиков заказчика.
+that is, the customer had other contractors besides us - то есть у заказчика были другие подрядчики кроме нас.
+we used the latest technologies - мы использовали актуальные технологии.
+we used technologies that were up-to-date at that time - мы использовали актуальные на тот момент технологии.
+I was developing a ticket accounting system
+
+as a result of using that system, the customer saved money - в результате использования той системы заказчик экономил деньги.
+the customer saved money using that system - заказчик экономил деньги, используя ту систему.
+we developed that system within(in) six months - мы разработали ту систему в течение шести месяцев.
+the customer received the finished system in six months - заказчик получил готовую систему через шесть месяцев.
+we developed the system on time - мы разработали систему вовремя.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

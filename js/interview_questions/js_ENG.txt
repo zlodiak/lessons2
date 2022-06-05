@@ -1,0 +1,88 @@
+is there a possibility to make a object property private?
+
+private properties must be prefixed with an underscore. however, this is just a convention. it can be broken.
+
+in the modern version of the javascript there is a hash prefix. if it is placed before the name of a property or method, then they become private.
+
+==============================
+what is a closure?
+
+this is the function's ability to remember its own variables values after the outer function has completed.
+
+let's say we have an outer function that returns an inner function. the inner function prints to the console the value of a variable that exists only in the outer function.
+
+	function outer() {
+		const count = 10;
+	  
+		return function inner() {
+			console.log(count);
+		}
+	}
+
+run the outer function first and then the inner one.
+
+  const out = outer();
+  out();
+
+as a result, the value of the variable from the external function was displayed. even though the outer function has already completed.
+
+but external function variables continue to exist as long as they are referenced by something.
+
+
+==============================
+what is the lexical environment?
+
+this is an object that is created for the function at run time. it is also created for the code block and for the script.
+the lexical environment consists of variables and a reference to the external environment. 
+
+if during function execution the variable is not found in the current lexical environment, then it is searched for in the external one.
+
+the lexical environment is not garbage collected while at least one internal lexical environment refers to it.
+
+==============================
+what is a hoisting?
+
+there are two stages in the function execution. i mean compilation and implementation. during the first stage, the variables are placed in the lexical environment. during the second stage, variables are assigned values.
+
+if a variable is declared in the function body using a keywords LET or CONST, then it cannot be used above the declaration. when you try to access it, an exception will be thrown. but this will not happen if the variable was declared using keyword VAR. in this case its value will be UNDEFINED.
+
+it is important to know that if a function is declared as FUNCTION DECLARATION then it is available anywhere in the scope.
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================

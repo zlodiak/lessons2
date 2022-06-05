@@ -1,0 +1,46 @@
+each project consists of development phases.
+the development model places them in a specific order.
+sometimes this model or parts of it is a cycle.
+there are development methodologies that describe a set of methods for managing development.
+I would like to tell about several of the more popular development methodologies.
+
+waterfall is the oldest methodology.
+the phases of the waterfall are performed sequentially.
+First of all, system requirements are determined.
+then the project analysts develop the specification.
+after that the architects create the architecture and prepare hardware.
+the next steps is coding and testing.
+implementation happens last.
+the cost of the error is very high because it is impossible to return to the previous phase.
+basically this methodology was applied until the nineties.
+it is good when all the requirements are known in advance.
+but in modern development, the requirements are changed often, so this methodology is rarely used.
+
+modern developers prefer to use agile methodologies.
+the most popular agile methodology is Scrum.
+this approach assumes that development time is divided into repetitive cycles.
+these cycles are called sprints.
+the average sprint lasts two weeks.
+after ending of each sprint the developers team shows the intermediate result to the customer.
+the customer looks at it and gives feedback.
+after that a new sprint starts.
+the important thing is that developers have meetings every day.
+they discuss plans for the current day and yesterday's results.
+
+It is important to understand that Scrum rules are very flexible.
+that is, they can be changed.
+therefore, each team uses its own unique variant of Scrum.
+this is probably why this methodology belongs to the agile group.
+
+kanban is one of the agile methodologies too.
+it is different from Scrum.
+first of all, it has no specific roles.
+instead of sprints, continuous tasking is used.
+this means that the team can receives a new task at any time.
+there are other methodologies, but the ones I have listed are the most common
+
+
+
+
+
+

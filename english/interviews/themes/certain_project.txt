@@ -1,0 +1,86 @@
+the most interesting project was related to a real estate agency. 
+the owner of that agency wanted to transform his company from a phisical enterprise to a digital enterprise.
+
+when our team started working there was only a backend.
+this backend contained web crawlers and ML algorithms.
+once a week web crawlers were launched.
+they collect info about real estate using real estate related sites and other open sources.
+after that ML algorithms processed the collected information array.
+
+at the beginning our team didnt have a frontender.
+however when the colected dataset became large i was invited to that project.
+i got the task to develop an admin panel that displays a dataset using diagrams, charts, graphs and so on.
+in addition, I had to develop a widget for low-skilled agencys managers.
+using that widget low skilled managers could avoid complicated calculations.
+
+out team consisted of only four developers.
+we didnt even have an account manager because our senior developer communicated with the customer himself.
+in general, the team consisted of two backenders, one frontender and one QA engineer.
+we were placed in the same room.
+it was very convinient and efficient.
+although our senior developer pretty often worked from home he constantly monitored us.
+he was a really experienced developer.
+and he helped each of us grow professionally.
+
+backend was written using C sharp language.
+at the front i used angular framework, rxjs library and other common technologies such as: html, css, typescript and so on.
+besides i was forced to study D3 library and yandex maps.
+at first I tried to use various third-party modules for rendering statistics.
+however most of them were written using D3 library. 
+in other words it was based on the D3 library.
+thats why i decided to study original technology.
+later I did not regret my decision because I needed fine tuning very often.
+
+yandex maps were the most ineresting part of my work.
+i created a lot of convinient objects then placed them on the interactive map.
+i mean such objects as labels, borders, tooltips, mini tables and so on.
+unfortunately I often reworked them because the customer often offered new ideas and suggestions.
+We used geolocation actively, so each manager had the opportunity to arrive at the place and then immediately start working.
+
+one day our senior developer left project.
+he was taken to another project.
+instead of him we got an account manager.
+actually we were forced to develop the architecture of the project together.
+that is without an expert developer.
+it was a little challeging for us.
+nevertheless we worked on the project for six months after that.
+eventually the project was transferred to support.
+
+immediately after that, the real estate agency began to save money and time because low-skilled managers received information about competing agencies very quickly.
+I gained valuable experience on that project.
+
+
+
+
+
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================
+===============================

@@ -74,9 +74,11 @@ Validation.StringValidator
 Boolean: логическое значение true или false
 Number: числовое значение
 String: строки
+
 Array: массивы. содержат только один тип элементов
 Tuple: кортежи. содержат различные типы элементов, их предварительно нужно описать	// let x: [string, number] = ["hello", 10]
 Enum: перечисления. enum Season { Winter=0, Spring=1, Summer=2, Autumn=3 };
+
 Any: произвольный тип
 Null и undefined: соответствуют значениям null и undefined в javascript
 Void: отсутствие конкретного значения, используется в основном в качестве возвращаемого типа функций
