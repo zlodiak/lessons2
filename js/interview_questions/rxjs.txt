@@ -259,6 +259,45 @@ custom pipe. это функция, которая принимает поток
 	  видно, что новый оператор представляет из себя обёртку над new Observable(), в котором происходит: подписка, изменение и next изменённого значения.
 	  
 ================================
+чем отличаются merge, mergeAll, mergeMap?
+
+	import { interval, merge } from 'rxjs';
+	import { take } form 'rxjs/operators';
+	const intA$ = interval(750).pipe(take(3));
+	const intB$ = interval(1000).pipe(take(3));
+	merge(intA$, intB$)
+	.subscribe(console.log);
+
+	-------------
+	import { interval } from 'rxjs';
+	import { map, take } from 'rxjs/operators';
+	const int$ = interval(1000).pipe(
+	  take(2),
+	  map(int => interval(500).pipe(take(3))
+	);
+	int$.subscribe(console.log);
+	// Observable
+	// Observable
+
+
+	import { interval } from 'rxjs';
+	import { map, take, mergeAll } from 'rxjs/operators';
+	const int$ = interval(1000).pipe(
+	  take(2),
+	  map(int => interval(500).pipe(take(3)),
+	  mergeAll()
+	);
+	int$.subscribe(console.log);
+
+	-------------
+	import { interval } from 'rxjs';
+	import { take, mergeMap } from 'rxjs/operators';
+	const int$ = interval(1000).pipe(
+	  take(2),
+	  mergeMap(int => interval(500).pipe(take(3))
+	);
+	int$.subscribe(console.log);
+
 ================================
 ================================
 ================================
