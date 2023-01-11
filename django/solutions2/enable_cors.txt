@@ -1,0 +1,22 @@
+проект состоит из приложений. чтобы в конкретном приложении разрешить cors нужно в каталоге приложения создать файл middleware.py:
+
+	class CorsMiddleware:
+
+	    def init(self, get_response):
+	        self.get_response = get_response
+
+	    def call(self, request):
+	        response = self.get_response(request)
+	        response['Access-Control-Allow-Origin'] = 'http://localhost:4200'
+	        response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+	        response['Access-Control-Allow-Headers'] = 'Content-Type'
+	        return response
+
+а в settings.py прописать:
+
+	MIDDLEWARE = [
+	    'api1.middleware.CorsMiddleware'
+	]	
+
+
+после этого можно с другого оста делать запрос на получение данных по апи.
