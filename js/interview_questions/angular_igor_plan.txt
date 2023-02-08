@@ -1265,6 +1265,46 @@ RG ограничивают навигацию по определённым м�
 
 
 =========================================================
+как использовать валидатор на уровне группы? (случай изменения пароля со старого на новый, с подтверждением)
+
+	нельзя использовать кастомные валидаторы, в которых объект валидации затирается при помоши setErrors
+
+	вот правильное решение:
+
+	@Component({
+	  selector: 'my-app',
+	  standalone: true,
+	  imports: [
+	    CommonModule,
+	    ReactiveFormsModule
+	  ],
+	  template: `
+	    <ng-container [formGroup]="form">
+	      <input formControlName="field_1" [class.error]="form.get('field_1').invalid"> 
+	      <br>
+	      <input formControlName="field_2" [class.error]="form.get('field_2').invalid"> 
+	    </ng-container>
+	    <br>
+	    <ng-container *ngIf="form.errors?.nonEqualPasswords">
+	      Пароли то разные
+	    </ng-container>
+	  `,
+	})
+	export class App {
+	  name = 'Angular';
+	  form = inject(FormBuilder).group({
+	    field_1: [null, Validators.required],
+	    field_2: [null, Validators.required]
+	  }, {
+	    validators: [(group) => {
+	      const c1 = group.get('field_1');
+	      const c2 = group.get('field_2');
+
+	      return c1.valid && c2.valid && c1.value !== c2.value ? {nonEqualPasswords: true} : null
+	    }]
+	  })
+	}	
+
 =========================================================
 =========================================================
 =========================================================
