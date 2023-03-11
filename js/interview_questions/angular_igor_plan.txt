@@ -857,12 +857,48 @@ angular 15: что нового
 		  canActivate: [() => inject(LoginService).isLoggedIn()]
 		};  
 
+
+		раньше было:
+
+			@Injectable({ providedIn: 'root' })
+			export class MyGuardWithDependency implements CanActivate {
+			  constructor(private loginService: LoginService) {}
+
+			  canActivate() {
+			    return this.loginService.isLoggedIn();
+			  }
+			}
+
+			const route = {
+			  path: 'somePath',
+			  canActivate: [MyGuardWithDependency]
+			};		
+
+		сейчас стало:
+
+			const route = {
+			  path: 'admin',
+			  canActivate: [() => inject(LoginService).isLoggedIn()]
+			};		
+
+
+
 	4. упростилась запись ленивой загрузкт в роутере (теперь не нужно указывать конкретный компонент, он сам будет найден на основе пути к файлу)
 
-		{
-		  path: 'lazy',
-		  loadComponent: () => import('./lazy-file'),
-		}  
+		раньше было:
+
+			{
+			  path: 'lazy',
+			  loadComponent: () => import('./lazy-file').then(m => m.LazyComponent),
+			}		
+
+		сейчас стало:
+
+			{
+			  path: 'lazy',
+			  loadComponent: () => import('./lazy-file'),
+			}
+
 
 	5. улучшенные сообщения об ошибках в консоли, которые, в частности, игнорируют сообщения от сторонних библиотек.
 
