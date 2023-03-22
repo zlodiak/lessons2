@@ -39,6 +39,18 @@
 ================================
 в чём отличие scan и reduce?
 
+	var obsScan = Observable.from([1,2,3,4,5,6]);
+    var count1 = obsScan.scan((acc, one) => acc + one, 0);
+    count1.subscribe(x => {
+      console.log('scan shows incremental total', x);
+    });
+
+    var obsReduce = Observable.from([1,2,3,4,5,6]);
+    var count2 = obsReduce.reduce((acc, one) => acc + one, 0);
+    count2.subscribe(x => {
+      console.log('reduce shows only total', x);
+    });
+
 ================================
 что делает оператор share?
 
@@ -180,6 +192,28 @@ mergeAll:
 	если существует поток, элементами которого являются другие потоки, то этот оператор подписывается на каждый внутренний поток, получает его результат и возвращает только внешний поток, содержащий уже не потоки, а результаты. 
 
 	таким образом этот оператор уменьшает вложенность потоков. порядок результатов внутри потока зависит от порядка в котором разрешилась подписка.
+
+		import { interval } from 'rxjs';
+		import { map, take } from 'rxjs/operators';
+		const int$ = interval(1000).pipe(
+		  take(2),
+		  map(int => interval(500).pipe(take(3))
+		);
+		int$.subscribe(console.log);
+		// Observable
+		// Observable
+
+
+		import { interval } from 'rxjs';
+		import { map, take, mergeAll } from 'rxjs/operators';
+		const int$ = interval(1000).pipe(
+		  take(2),
+		  map(int => interval(500).pipe(take(3)),
+		  mergeAll()
+		);
+		int$.subscribe(console.log);
+		// values
+
 
 concatAll:
 	 делает то же самое, но порядок результатов в потоке зависит от регистрации, а не от скорости разрешения подписок.
