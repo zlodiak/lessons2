@@ -736,6 +736,147 @@ as const
   type Placement = Side | AlignedPlacement;
   
 ================================
+утиная типизация 
+
+  это проверка реализации объектом требуемого интерфейса. если кроме свойств, заявленных в интерфейся, присутствуют дополнительные свойства, то это не мешает отнести объект к типу, который не подразумевает наличие дополнительных свойств.
+
+================
+Тип never 
+
+  можно указать только той функции, из которой программа никогда не сможет выйти.
+
+================
+Слабое сопряжение (loose coupling)
+
+  Чем меньше окружающему миру известно о внутреннем устройстве классов, тем меньше оно взаимодействует с ним. Взаимодействия программы с объектом называют сопряжением (coupling), уровень которого варьируется от сильного до слабого. 
+
+================
+Интерфейсы предназначены 
+  
+  для описания публичного api, которое служит для сопряжения с программой. Кроме того, они не должны, а в TypeScript и не могут, реализовывать бизнес логику той части, которую представляют. 
+
+================
+Добавление статических свойств и методов в класс заставляет их действовать как singleton, в то время как определение нестатических свойств и методов заставляет их действовать как factory.
+
+  singleton:
+
+    const pizza = PizzaMaker.create({
+      name: 'Inferno',
+      toppings: ['cheese', 'peppers'],
+    });
+    console.log(pizza);
+    // Output: { name: 'Inferno', toppings: [ 'cheese', 'peppers' ] }  
+
+  factory:
+
+    class PizzaMaker {
+      create(event: { name: string; toppings: string[] }) {
+        return { name: event.name, toppings: event.toppings };
+      }
+    }
+    const pizzaMaker = new PizzaMaker();
+    const pizza = pizzaMaker.create({
+      name: 'Inferno',
+      toppings: ['cheese', 'peppers'],
+    });
+    console.log(pizza);
+    // Output: { name: 'Inferno', toppings: [ 'cheese', 'peppers' ] }    
+
+================
+readonly 
+
+  Локальную переменную можно определить неизменяемой при помощи ключевого слова const. readonly делает то же самое для свойства класса. но такое свойство всё таки можно переопределить через конструктор
+
+    interface IAnimal {
+        readonly name: string;
+    }
+
+    class Animal implements IAnimal {
+        public readonly name: string; // Ok
+        
+        constructor(){
+            this.name = 'animal'; // Ok
+        }
+    }
+
+  Если полям, помеченным “только для чтения”, не указан тип, а присвоение примитивного значения происходит в месте объявления, то для таких полей вывод типов укажет принадлежность к литеральному типу.
+
+    class Animal {
+        public readonly nameReadonly = 'animal'; // nameReadonly: "animal"
+        public nameDefault = 'animal';           // nameDefault: string
+    }  
+
+
+================
+если значение тип значения не задач явно для readonly и const, то присваивается литеральный тип
+
+================
+открытый обобщённый тип:
+
+  class T1<T> {
+    public f: T0<number, T>; // T0 - открытый тип
+  }
+
+закрытый обобщённый тип:
+
+  class T1<T> {
+    public f1: T0<number, string>; // T0 - закрытый тип
+  }
+
+================
+нельзя использовать одинаковые названия для параметризованной и непараметризованной сущности:
+
+  class T2<T> {}
+  class T2 {} // Error -> Duplicate identifier
+
+================
+параметры типа можно расширять. вот неуспешный пример:
+
+  class Collection<T> {
+      private itemAll: T[] = [];
+      
+      public add(item: T): void {
+          this.itemAll.push(item);
+      }
+
+      public getItemByName(name: string): T {
+          return this.itemAll.find(item => item.name === name); // Error -> Property 'name' does not exist on type 'T'
+      }
+  }
+
+При операции поиска в массиве возникнет ошибка. Это происходит по причине того, что в типе T не описано свойство name. Для того, что бы ошибка исчезла, тип T должен расширить тип, в котором описано необходимое свойство name.   
+
+вот правильное решение проблемы при помощи расширения параметра типа:
+
+  interface IName {
+      name: string;
+  }
+
+  class Collection<T extends IName> {
+      private itemAll: T[] = [];
+
+      public add(item: T): void {
+          this.itemAll.push(item);
+      }
+
+			public getItemByName(name: string): T {
+          return this.itemAll.find(item => item.name === name); // Ok
+      }
+  }
+
+================
+type assertion
+
+  в DOM все элементы имеют наивысшего родителя Element. но часть элементов не отображается(script), а часть отображается(div). те которые отображаются принадлежат к более узкомц типу HTMLElement.
+
+  querySelector() может найти и видимый элемент, и невидимый.
+
+    // <canvas id="stage" data-inactive="false"></canvas>
+    const element: Element = document.querySelector('#stage');
+    const stage: HTMLElement = element // Error, Element is not assignable to type HTMLElement
+
+  вообще TS не имеет связи с DOM поэтому для элементов DOM нужно использовать утверждения.      
+
 ================================
 ================================
 ================================
