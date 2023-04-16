@@ -1791,6 +1791,39 @@ pipe
   observable это многократный промис. его можно отменить. он выполняется только после подписки на него, то есть ленив. observable может использовать много операторов для обработки получаемых данных.
 
 =========================================================
+использование мультикастинга для уменьшения количества запросов в случае с async pipe
+
+	@Component({
+	  selector: 'my-app',
+	  templateUrl: './app.component.html',
+	  styleUrls: ['./app.component.css'],
+	})
+	export class AppComponent {
+	  users$: Observable<any> | null = ajax(
+	    'https://jsonplaceholder.typicode.com/users'
+	  ).pipe(
+	    map((res) => res.response),
+	    share()
+	  );
+
+	  constructor(private http: HttpClient) {}
+	}
+
+	<div *ngIf="users$ | async">
+	  <li *ngFor="let item of users$ | async">
+	    {{ item.name }}
+	  </li>
+
+	  <li *ngFor="let item of users$ | async">
+	    {{ item.name }}
+	  </li>
+
+	  <li *ngFor="let item of users$ | async">
+	    {{ item.name }}
+	  </li>
+	</div>
+
+
 =========================================================
 =========================================================
 =========================================================

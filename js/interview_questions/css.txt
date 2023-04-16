@@ -890,6 +890,42 @@ flex vs grid
 	флекс-модель строит макет на основе размера элементов. грид-модель подгоняет размеры элементов под макет.
 
 ================
+как сделать верхний слой прозрачным для клика по нижнему?
+
+	<div class="ul">
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <a href="ya.ru" target="_blank">gogogo</a>
+	  <div class="in"></div>
+	</div>
+
+	<style>
+	  .ul {
+	    background: red;
+	    position: relative;
+	  }
+
+	  a {
+	    display: block;
+	  }
+
+	  .in {
+	    position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    width: 40px;
+	    height: 40px;
+	    background: lime;
+	    opacity: 0.4;
+	    pointer-events: none;
+	  }
+	</style>
+
+
 ================
 ================
 ================
