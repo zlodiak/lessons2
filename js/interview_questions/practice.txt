@@ -266,6 +266,102 @@ Array.isArray(obj)
 
   console.log('result', fino(5));
 ================================
+let f = function () {
+  var a = 1;
+  this.b = 2;
+  return a;
+};
+f.c = 3;
+console.log(f.hasOwnProperty('c')); // true
+console.log(f.hasOwnProperty.c); // undefined
+console.log(new f().a); // undefined
+console.log(new f().b); // 2
+console.log(f()); // 1
+
+================================
+const user = {
+  getName: function () {
+    console.log(this.userName);
+  },
+  userName: 'Alex',
+};
+
+user.getName.userName = 'Nick';
+user.getName(); // Alex
+console.log(user); // {getName: ƒ, userName: "Alex"}
+console.log(user.getName); // function { name: "getName" }
+console.log(user.getName.hasOwnProperty('userName')); // true
+console.log(user.getName.userName); // Nick
+
+const { getName } = user;
+console.log(getName); // function { name: "getName" }
+getName(); // undefined ?
+
+--------------------------------
+в предыдущем примере заменить getName на стрелочную функцию. что изменится?
+
+================================
+console.log(1);
+
+setTimeout(function() {
+	console.log(2);
+})
+
+Promise.resolve(3).then(console.log)
+
+console.log(4);
+
+setTimeout(function() {
+	console.log(5);
+})
+
+console.log(6);
+
+
+// 1 4 6 3 2 5
+
+================================
+Promise.resolve(1)
+	.then(x => console.log(1))
+	.catch(x => console.log(2))
+	.then(x => console.log(3))
+
+Promise.reject(2)
+	.then(x => console.log(4))
+	.then(x => console.log(5))
+	.catch(x => console.log(6))
+	.then(x => console.log(7))
+
+// 1 3 6 7
+
+--------------------------------
+Promise.resolve(1)
+  .then((x) => console.log(1))
+  .catch((x) => console.log(2))
+  .then((x) => console.log(3));
+
+Promise.reject(2)
+  .then((x) => console.log(4))
+  // .then((x) => console.log(5))
+  .catch((x) => console.log(6))
+  .then((x) => console.log(7));
+
+// 1 6 3 7
+
+
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
 ================================
 ================================
 ================================

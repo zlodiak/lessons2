@@ -1,5 +1,44 @@
 ================================
 ================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+чтобы приложение было интерактивным необходимо чтобы браузер посылал события, а разработчик своим кодом улавливал их. 
+
+например, если на элемент DOM пользователь кликнул, то программист может подписаться на событие клика и обработать его при помощи коллбека.
+
+подписаться можно двумя способами:
+
+	1. on-свойства элементов 
+
+		onclick,
+		onmouseenter,
+		onscroll
+
+		buttonElement.onclick = function() {
+		  squareDiv.style = `background-color: ${getColor()};`
+		}		
+
+	2. addEventListener()
+
+		buttonElement.addEventListener('click', function() {
+		  squareDiv.style = `background-color: ${getColor()};`
+		})	
+
+================================
 перечислить типы данных в js
 
 null 
@@ -986,6 +1025,176 @@ this.внутри функции указывает на контекст объ
 
   console.log(Object.keys(obj)); // ['a']
   console.log(Object.getOwnPropertyNames(obj)); // ['a']
+
+=================
+что такое промисы?
+
+	промис это объект, который используется для выполнения асинхронного кода. он содержит функцию-экзекутор, которая выполняется сразу после создания промиса:
+		1. после создания промис находится в состоянии pending
+		2. затем промис возвращает или успешный ответ или ошибку
+		3. после этого промис находится в состоянии filfilled.
+
+		console.log(1);
+		const p = new Promise((resolve, reject) => {
+		  console.log(2);
+		  resolve('resolve!');	// reject('reject!');
+		  console.log(3);
+		});
+		console.log(4);
+
+		// вывод консоли будет: 1 2 3 4
+
+	промис отдаёт thenable объект, на который можно подписаться так:
+
+		p.then(
+			success => console.log('success!'),
+			error => console.log('error!')
+		)
+
+		then можно объединять в цепочки при этом важно помнить, что блок success или error должен вернуть тоже промис иначе в следующем блоке success будет undefined.
+
+	блок catch отлавливает только reject, иначе он не сработает. блок catch может так же возвращать resolve/reject.
+
+	блок finally выполняется в любом случае, он не принимает аргументы, но может вернуть reject(). блок finally можно применять многократно в любых звеньях цепочки.
+
+	Каждый вызов then или catch создаёт новый промис.
+
+	внутри функции success живёт неявный try/catch. то есть если там произойдёт ошибка, то выбросится reject.
+
+	промисификация это переписывание функции, которая принимает 2 коллбека в промис. эта новая функция будет возвращать промис.
+
+		было:
+
+			function getData(onSuccess, onError) {
+			  setTimeout(function () {
+			    const result = Math.random()
+			    if (result > 0.5) {
+			      onSuccess(result)
+			    } else {
+			      onError(new Error('Что-то пошло не так'))
+			    }
+			  }, 1000)
+			}
+
+		стало:
+
+			function getData() {
+			  return new Promise(function (resolve, reject) {
+			    const result = getData(
+			      function (result) {
+			        resolve(result)
+			      },
+			      function (error) {
+			        reject(error)
+			      }
+			    )
+			  })
+			}
+
+	Promise.all - аналог forkJoin. то есть ждёт завершения всех промисов и возвращает их результаты в виде массива.
+	Promise.race - возвращает значение первого выполнившегося промиса.
+	Promise.any - возвращает значение или отказ, в зависимости что раньше произойдёт.
+	Promise.allSettled - аналог Promise.all, но результат возвращает в виде { status: "fulfilled", value: "^_^" }.
+
+=================
+что такое async-await?
+
+	это синтаксический сахар для промисов. конструкция async-await работает как генератор, то есть останавливает свою работу, передаёт выполнение далее по потоку и затем снова получает возможность продолжить.
+
+		const f = async function () {
+		  console.log(2);
+		  const value = await Promise.resolve('value');
+		  console.log(value);
+		  console.log(4);
+		};
+
+		console.log(1);
+		f();
+		console.log(3);
+
+		// вывод в консоль: 1 2 3 value 4 
+
+	отлов ошибок делается при помощи try/catch
+
+		const f = async function () {
+		  console.log(2);
+		  try {
+		    const value = await Promise.resolve('value');
+		    console.log(value);
+		    console.log(4);
+		  } catch (error) {
+		    console.log('error', error);
+		  }
+		};
+
+		console.log(1);
+		f();
+		console.log(3);
+
+		// вывод в консоль: 1 2 3 value 4 
+
+	на async-функцию можно подписаться при помощи then:
+
+		const f = async function () {
+		  console.log(2);
+		  return await Promise.resolve('value');
+		  console.log(4);
+		};
+
+		console.log(1);
+		f().then(
+		  (s) => console.log('s', s),
+		  (e) => console.log('e', e)
+		);
+		console.log(3);	
+
+		// вывод в консоль 1 2 3 s value
+
+=================
+пример потери контекста
+
+	this определяется в момент вызова функции. Если записать метод объекта в переменную и вызвать её, значение this изменится.
+
+		const user = {
+		  name: 'Alex',
+		  greet() {
+		    console.log(`Hello, my name is ${this.name}`)
+		  },
+		}
+
+		const greet = user.greet
+		greet()
+
+		// Hello, my name is
+
+=================
+что такое стрелочная функция?
+
+	тут setTimeout выполняет СФ в конексте window:
+
+		setTimeout(() => {
+			console.log(`Hello again, ${this.name}!`)
+		})
+
+	СФ не имеет собственного контекста и ищет контекст вверх по иерархии объектов, к которым принадлежит. то есть ей всё равно, что её вызывают как window.()=>f. внутри неё this не будет ссылаться на window
+
+		function greetWaitAndAgain() {
+		  console.log(`Hello, ${this.name}!`)
+		  setTimeout(() => {
+		    console.log(`Hello again, ${this.name}!`)
+		  })
+		}
+
+		const user = { name: 'Alex' }
+
+		user.greetWaitAndAgain = greetWaitAndAgain;
+		user.greetWaitAndAgain()
+
+		// Hello, Alex!
+		// Hello again, Alex!
+
+		setTimeout принадлежит функции greetWaitAndAgain, а та является частью объекта user. следовательно this стрелочной функции будет ссылаться на user.
+
   
 ================================
 ================================
