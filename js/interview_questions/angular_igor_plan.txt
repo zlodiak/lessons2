@@ -1558,6 +1558,8 @@ CVA validation
 		  constructor(@Optional() service1: OptionalS) {}
 		}
 
+		или же @Optional может пригодиться в ситуации когда @Self ничего не нашёл в текущем компоненте, тогда @Optional предотвратить выброс исключения.
+
 	@Self говорит DI, чтобы искать зависимость только провайдерах своего компонента.
 
 		@Component({
@@ -1856,10 +1858,113 @@ pipe
 
 =========================================================
 =========================================================
+SIP pattern
+
+	это паттерн, который связывает два глупых компонента и один умный компонент. вся логика содержится в умном компоненте, но его желательно разгрузить при помощи сервиса.
+
+	в умном компоненте объявлены subjects для каждого глупого компонента. из глупого компонента-формы всплывают значения и сразу отправляются в subjects умного компонента при помощи next(). в OnInit() отрабатывают операции, которые заполняюи сабжекты глупого компонента-таблицы, через шаблон они сразу же отправляются внутрь глупого компоннета. при этом топравляются не в виде потоков, а в виде обычных данных, что достигается использование asyncPipe.
+
+	тут живой пример: 
+
+		https://sip-principle-a3fjro.stackblitz.io
+
 =========================================================
+способ менять флаг loading
+
+  this.loading$ = query$.pipe(
+    mapTo(true),
+    merge(results$.pipe(mapTo(false)))
+  );	
+
+  здесь query это сформированный запрос(поле, в котором пользователь изменил символ), а results это результат, который этот сформированный запрос возвращает(неопределённость или результат).
+
 =========================================================
+паттерн отлова ошибки отвалившегося интернет-соединения
+
+	const results$ = searchTerm$.pipe(
+	    switchMap(term => 
+	        fetchData(term).pipe(
+	            retryWhen(() => fromEvent(window, 'online'))
+	            // still keep the observable alive if
+	            // the server would return a different
+	            // HTTP error
+	            catchError(e => of(e))
+	        )
+	    )
+	)
+
+	запрос сработает ещё раз после восстановления интернет-соединения. здесь:
+
+		window.addEventListener("online", (event) => {
+		  console.log("You are now connected to the network.");
+		});	
+
 =========================================================
+query params
+
+	можно передавать так:
+
+		goProducts() {
+		  this.router.navigate(
+		    ['/products'],
+		    { queryParams: { order: 'popular' } }
+		  );
+		}		
+
+		// http://localhost:4200/products?order=popular
+
+	но при переходе на следующую страницу (products -> users) они не сохранятся в url. можно сделать так чтобы они сохранились:
+
+		goUsers() {
+		  this.router.navigate(
+		    ['/users'],
+		    { queryParamsHandling: 'preserve' }
+		  );
+		}	
+
+		// http://localhost:4200/users?order=popular
+
+	или можно сделать так чтобы параметры и сохранялись, и добавлялись:
+
+		goUsers() {
+		  this.router.navigate(
+		    ['/users'],
+		    {
+		      queryParams: { filter: 'new' },
+		      queryParamsHandling: 'merge' }
+		    );
+		}	
+
+		// http://localhost:4200/users?order=popular&filter=new
+
+
+---------------------
+всё вышеперечисленное можно делать не только из компонента, но и из шаблона:
+
+	<a
+	   [routerLink]="['/users']"
+	   [queryParams]="{ filter: 'new' }"
+	   queryParamsHandling="merge"
+	>
+	  Users
+	</a>
+
 =========================================================
+подписаться на изменения query-параметров можно так:
+
+	// http://localhost:4200/products?order=popular
+  ngOnInit() {
+    this.route.queryParams
+      .filter(params => params.order)
+      .subscribe(params => {
+        console.log(params); // { order: "popular" }
+      }
+    );
+  }
+
+=========================================================
+
+
 =========================================================
 =========================================================
 =========================================================
