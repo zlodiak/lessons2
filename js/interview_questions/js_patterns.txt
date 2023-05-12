@@ -156,14 +156,336 @@
 	let obj1 = Singleton.getInstance();
 	let obj2 = Singleton.getInstance();
 
+=========================================================
+SIP pattern
+
+	это паттерн, который связывает два глупых компонента и один умный компонент. вся логика содержится в умном компоненте, но его желательно разгрузить при помощи сервиса.
+
+	в умном компоненте объявлены subjects для каждого глупого компонента. из глупого компонента-формы всплывают значения и сразу отправляются в subjects умного компонента при помощи next(). в OnInit() отрабатывают операции, которые заполняюи сабжекты глупого компонента-таблицы, через шаблон они сразу же отправляются внутрь глупого компоннета. при этом топравляются не в виде потоков, а в виде обычных данных, что достигается использование asyncPipe.
+
+	тут живой пример: 
+
+		https://sip-principle-a3fjro.stackblitz.io
+
+=========================================================
+способ менять флаг loading
+
+  this.loading$ = query$.pipe(
+    mapTo(true),
+    merge(results$.pipe(mapTo(false)))
+  );	
+
+  здесь query это сформированный запрос(поле, в котором пользователь изменил символ), а results это результат, который этот сформированный запрос возвращает(неопределённость или результат).
+
+=========================================================
+паттерн отлова ошибки отвалившегося интернет-соединения
+
+	const results$ = searchTerm$.pipe(
+	    switchMap(term => 
+	        fetchData(term).pipe(
+	            retryWhen(() => fromEvent(window, 'online'))
+	            // still keep the observable alive if
+	            // the server would return a different
+	            // HTTP error
+	            catchError(e => of(e))
+	        )
+	    )
+	)
+
+	запрос сработает ещё раз после восстановления интернет-соединения. здесь:
+
+		window.addEventListener("online", (event) => {
+		  console.log("You are now connected to the network.");
+		});	
+
 ===================================
+angular sandbox facade
+	
+	это сервис, который содержит ссылки на ресурсы разнообразных сервисов. этот сервис инжектится в умный компонент, внося порядок потому что умному компоненту не приходится самостоятельно дёргать ресурсы из разных мест.
+
+	это даёт удобство при рефакторинге. например, если потребуется заменить стейт с обычных сабжектов на ngrx, то не придётся вызовы стейта менять во многих местах, достаточно будет заменить вызов только в фасаде потому что компоненты просто делегируют действия фасаду. содержит некоторое количество логики(заполняет стейт, делегирует события из компонентов в апи-сервисы).
+
+	также в фасаде одна функция может запускать набор связанных функций. например, при создании нового пользователя сразу делать запись в лог.
+
+	можно создать фасад для модуля или для каждой составляющей модуля.
+
+	тут больше: https://blog.simplified.courses/smart-components-ui-components-and-sandbox-facades-in-angular/ 
+
 ===================================
+angular adapter
+
+	API не всегда отдаёт данные приложению в том формате, который требуется. проводить преобразование формата в компонентах плохая практика потому что компонент должен быть максимально простым. поэтому между компонентом и апи-сервисом создают слой адаптера, который занимается только преобразованием формата данных.
+
+	иногда адаптер можно реализовать не в виде промежуточного сервиса, а в виде отдельнолежащего около модели сервиса, который используется для как обёртка в основном сервисе: 
+
+		import adapter;
+
+		get() {
+			return x = adapter(y);
+		}
+
+--------------------
+пример адаптера с промежуточным сервисом. 
+
+	суть в том, что шаблон ожидает массив имён, а апи возвращает объект с именами и их id. сервис-адаптер UserService производит преобразование:
+
+		export class UserApi {
+		  getUsers(): User[] {
+		    return [
+		      { id: 1, name: 'User 1' },
+		      { id: 2, name: 'User 2' },
+		      { id: 3, name: 'User 3' }
+		    ];
+		  }
+		}
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class UserService {
+		  constructor(private userApi: UserApi) {}
+
+		  getUsers(): string[] {
+		    return this.userApi.getUsers().map(user => user.name);
+		  }
+		}
+
+		@Component({
+		  selector: 'app-user-list',
+		  template: '<ul><li *ngFor="let user of users">{{ user }}</li></ul>'
+		})
+		export class UserListComponent {
+		  users: string[];
+
+		  constructor(private userService: UserService) {
+		    this.users = this.userService.getUsers();
+		  }
+		}	
+
 ===================================
+angualar proxy object
+
+	этот паттерн похож на адаптер тем, что между целевым сервисом и компонентом ставится промежуточный сервис. но отличается от адаптера тем, что промежуточный сервис не преобразовывает данные а или отдаёт их или не отдаёт.
+
+	примером этого паттерна может быть класс CanActivate. или, например, proxy при получении списка пользователей может проверять если ли этот список в локалсторадже и отдавать один из этих вариантов по некоторому условию:
+
+		export class UserApi {
+		  getUsers(): User[] {
+		    return [
+		      { id: 1, name: 'User 1' },
+		      { id: 2, name: 'User 2' },
+		      { id: 3, name: 'User 3' }
+		    ];
+		  }
+		}
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class UserService {
+		  constructor(private userApi: UserApi) {}
+
+		  getUsers(): User[] {
+		    console.log('Fetching users...');
+		    return this.userApi.getUsers();
+		  }
+		}
+
+		@Injectable({
+		  providedIn: 'root'
+		})
+		export class UserServiceProxy {
+		  constructor(private userService: UserService) {}
+
+		  getUsers(): User[] {
+		    console.log('Checking cache...');
+		    let users = localStorage.getItem('users');
+		    if (!users) {
+		      console.log('Cache miss, fetching users...');
+		      users = this.userService.getUsers();
+		      localStorage.setItem('users', JSON.stringify(users));
+		    } else {
+		      console.log('Cache hit, returning users...');
+		      users = JSON.parse(users);
+		    }
+		    return users;
+		  }
+		}
+
+		@Component({
+		  selector: 'app-user-list',
+		  template: '<ul><li *ngFor="let user of users">{{ user.name }}</li></ul>'
+		})
+		export class UserListComponent {
+		  users: User[];
+
+		  constructor(private userServiceProxy: UserServiceProxy) {
+		    this.users = this.userServiceProxy.getUsers();
+		  }
+		}
+
 ===================================
+angular shareReplay(1)
+
+	может использоваться в качестве кеша:
+
+		@Injectable()
+		export class RecordsFacade {
+
+		  private records$: Observable<Record[]>;
+
+		  constructor(private recordApi: RecordApi) {
+		    this.records$ = this.recordApi
+		        .getRecords()
+		        .pipe(shareReplay(1)); // cache the data
+		  }
+
+		  getRecords() {
+		    return this.records$;
+		  }
+		}	
+
 ===================================
+BehaviorSubject
+
+	может использоваться как стейт, но для этого нужно отдавать его как observable чтобы невозможно было менять стейт из разных мест приложения.
+
+		@Injectable()
+		export class SettingsState {
+
+		  private updating$ = new BehaviorSubject<boolean>(false);
+
+		  isUpdating$() {
+		    return this.updating$.asObservable();
+		  }
+
+		  setUpdating(isUpdating: boolean) {
+		    this.updating$.next(isUpdating);
+		  }
+		}	
+
 ===================================
+вариант архитектуры:
+
+	(state, API) -> (facade) -> (module1, module2, etc...)
+
+	стейт может быть на основе ngrx или subjects.
+
+	фасад только предоставляет доступ к core-слою и содержит обработчики события, которые были делегированы из умных компонентов. таким образом если изменится реализация стейта или апи, то не придётся менять обращения во множестве модулей и компонентов.
+
+		export class MyComponent{
+			users$ = this.facade.users$;
+			foo$ = this.facade.foo$;
+			bar$ = this.facade.bar$;
+			
+			constructor(private facade: ...){
+			}
+			
+			addUser(user: User): void{
+				this.facade.addUser(user);
+			}
+			removeUser(userId: string): void{
+				this.facade.removeUser(userId)
+			}
+		}	
+
+	умные компоненты в модулях только получают данные и делегируют действия в слой фасада. глупые компоннеты просто отображают данные.
+
+	описаннуяю выше структуру можно масштабировать горизонтально. то есть каждая отделная фича будет содержать свой набор перечисленных выше слоёв.
+
+	важно, что данные текут только сверху вних, а события поднимаются только снизу вверх.
+
+	больше тут: https://dev-academy.com/angular-architecture-best-practices/
+
 ===================================
+angular guard 
+
+	может возвращать значения в сокращённом виде:
+
+		class UserAuthorizedGuard implements CanActivate {
+		  constructor(private authService: AuthService) {}
+
+		  canActivate(): Observable<boolean> {
+		    return this.authService.getUserData().pipe(
+		      catchError((error) => {
+		        console.error('User not authorized!', error);
+
+		        return observableOf(false);
+		      }),
+		      map(Boolean), // we could technically omit this mapping to Boolean since User model will be a truthy value anyway
+		    )
+		  }
+		}	
+
+	вместо избыточного:
+
+		class UserAuthorizedGuard implements CanActivate {
+		  constructor(private authService: AuthService) {}
+
+		  canActivate(): Observable<boolean> {
+		    const authStatus$ = new Subject();
+
+		    this.authService.getUserData().subscribe((user: User) => {
+		      authStatus$.next(true);
+		      authStatus$.complete();
+		    }, (error) => {
+		      console.error('User not authorized!', error);
+
+		      authStatus$.next(false);
+		      authStatus$.complete();
+		    })
+
+		    return authStatus$;
+		  }
+		}	
+
 ===================================
+angular single observable pattern
+
+	problem hell:
+
+		<ng-container *ngIf="frameworkName1$ | async as frameworkName1">
+		  <ng-container *ngIf="frameworkName2$ | async as frameworkName2">
+		    <ng-container *ngIf="frameworkName3$ | async as frameworkName3">
+		      {{ frameworkName1 }} is way better than {{ frameworkName2 }}. I will not even talk about {{ frameworkName3 }}.
+		    </ng-container>
+		  </ng-container>
+		</ng-container>	
+
+	decision:
+
+		@Component(...)
+		export class MyComponent {
+		  private readonly frameworkName1$ = ...;
+		  private readonly frameworkName2$ = ...;
+		  private readonly frameworkName3$ = ...;
+
+		  public readonly frameworkNames$ = combineLatest([
+		    frameworkName1$,
+		    frameworkName2$,
+		    frameworkName3$,
+		  ]).pipe(map(([
+		    frameworkName1,
+		    frameworkName2,
+		    frameworkName3,
+		  ]) => {
+		    return {
+		      frameworkName1,
+		      frameworkName2,
+		      frameworkName3,
+		    }
+		  }))
+		}	
+
+		<ng-container *ngIf="frameworkNames$ | async as frameworkNames">
+		  {{ frameworkNames.frameworkName1 }} is way better than {{ frameworkNames.frameworkName2 }}. I will not even talk about {{ frameworkNames.frameworkName3 }}.
+		</ng-container>
+
+===================================
+angular observer 
+
+	может быть реализован через subject в сервисе. потом можно этот сервис инжектить в несколько компонентов и подписаться. таким образом сабжект сервиса будет рассылать уведомления разным компонентам-подписчикам.
+
 ===================================
 ===================================
 ===================================
