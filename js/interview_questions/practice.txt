@@ -273,7 +273,6 @@ let f = function () {
 };
 f.c = 3;
 console.log(f.hasOwnProperty('c')); // true
-console.log(f.hasOwnProperty.c); // undefined
 console.log(new f().a); // undefined
 console.log(new f().b); // 2
 console.log(f()); // 1
