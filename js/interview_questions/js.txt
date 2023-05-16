@@ -176,60 +176,6 @@ this['#name'] не работает.
 	});
 
 ================================
-что такое глубокая и мелкая копия объекта?
-
-	если объект состоит из вложенных структур, то при создании копии копируются только элементы первого уровня. то есть в этом случае копии будут полностью независимы(если изменить оригинал, то в копии этих изменений не будет).
-
-		const itemsInCart = [
-		  { product: 'Носки', quantity: 3 },
-		  { product: 'Штаны', quantity: 1 },
-		  { product: 'Кепка', quantity: 1 },
-		];
-		const clonedCart = [...itemsInCart];
-		console.log(itemsInCart === clonedCart); // false 
-
-	но если объект имеет вложенную структуру более одного уровня, то копия и оригинал не будут полностью независимыми. это называется мелкая копия.
-
-	глубокая копия это когда оригинал и копия полностью независимы.
-
-
-================================
-рассказать о клонировании объектов:
-
-1. JSON.parse(JSON.stringify(obj))
-глубокая копия. методы не копируются. не работает для циклических объектов.
-
-2. Object.assign
-неглубокая копия. методы копируются
-
-3. for (let key in user) {}
-неглубокая копия. методы копируются
-
-4. clone = { ...user };
-неглубокая копия. методы копируются
-
-5. рекурсивный обход
-глубокая рекурсия. методы копируются
-
-	const Y = deepClone(Z);
-	function deepClone(obj) {
-	  const clObj = {};
-	  for(const i in obj) {
-	    if (obj[i] instanceof Object) {
-	      clObj[i] = deepClone(obj[i]);
-	      continue;
-	    }
-	    clObj[i] = obj[i];
-	  }
-	  return clObj;
-	}
-	Y.addnlProp = { fd: 45 };
-	console.log('Z object after cloning: ', Z);
-	console.log('Y object: ', Y);
-
-6. lodash cloneDeep()
-
-================================
 что такое IIFE? приведите пример
 
 ================================
@@ -366,6 +312,12 @@ spread-оператор всегда создаёт новый объект, а 
 	const a = { name: 'Joe Bloggs' }
 	const b = Object.assign(a, { age: 27 });
 	console.log(a === b) //=> true
+
+	но
+
+	const a = { name: 'Joe Bloggs' };
+	const b = Object.assign({}, a, { age: 27 });
+	console.log(a === b); //=> flase
 
 ================================
 что такое модуль?
@@ -733,30 +685,6 @@ boundGetX(); // 81
 
   промис возвращает только единожды сигнал о завершении асинхронной операции, его коллбеки запускаются со стороны исходного срипта.		
 
-================================
-как перебрать объект?
-
-  let pro = {
-    d: 3,
-  };
-
-  let obj = {
-    a: 1,
-  };
-
-  obj.proto = pro;
-
-  for (key in obj) {
-    console.log(key, obj[key]); // a 1 d 3
-  }
-
-  for (const [key, value] of Object.entries(obj)) {
-    console.log(key, value); // a 1
-  }
-
-  console.log(Object.keys(obj)); // ['a']
-  console.log(Object.getOwnPropertyNames(obj)); // ['a']
-
 =================
 что такое async-await?
 
@@ -1061,22 +989,6 @@ IIFE
 		};
 
 		a.method1();
-
-===============================
-способы создания объекта
-
-	1. var person = new Object();
-
-	2. const obj = {}
-
-	3. var person = Object.create(null);
-
-	4. 
-		const Construct = function () {
-		  this.name = 'masha';
-		};
-		const person = new Construct();
-		console.log(person);
 
 ===============================
 Object.seal()
@@ -2205,6 +2117,224 @@ promise vs async/await
 
 	в js все конструкторы построены в иерархию в виде пирамиды. на самом верху находится конструктор Object(), у него [[prototype]] = null. этот конструктор имеет набор методов, которые доступны всем нижестоящим обхектам: toString(), hasOwnProperty(), и т. д.
 
+================================
+как перебрать объект?
+
+	// a 1 d 3
+		let pro = {
+		  d: 3,
+		};
+		let obj = {
+		  a: 1,
+		};
+		obj.__proto__ = pro;
+		for (key in obj) {
+		  console.log(key, obj[key]); 
+		}
+
+	// a 1
+		let pro = {
+		  d: 3,
+		};
+		let obj = {
+		  a: 1,
+		};
+		obj.__proto__ = pro;
+		for (key in obj) {
+		  if (obj.hasOwnProperty(key)) {
+		    console.log(key, obj[key]); 
+		  }
+		}
+
+	// a 1
+		let pro = {
+		  d: 3,
+		};
+		let obj = {
+		  a: 1,
+		};
+		obj.__proto__ = pro;
+		const keys = Object.keys(obj);
+		keys.forEach((key) => console.log(key, obj[key]));
+
+	// 1
+		let pro = {
+		  d: 3,
+		};
+		let obj = {
+		  a: 1,
+		};
+		obj.__proto__ = pro;
+		const keys = Object.values(obj);
+		keys.forEach((value) => console.log(value));	
+
+	// a 1
+		let pro = {
+		  d: 3,
+		};
+		let obj = {
+		  a: 1,
+		};
+		obj.__proto__ = pro;
+		const keys = Object.entries(obj);
+		keys.forEach(([key, value]) => console.log(key, value));
+
+	// a 1
+		let pro = {
+		  d: 3,
+		};
+		let obj = {
+		  a: 1,
+		};
+		obj.__proto__ = pro;
+		const keys = Object.getOwnPropertyNames(obj); // массив перечисляемых и неперечисляемых свойств объекта
+		keys.forEach((key) => console.log(key, obj[key]));
+
+===============================
+способы создания объекта
+
+	1. var person = new Object();
+
+	2. const obj = {}
+
+	3. var person = Object.create(null);
+
+	4. 
+		const Construct = function () {
+		  this.name = 'masha';
+		};
+		const person = new Construct();
+		console.log(person);		
+
+================================
+способы копирования объектов:
+
+	1. JSON.parse(JSON.stringify(obj))
+
+		глубокая копия. методы не копируются. не работает для циклических объектов. кроме несериализуемых данных: undefined, symbol()
+
+			JSON.parse(JSON.stringify(itemsInCart))
+
+
+	2. Object.assign
+
+		неглубокая копия. методы копируются
+
+			const a = { name: 'Joe Bloggs' }
+			const b = Object.assign(a, { age: 27 });
+			console.log(a === b) //=> true
+
+			но
+
+			const a = { name: 'Joe Bloggs' };
+			const b = Object.assign({}, a, { age: 27 });
+			console.log(a === b); //=> flase		
+
+
+	3. clone = { ...user };
+
+		неглубокая копия. методы копируются
+
+			const a = { name: 'Joe Bloggs' }
+			const b = { ...a, age: 27 };
+			console.log(a === b) //=> false		
+
+
+	4. for (let key in user) {}
+
+		неглубокая копия. методы копируются
+
+			function copy(mainObj) {
+			  let objCopy = {};
+
+			  for (let key in mainObj) {
+			    objCopy[key] = mainObj[key];
+			  }
+			  return objCopy;
+			}
+
+			const mainObj = {
+			  a: function () {
+			    console.log(123);
+			  },
+			  b: 5,
+			  c: {
+			    x: 7,
+			  },
+			};
+
+			const copyObj = copy(mainObj);
+			console.log(copyObj); // ok
+			copyObj.a(); /// 123		
+
+
+	5. рекурсивный обход
+
+		глубокая рекурсия. методы не копируются
+
+			function isPrimitive(obj) {
+			  return (
+			    obj == null ||
+			    typeof obj === 'number' ||
+			    typeof obj === 'string' ||
+			    typeof obj === 'boolean'
+			  );
+			}
+
+			function isArray(obj) {
+			  return Array.isArray(obj);
+			}
+
+			function isObject(obj) {
+			  return obj != null && typeof obj === 'object';
+			}
+
+			function deepClone(obj) {
+			  if (isPrimitive(obj)) {
+			    return obj;
+			  } else if (isArray(obj)) {
+			    return obj.map((val) => {
+			      return deepClone(val);
+			    });
+			  } else if (isObject(obj)) {
+			    let res = {};
+			    for (let k in obj) {
+			      res[k] = deepClone(obj[k]);
+			    }
+			    return res;
+			  }
+			}
+
+			const obj1 = {
+			  a: 10,
+			  b: [{ a: 1 }, { b: 2 }],
+			};
+
+			const obj2 = deepClone(obj1);
+			obj1.b[0].a = 100;
+			console.log(obj1, obj2);
+
+
+	6. lodash cloneDeep()
+
+================================
+что такое глубокая и мелкая копия объекта?
+
+	если объект состоит из вложенных структур, то при создании копии копируются только приммитивы, а объекты ссылаются на одно и то же место в памяти.
+
+		const itemsInCart = [
+		  { product: 'Носки', quantity: 3 },
+		  { product: 'Штаны', quantity: 1 },
+		  { product: 'Кепка', quantity: 1 },
+		];
+		const clonedCart = [...itemsInCart];
+
+		itemsInCart[0].quantity = 4;
+
+		console.log(itemsInCart[0].quantity);
+		console.log(clonedCart[0].quantity);
+
+	глубокая копия это когда оригинал и копия полностью независимы. мелкая копия это когда копия и оригинал зависимы вложенными структурами.
 
 ================================
 ================================
