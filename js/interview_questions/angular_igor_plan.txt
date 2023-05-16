@@ -1921,7 +1921,7 @@ query params
 
 	// http://localhost:4200/products?order=popular
   ngOnInit() {
-    this.route.queryParams
+    this.route.queryParamsHandling	
       .filter(params => params.order)
       .subscribe(params => {
         console.log(params); // { order: "popular" }
@@ -1930,9 +1930,97 @@ query params
   }
 
 =========================================================
+singnals
 
+	это альтернативный подход к обнаружению изменений:
+
+		export class AppComponent{
+			count = signal(0)
+			double = computed(() => this.count() * 2);
+
+			changeCount() {
+				this.count.set(5)
+			}
+		}	
+
+		здесь послу утсановки новго значения, сигнал сам оповещает своих потребителей.
 
 =========================================================
+анимации
+
+	можно пометить элемент директивой анимации и чередовать состояния:
+
+		<div [@fade]=" show ? 'collapse' : 'expanded'">
+
+	  animations: [
+	    trigger('fade', [			// имя директивы
+	      state(
+	        'collapse',				// имя состояния
+	        style({...})
+	      ),
+	      state(
+	        'expanded',				// имя состояния
+	        style({...})
+	      ),
+	      transition('collapse => expanded', [...]),		// характеристики перехода состояний
+	      transition('expanded => collapse', [...]),		// характеристики перехода состояний
+	    ]),
+	  ],	
+
+	  живой пример: https://stackblitz.com/edit/angular-animation-enter-leave-dom-solution-test-lcub4j?file=src/app/app.component.ts
+
+	есть возможность повесить анимацию на хост компонента:
+
+		@HostBinding('@fade')
+		public myStatusExp;
+
+	отслеживать события на анимируемом элементе можно так:
+
+		(@fade.start)="animationStarted($event)"
+		(@fade.done)="animationDone($event)"	
+
+	можно обойтись без state:
+
+    trigger('todoAnimation', [
+       transition(':enter', [					// момент появления элемента в DOM
+          style({ height: 0 }),				// перед стартом
+          animate('0.3s ease-in', style({ height: '*' }))		// после старта анимации появления
+       ]),
+       transition(':leave', [					// момент удаления элемента из DOM
+          animate('0.3s ease-out', style({ transform: 'scale(0)' })) 		// после старта анимации удаления
+       ]),
+    ])
+
+  анимация дочерних элементов будет заблокирована. 
+
+-------------------
+
+Web Animations API
+
+	позволяет работать с CSS-анимацией средствами JS. то есть у каждого элемента в DOM есть метод animate:
+
+		const el = document.getElementById('cube');
+		console.log(el);
+		console.log('animate' in el);   // true	
+
+	этому методу преедаётся объект, эмулирующий @keyframes и задающий повторяемость:
+
+		document.getElementById('cube').animate(
+		    cubeRotating,
+		    cubeTiming
+		)	
+
+		let cubeRotating = [
+		    {transform: 'rotate(0deg)', backgroundColor: 'pink'},
+		    {backgroundColor: 'purple', offset: 0.3},
+		    {transform: 'rotate(180deg)', backgroundColor: 'pink'}
+		]	
+
+		let cubeTiming = {
+		    duration: 1000,
+		    iterations: Infinity
+		}	
+
 =========================================================
 =========================================================
 =========================================================
