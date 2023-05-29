@@ -487,6 +487,73 @@ angular observer
 	может быть реализован через subject в сервисе. потом можно этот сервис инжектить в несколько компонентов и подписаться. таким образом сабжект сервиса будет рассылать уведомления разным компонентам-подписчикам.
 
 ===================================
+angular bridge
+
+	есть возможность собирать компонент не только из набора сервисов, но и из набора встроенных в шаблон компонентов. причём их набор определяется динамически.
+
+	допустим, есть несколько однообразных виджетов, каждый из которых имеет заголовок, кнопку обновления и контентную часть. меняется только контентная часть:
+
+		<div class="header">
+		  <h1>Widget</h1>
+		  <button mat-stroked-button (click)="onRefresh()">Refresh</button>
+		</div>
+		<mat-divider></mat-divider>
+		<section>
+		  <ng-content></ng-content>
+		</section>	
+
+	создаём в отдельном файле токен:
+
+		export const WIDGET = new InjectionToken<Widget>('Widget');
+
+	и используем его в @ContentChild(). таким образом контент любого виджета будет помечен этим токеном:
+
+		export class WidgetWrapperComponent implements OnInit {
+		  @ContentChild(WIDGET as any, { static: true })
+		  widget: Widget;
+
+		  ngOnInit() {
+		    this.widget.load();
+		  }
+
+		  onRefresh() {
+		    this.widget.refresh();
+		  }
+		}
+
+	таким образом, каждый новый виджет будет обращаться к своему апи, но будет работать единообразно с остальными подобными виджетами:
+
+		@Component({
+		  selector: 'app-velocity-widget',
+		  templateUrl: './velocity-widget.component.html',
+		  styleUrls: ['./velocity-widget.component.scss'],
+		  providers: [
+		    {
+		      provide: WIDGET,
+		      useExisting: VelocityWidgetComponent,
+		    },
+		  ],
+		})
+		export class VelocityWidgetComponent implements Widget {
+		  isRefreshing = false;
+
+		  load() {
+		    console.log('Load data from JIRA API... ');
+		  }
+		  refresh() {
+		    this.isRefreshing = true;
+		    setTimeout(() => {
+		      this.isRefreshing = false;
+		    }, 2500);
+		  }
+		}	
+
+	тут больше:
+
+		https://github.com/DMezhenskyi/angular-cdk-lessons/blob/master/src/app/patterns-example/widgets/velocity-widget/velocity-widget.component.ts
+
+		https://www.youtube.com/watch?v=2rQOu9TmuxE&list=PLX7eV3JL9sfk0tbUkZwGCD1Y-kJ05NvOR&index=2&ab_channel=DecodedFrontend
+
 ===================================
 ===================================
 ===================================
