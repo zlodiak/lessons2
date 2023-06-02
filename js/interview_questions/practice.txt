@@ -503,6 +503,23 @@ export class UserComponent implements OnInit, OnChange {
 	var b = Object.assign([], a);
 
 ================================
+как заменить rest-оператор при передаче массива параметров в функцию на es5-решение?
+
+	function sandwich(a, b, c) {
+	  console.log(a); // 'a'
+	  console.log(b); // 'b'
+	  console.log(c); // 'c'
+	}
+
+	const food = ['a', 'b', 'c'];
+
+	// Old way
+	sandwich.apply(null, food);
+
+	// ✅ ES6 way
+	sandwich(...food);
+
+
 ================================
 ================================
 ================================
