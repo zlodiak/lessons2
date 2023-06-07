@@ -521,7 +521,34 @@ export class UserComponent implements OnInit, OnChange {
 
 
 ================================
+написать полифил для forEach
+
+	const arr = [1, 2, 3, , , 10];
+
+	Array.prototype.forEach2 = function (cb) {
+	  for (let i = 0; i <= this.length - 1; i++) {
+	    if (this[i]) {
+	      cb(this[i], i, this);
+	    }
+	  }
+	};
+
+	const cb = (item, index, array) => {
+	  console.log('result', item, index, array);
+	};
+
+	arr.forEach2(cb);
+
+	// https://stackblitz.com/edit/js-hh9ayn?file=index.js
+
 ================================
+как при помощи регулярного выражения вытащить innerHTML из определённого тега?
+
+	const str = '<a href="/users/evgenii.shakhov" target="_blank">Евгений Шахов</a></br>';
+	const result = /(?<=\<a\shref=.*?\>).*?(?=\<\/a\>)/.exec(str)[0];
+	console.log(result);
+
+
 ================================
 ================================
 ================================
