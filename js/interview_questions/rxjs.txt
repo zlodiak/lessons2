@@ -135,39 +135,44 @@ share() преобразует холодный поток в горячий.
 ================================
 что такое subject? какие виды subject существуют?
 
-subject это observable, который может не только отдавать значения, но и принимать. кроме того для каждого нового подписчика он отдаёт не новый поток, а тот же самый.
+	subject 
 
-behaviourSubject:
-его можно инициализировать значением. кроме того каждому новому подписчику он отдаём последнее значение.
+		это observable, который может не только отдавать значения, но и принимать. кроме того для каждого нового подписчика он отдаёт не новый поток, а тот же самый.
 
-	const subject = new BehaviorSubject(0);
-	subject.subscribe(x => console.log(x)); // в консоли: 0
-	subject.next(1); // в консоли: 1
-	subject.next(2); // в консоли: 2
-	subject.subscribe(x => console.log(x)); // в консоли: 2
-	subject.complete();
+	behaviourSubject:
 
-asyncSubject:
-отдаёт значения подписчикам только после того как перейдёт в статус complete. в вслучае, если произойдёт ошибка, то подписчики получат только информацию об ошибке.
+		его можно инициализировать значением. кроме того каждому новому подписчику он отдаёт последнее значение.
 
-	const subject = new AsyncSubject();
-	subject.subscribe(x => console.log(x));
-	subject.next(1);
-	subject.next(2);
-	subject.complete(); // в консоли: 2
+		const subject = new BehaviorSubject(0);
+		subject.subscribe(x => console.log(x)); // в консоли: 0
+		subject.next(1); // в консоли: 1
+		subject.next(2); // в консоли: 2
+		subject.subscribe(x => console.log(x)); // в консоли: 2
+		subject.complete();
 
-replaySubject:
-каждому новому подписчику отдаёт все предыдущие значения. причём есть возможность ограничить количество предыдущих значений.
+	asyncSubject:
 
-	const subject = new ReplaySubject();
-	subject.subscribe(x => console.log(x));
-	subject.next(1); // в консоли: 1
-	subject.next(2); // в консоли: 2
-	subject.subscribe(x => console.log(x));
-	// в консоли:
-	// 1
-	// 2
-	subject.complete();
+		отдаёт последнее значение подписчикам только после того как перейдёт в статус complete. в вслучае, если произойдёт ошибка, то подписчики получат только информацию об ошибке.
+
+		const subject = new AsyncSubject();
+		subject.subscribe(x => console.log(x));
+		subject.next(1);
+		subject.next(2);
+		subject.complete(); // в консоли: 2
+
+	replaySubject:
+
+		каждому новому подписчику отдаёт все предыдущие значения. причём есть возможность ограничить количество предыдущих значений.
+
+		const subject = new ReplaySubject();
+		subject.subscribe(x => console.log(x));
+		subject.next(1); // в консоли: 1
+		subject.next(2); // в консоли: 2
+		subject.subscribe(x => console.log(x));
+		// в консоли:
+		// 1
+		// 2
+		subject.complete();
 
 
 ================================
