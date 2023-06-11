@@ -159,7 +159,7 @@
 =========================================================
 SIP pattern
 
-	это паттерн, который связывает два глупых компонента и один умный компонент. вся логика содержится в умном компоненте, но его желательно разгрузить при помощи сервиса.
+	это паттерн, который связывает глупый компонент и умный компонент. вся логика и вычисления содержатся в умном компоненте, но его желательно разгрузить при помощи сервиса.
 
 	в умном компоненте объявлены subjects для каждого глупого компонента. из глупого компонента-формы всплывают значения и сразу отправляются в subjects умного компонента при помощи next(). в OnInit() отрабатывают операции, которые заполняюи сабжекты глупого компонента-таблицы, через шаблон они сразу же отправляются внутрь глупого компоннета. при этом топравляются не в виде потоков, а в виде обычных данных, что достигается использование asyncPipe.
 
@@ -337,13 +337,33 @@ angular shareReplay(1)
 		  constructor(private recordApi: RecordApi) {
 		    this.records$ = this.recordApi
 		        .getRecords()
-		        .pipe(shareReplay(1)); // cache the data
+		        .pipe(shareReplay(1)); // каждому новому подписчику отдаёт последнее значение
 		  }
 
 		  getRecords() {
 		    return this.records$;
 		  }
 		}	
+
+------------------
+	пример того же самого, но вне контекста ангуляра:
+
+		const routeEnd = new Subject<string>();
+		const lastUrl = routeEnd.pipe(shareReplay(1));
+
+		const initialSubscriber = lastUrl.subscribe((x) => {
+		  console.log('init:', x);
+		});
+
+		routeEnd.next('my-path');
+
+		const lateSubscriber = lastUrl.subscribe((x) => {
+		  console.log('late:', x);
+		});	
+
+		// console output
+		// init:my-path
+		// late:my-path
 
 ===================================
 BehaviorSubject
