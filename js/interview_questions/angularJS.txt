@@ -1,0 +1,907 @@
+простейшая форма с валидацией
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <body ng-app="AngularngifApp">
+    <div ng-controller="ngifctrl">
+      <form name="form" novalidate>
+        
+        <input type="text" ng-model="user.firstname" name="firstname" required />
+        <div ng-show="form.firstname.$touched">
+          <div ng-show="form.firstname.$error.required">Tell us your firstname.</div>
+        </div>
+        <br>
+        
+        <input type="text" ng-model="user.lastname" name="lastname" required ng-model-options="{ debounce: 250 }" />
+        <div ng-show="form.lastname.$touched">
+          <div ng-show="form.lastname.$error.required">Tell us your lastname.</div>
+        </div>        
+        <br>
+        
+        <button ng-click="submit()">submit</button>
+        <button ng-click="restoreForm()">restore</button>
+        <button ng-click="check()">check</button>
+        
+      </form>
+
+      <hr />
+      <pre>user = {{user | json}}</pre>
+      <pre>users = {{users | json}}</pre>
+    </div>
+  </body>
+
+
+
+  var app = angular.module("AngularngifApp", []);
+  app.controller("ngifctrl", function ($scope) {
+    $scope.user = {
+      firstname: null,
+      lastname: null
+    };
+    $scope.users = [];
+    
+    $scope.submit = function() {
+      if(!$scope.form.$valid) {
+        return;
+      }
+      
+      $scope.users.push($scope.user);
+      $scope.user = {
+        firstname: null,
+        lastname: null
+      };      
+      console.log($scope.user);
+      console.log($scope.form);
+    }
+    
+    $scope.restoreForm = function() {
+      $scope.form.$setPristine();
+      $scope.form.$setUntouched();          
+    }
+    
+    $scope.check = function() {
+      console.log($scope.form);
+      console.log($scope.form.firstname);
+      console.log($scope.form.lastname);
+    }        
+    
+    
+  });
+
+-----------
+<form name="form"
+	это обязательно потому что в контроллере к форме обращаются так:
+	$scope.form
+
+novalidate 
+	отключает браузерные свистелки
+
+name="lastname" 
+	каждое поле тоже должно быть названо чтобы можно было в консоли удобно смотреть объекты, из которых состоит форма.
+
+ng-model-options="{ debounce: 250 }"
+	дополнительные возможности модели. например, эта добавляет время задержки перед добавлением в модель. там ещё много возможностей
+
+=====================================
+форма с кастомными валидаторами(синхронный и асинхронный):
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <body ng-app="AngularngifApp">
+    <div ng-controller="ngifctrl">
+      <form name="form" novalidate>
+        
+        <input type="text" ng-model="user.firstname" name="firstname" required integer />
+        <div ng-show="form.firstname.$touched">
+          <div ng-show="form.firstname.$error.integer">firstname must be an integer.</div>
+        </div>
+        <br>
+        
+        <input type="text" ng-model="user.lastname" name="lastname" required username/>
+        <div ng-show="form.lastname.$touched">
+          <div ng-show="form.lastname.$pending.username">Require right lastname.</div>
+        </div>        
+        <br>
+        
+        <button ng-click="submit()">submit</button>
+        <button ng-click="restoreForm()">restore</button>
+        <button ng-click="check()">check</button>
+        
+      </form>
+
+      <hr />
+      <pre>user = {{user | json}}</pre>
+      <pre>users = {{users | json}}</pre>
+    </div>
+  </body>
+
+
+
+
+      var app = angular.module("AngularngifApp", []);
+      app.controller("ngifctrl", function ($scope) {
+        $scope.user = {
+          firstname: null,
+          lastname: null
+        };
+        $scope.users = [];
+        
+        $scope.submit = function() {
+          if(!$scope.form.$valid) {
+            return;
+          }
+          
+          $scope.users.push($scope.user);
+          $scope.user = {
+            firstname: null,
+            lastname: null
+          };      
+          console.log($scope.user);
+          console.log($scope.form);
+        }
+        
+        $scope.restoreForm = function() {
+          $scope.form.$setPristine();
+          $scope.form.$setUntouched();          
+        }
+        
+        $scope.check = function() {
+          console.log($scope.form);
+          console.log($scope.form.firstname);
+          console.log($scope.form.lastname);
+        }        
+        
+        
+      });
+
+app.directive('integer', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$validators.integer = function(modelValue, viewValue) {
+        if (/^-?\d+$/.test(viewValue)) {
+          return true;
+        }
+        return false;
+      };
+    }
+  };
+});
+
+app.directive('username', function($q, $timeout) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      var usernames = ['Jim', 'John', 'Jill', 'Jackie'];
+      ctrl.$asyncValidators.username = function(modelValue, viewValue) { 
+        var def = $q.defer();
+        $timeout(function() {
+        	usernames.indexOf(modelValue) === -1 ? def.resolve() : def.reject();
+        }, 2000);
+        return def.promise;
+      };
+    }
+  };
+});
+
+
+-----------  
+у переданного в валидатор контрола есть массив синхнонных ($validators) и асинхронных валидаторов($asyncValidators). в них нужно добавить кастомные валидаторы в виде директивы.
+
+если валидатор возвращает true или resolve, то всё ок. в выводе объекта формы в консоль действует обратное правило (если в $errors есть объект, то ошибка присутствует и валидация не проходит)
+
+есть возможность переписать встроенный валидатор:
+
+    ctrl.$validators.email = function(modelValue) {
+      return ctrl.$isEmpty(modelValue) || EMAIL_REGEXP.test(modelValue);
+    };
+
+=====================================
+форма с кастомным контролом (аналог CVA)
+
+<div contentEditable="true" ng-model="content" title="Click to edit">Some</div>
+
+angular.module('form-example2', []).directive('contenteditable', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      // view -> model
+      elm.on('blur', function() {
+        ctrl.$setViewValue(elm.html());
+      });
+
+      // model -> view
+      ctrl.$render = function() {
+        elm.html(ctrl.$viewValue);
+      };
+
+      // load init value from DOM
+      ctrl.$setViewValue(elm.html());
+    }
+  };
+});
+
+
+-----------
+тут всего лишь 3 коллбека:
+из шаблона в модель,
+из модели в шаблон,
+инициализация
+
+=====================================
+один из способов создания сервиса. пусть он возвращает предопределённый объект.
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<body ng-app="App">
+  <div ng-controller="RenderController as ctrl">
+    <div>{{ ctrl.header }}</div>
+    <pre>{{ ctrl.question | json }}</pre>
+  </div>
+</body>
+
+
+var questionFn = function(){
+    return{
+        question:{
+            text: 'Какой js-фреймворк лучше использовать?',
+            author: 'Иван Иванов',
+            date: '20/10/2013'
+        }
+    }
+};
+
+// var questionServiceFn = function FilterController($scope, questionService) {		// можно и так
+var questionServiceFn = function FilterController(questionService) {
+  this.header = 'header';
+  this.question = questionService.question;
+}
+
+angular.module('App', [])
+.service('questionService', questionFn)
+.controller('RenderController', questionServiceFn);
+
+-----------
+при передаче имени сериса в аргумент функции контроллера происходит инжектирование.
+
+в примере выше функции вынесены из объявлений сервиса и контроллера. при объявлении также можно использовать подобные функции, но полученные как зависимости модуля. например: 
+
+	var myApp = angular.module('myApp', ["ngSanitize"]);
+
+=====================================
+контроллеры наследуются и ищут переменные в родителях
+
+
+<div class="spicy">
+  <div ng-controller="MainController">
+    <p>Good {{timeOfDay}}, {{name}}!</p>
+
+    <div ng-controller="ChildController">
+      <p>Good {{timeOfDay}}, {{name}}!</p>
+
+      <div ng-controller="GrandChildController">
+        <p>Good {{timeOfDay}}, {{name}}!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+var myApp = angular.module('scopeInheritance', []);
+myApp.controller('MainController', ['$scope', function($scope) {
+  $scope.timeOfDay = 'morning';
+  $scope.name = 'Nikki';
+}]);
+myApp.controller('ChildController', ['$scope', function($scope) {
+  $scope.name = 'Mattie';
+}]);
+myApp.controller('GrandChildController', ['$scope', function($scope) {
+  $scope.timeOfDay = 'evening';
+  $scope.name = 'Gingerbread Baby';
+}]);
+
+
+-----------
+результат:
+	Good morning, Nikki!
+	Good morning, Mattie!
+	Good evening, Gingerbread Baby!
+
+=====================================
+обозначения директив нормализуются. например, ниже несколько раз выводится одна и та же директива:
+
+	<div ng-controller="Controller">
+	  Hello <input ng-model='name'> <hr/>
+	  <span ng-bind="name"></span> <br/>
+	  <span ng:bind="name"></span> <br/>
+	  <span ng_bind="name"></span> <br/>
+	  <span data-ng-bind="name"></span> <br/>
+	  <span x-ng-bind="name"></span> <br/>
+	</div>
+
+=====================================
+директивы можно привязывать четырьмя способами:
+
+	<my-dir></my-dir>
+	<span my-dir="exp"></span>
+	<!-- directive: my-dir exp -->
+	<span class="my-dir: exp;"></span>
+
+за это отвечает ключ restrict
+
+	E - Element name (default): <my-directive></my-directive>
+	A - Attribute (default): <div my-directive="exp"></div>
+	C - Class: <div class="my-directive: exp;"></div>
+	M - Comment: <!-- directive: my-directive exp -->
+
+=====================================
+пример директивы, которая возвращает разметку. эту разметку можно использовать в разных частях сайта многократно.
+
+	.directive('myCustomer', function() {
+		return {
+		template: 'Name: {{customer.name}} Address: {{customer.address}}'
+	};
+
+то же самое
+
+	.directive('myCustomer', function() {
+	  return {
+	    templateUrl: 'my-customer.html'
+	  };
+	});
+
+=====================================
+директива, которая привязана к модулю действует во всех контроллерах, которые привязаны к этому же модулю. то есть она имеет доступ к их контексту.
+
+но контекст можно изменить:
+
+	angular.module('docsIsolateScopeDirective', [])
+	.controller('Controller', ['$scope', function($scope) {
+	  $scope.naomi = { name: 'Naomi', address: '1600 Amphitheatre' };
+	  $scope.igor = { name: 'Igor', address: '123 Somewhere' };
+	}])
+	.directive('myCustomer', function() {
+	  return {
+	    restrict: 'E',
+	    scope: {
+	      customerInfo: '=info'
+	    },
+	    templateUrl: 'my-customer-iso.html'
+	  };
+	});
+
+
+	<div ng-controller="Controller">
+	  <my-customer info="naomi"></my-customer>
+	  <hr>
+	  <my-customer info="igor"></my-customer>
+	</div>
+
+
+
+но можно привязаться к пустому контексту:
+
+	angular.module("MyModule").directive("MyDirective", function () {
+	  return {
+	    scope: {},
+	    template: "Name: [[ user.name ]] Street: [[ user.street ]]", // print symbols are Interpolated
+	  };
+	});
+
+=====================================
+$rootScope это глобальная область видимости. если в текущем контроллере невозможно найти переменную через $scope, то она будет искаться в $rootScope. в $rootScope можно записывать переменные из любого места скрипта.
+
+	<body ng-app="App">
+	  <span>{{ test }}</span>
+	  <div ng-controller="RenderController">
+	    <div>{{ header }}</div>
+	    <span>{{ test }}</span>
+	  </div>
+	</body>
+
+
+	angular.module('App', [])
+	.run(function($rootScope) {
+	    $rootScope.test = new Date();
+	})
+	.controller('RenderController', function($scope, $rootScope) {
+	  $scope.header = 'headerr';
+	  // $rootScope.test = new Date();  // так тоже можно
+	});
+
+
+
+	// html
+	// "2023-06-16T21:30:57.949Z"
+	// headerr
+	// "2023-06-16T21:30:57.949Z"
+
+
+=====================================
+можно подписаться на наблюдение изменения значения переменной
+
+<body ng-app="App">
+  <div ng-controller="RenderController">
+    <div>{{ header }}</div>
+    <button ng-click="press()">press</button>
+  </div>
+</body>
+
+
+angular.module('App', [])
+.controller('RenderController', function($scope) {
+  $scope.header = 'headerr';
+  $scope.press = function() {
+    $scope.header = Math.random();
+  }
+  $scope.$watch('header', function(newValue, oldValue) {
+    console.log('first:', $scope.header, newValue, oldValue);
+  });
+  
+  $scope.$watch('header', function(newValue, oldValue) {
+    console.log('secon:', $scope.header, newValue, oldValue);
+  });  
+});
+
+=====================================
+существует возможность проецировать контент (аналог ng-content).
+
+	<div ng-controller="Controller">
+	  <my-dialog>Check out the contents, {{name}}!</my-dialog>
+	</div>
+
+	angular.module('docsTransclusionDirective', [])
+	.controller('Controller', ['$scope', function($scope) {
+	  $scope.name = 'Tobias';
+	}])
+	.directive('myDialog', function() {
+	  return {
+	    restrict: 'E',
+	    transclude: true,
+	    scope: {},
+	    template: '<div class="alert" ng-transclude></div>'
+	  };
+	});
+
+
+=====================================
+директива может повесить событие. но нужно не забывать после обновления DOM запускать digest-цикл.
+
+	<body ng-app="App">
+	  <div ng-controller="RenderController">
+	    <div direct>{{ header }}</div>
+	  </div>
+	</body>
+
+	angular.module('App', [])
+	.controller('RenderController', function($scope, $rootScope) {
+	  $scope.header = 'header';
+	})
+	.directive('direct', function() {
+	  return {
+	    link: function(scope, element, attrs) {
+	      element.on('click', function(event) {
+	        scope.header = 'new header';
+	        scope.$apply();		// или scope.$digest();
+	      })
+	    }
+	  }
+	});
+
+=====================================
+пример компонента(версия > 1.5)
+
+	<body>
+	  <div ng-app="app">
+	    <hello-world name="Bill"></hello-world>
+	  </div>
+	</body>
+
+	angular.module('app', [])
+	.component('helloWorld', {
+		template: '<span>component - {{ $ctrl.name }} - {{ $ctrl.myName }}</span>',
+		bindings: { name: '@' },
+		controller: function(){
+		  this.$onInit = function() {
+		    this.myName = 'Buffalo ' + this.name;
+		  }      
+		}    
+	});
+
+$onInit не обязателен, но желателен. он гарантирует, что все связанные контроллеры инициализировались.
+
+=====================================
+nested components
+
+	<body>
+	  <div ng-app="app">
+	    <hello-world name="Bill">
+	      <goodbye-world name = "John"></goodbye-world>
+	    </hello-world>
+	  </div>
+	</body>
+
+  angular.module('app', [])
+  .component('helloWorld', {
+    template: '<div>helloWorld - {{ $ctrl.name }} - {{ $ctrl.myName }}</div><ng-transclude></ng-transclude>',
+    bindings: { name: '@' },
+    transclude: true,
+    controller: function($scope){
+      this.$onInit = function() {
+        this.myName = 'Buffalo ' + this.name;
+      }      
+    }    
+  })
+  .component('goodbyeWorld', {
+    template: '<div>goodbyeWorld - {{ $ctrl.name }} -- {{ $ctrl.myName }} --- {{ $ctrl.guest }}</div>',
+    bindings: { name: '@' },
+    require: {
+      parent: '^helloWorld'
+    },    
+    controller: function(){
+      this.$onInit = function() {
+        this.myName = 'Doe ' + this.name;
+        this.guest = this.parent.myName;
+      }      
+    }    
+  });
+
+
+есть возможность инжектить в контроллер $scope
+
+=====================================
+для привязки данных между родительским и дочерним компонентом используются привязки в блоке bindings дочернего компонента:
+
+	= - двусторонняя привязка
+	< - односторонняя(только из родителя в потомка)
+	@ - передача через атрибут в дочерний компонент
+	& - всплытие данных через коллбек(аналог eventEmitter)
+
+=====================================
+вложенные контроллеры 
+
+	разрешены. для этого в модуле их нужно объявить на одном уровне, но в html вложить один в другой. при этом внутренний контроллер видит переменные внешнего контроллера, но не наоборот.
+
+		<body ng-app="myApp">
+		    <div ng-controller="parentController">
+		        <div ng-controller="childController">
+		            <p>{{title}}</p>
+		  
+		        </div>
+		    </div>
+		    <script type="text/javascript">
+		        var app = angular.module("myApp", []);
+		        app.controller("parentController", function ($scope) {
+		            $scope.title = "This is parent controller.";
+		        });
+		        app.controller("childController", function ($scope) {
+		        });
+		    </script>
+		</body>
+
+
+=====================================
+2 вида привязки:
+
+	односторонняя: 
+		интерполяция,
+		ng-bind
+
+	двусторонняя(применяется только для интерактивных элементов типа input):
+		ng-model
+
+=====================================
+маршрутизация контроллерная
+
+	задаётся в конфиге для каждого модуля. в нём указывается шаблон и соответствующий контроллер. при этом этот же контроллер не нужно прописывать в html.
+
+		var questApp = angular.module('questApp', ["ngRoute"])
+		    .config(function($routeProvider){
+		        $routeProvider.when('/question',
+		        {
+		            templateUrl:'views/question.html',
+		            controller:'QuestionController'
+		        });
+		        $routeProvider.when('/answer',
+		        {
+		            templateUrl:'views/answer.html',
+		            controller:'AnswerController'
+		        });
+		        $routeProvider.otherwise({redirectTo: '/question'});
+		});
+
+	затем на странице прописывает тег, в котором будет отображаться модуль, для которого описывался роутинг:
+
+		<ng-view></ng-view>
+
+=====================================
+параметры роута можно передавать так:
+
+    $routeProvider.when("/edit/:id/:data*", {
+        templateUrl: "views/answer.html",
+        controller:'AnswerController'
+    });
+
+а получать в контроллере так:
+
+	var id = $routeParams["id"]
+
+при этом в контроллер нужно заинжектить $routeParams
+
+=====================================
+для компонентного роутинга используется настройка html5, которая приводит урл к привычному виду(без #). каждый роут имеет имя name, на ктотрой можно ссылаться из ссылок:
+
+	<a ng-link="['Heroes']">Heroes</a>
+
+каждый роут, который имеет лочерний роут помечается на кноце знаком ...
+
+конфиг роута выглядит примерно так:
+
+	.component('app', {
+	  template:
+	    '<nav>\n' +
+	    '  <a>Crisis Center</a>\n' +
+	    '  <a ng-link="[\'Heroes\']">Heroes</a>\n' +
+	    '</nav>\n' +
+	    '<ng-outlet></ng-outlet>\n',
+	  $routeConfig: [
+	    {path: '/heroes/...', name: 'Heroes', component: 'heroes'},
+	  ]
+	});
+
+во внутреннем роуте нужно указать дефолтный путь:
+
+	angular.module('heroes', [])
+	.component('heroes', {
+	  template: '<h2>Heroes</h2><ng-outlet></ng-outlet>',
+	  $routeConfig: [
+	    {path: '/',    name: 'HeroList',   component: 'heroList', useAsDefault: true},
+	    {path: '/:id', name: 'HeroDetail', component: 'heroDetail'}
+	  ]
+	})
+
+доступ к параметрам роута выглядит так:
+
+	function HeroDetailComponent(heroService) {
+	var $ctrl = this;
+
+	this.$routerOnActivate = function(next, previous) {
+	  // Get the hero identified by the route parameter
+	  var id = next.params.id;
+	  return heroService.getHero(id).then(function(hero) {
+	    $ctrl.hero = hero;
+	  });
+	};
+
+тут больше:
+https://docs.angularjs.org/guide/component-router
+
+живой пример:
+https://plnkr.co/edit/?p=preview&preview
+
+
+=====================================
+модуль это контейнер составных частей приложения. 
+он может выполнять некоторые действия при инициализации:
+
+	angular.module('xmpl', ['xmpl.service', 'xmpl.directive', 'xmpl.filter'])
+
+	  .run(function(greeter, user) {
+	    // This is effectively part of the main method initialization code
+	  })
+
+ он может привязать к себе предопределённый объект или функцию:
+
+	 angular.module('xmpl.service', [])
+
+	  .value('greeter', {
+	    salutation: 'Hello',
+	    localize: function(localization) {
+	      this.salutation = localization.salutation;
+	    },
+	    greet: function(name) {
+	      return this.salutation + ' ' + name + '!';
+	    }
+	  })
+
+и затием использовать их:
+
+	  .controller('XmplController', function($scope, greeter, user) {
+	    $scope.greeting = greeter.greet(user.name);
+	  });
+
+через метод .config() он может определить роутинг.
+
+через конфиг также можно добавлять все составные части приложения:
+
+	angular.module('myModule', []).
+	  value('a', 123).
+	  factory('a', function() { return 123; }).
+	  directive('directiveName', ...).
+	  filter('filterName', ...);
+
+	// is same as
+
+	angular.module('myModule', []).
+	  config(function($provide, $compileProvider, $filterProvider) {
+	    $provide.value('a', 123);
+	    $provide.factory('a', function() { return 123; });
+	    $compileProvider.directive('directiveName', ...);
+	    $filterProvider.register('filterName', ...);
+	  });
+
+=====================================
+провайдеры могут быть нескольких видов, но суть их в том, что они предоставляют данные и чтобы пользоваться провайдером его нужно инжектировать. 
+
+	вот простейший пример, в котором провайдер возвращает строку:
+
+		var myApp = angular.module('myApp', []);
+		myApp.value('clientId', 'a12345654321x');
+
+		myApp.controller('DemoController', ['clientId', function DemoController(clientId) {
+		  this.clientId = clientId;
+		}]);
+
+		<html ng-app="myApp">
+		  <body ng-controller="DemoController as demo">
+		    Client ID: {{demo.clientId}}
+		  </body>
+		</html>
+
+
+	вот пример, в котором фабрика по условию возвращает разные строки:
+
+		angular
+		  .module('app')
+		  .factory('clientId', function clientIdFactory() {
+		    return Math.random() > 0.5 ? '111' : '000';
+		  })
+		  .controller('values', function ($scope, clientId) {
+		    $scope.val = clientId;
+		  });	
+
+
+	существует упрощённая запись инжектирования провайдера:
+
+		myApp.factory('unicornLauncher', ["apiToken", function(apiToken) {
+		  return new UnicornLauncher(apiToken);
+		}]);	
+
+		то же самое что и:
+
+		myApp.service('unicornLauncher', ["apiToken", UnicornLauncher]);
+
+
+	пример определения в провайдере предопределённого объекта:
+
+		angular
+		  .module('app')
+		  .constant('planetName', 'Greasy Giant')
+		  .factory('clientId', function clientIdFactory() {
+		    return Math.random() > 0.5 ? '111' : '000';
+		  })
+		  .controller('values', function ($scope, clientId, planetName) {
+		    $scope.val = clientId + planetName;
+		  }); 
+
+=====================================
+декоратор 
+
+	имеет внутри себя ссылку $delegate, которая ссылкается на подменяемую декорт=атором сущность. в следующем примере в шаблоне вместо null выводится реальное время.
+
+		angular.module('app', [])
+		  .config(function($provide) {
+		    $provide.decorator('myService', function($delegate) {
+		      $delegate.getDate = function() { // override with actual date object
+		        return new Date();
+		      };
+		      return $delegate;
+		    });
+		  })
+		  .service('myService', function() {
+		    this.getDate = function() {
+		      return null; // w/o decoration we'll be returning null
+		    };
+		  })
+		  .controller('myController', function(myService) {
+		    var vm = this;
+		    vm.date = myService.getDate();
+		  });	
+
+		<body ng-controller="myController as vm">
+		  <div ng-bind="vm.date | date:'fullDate'"></div>
+		</body>		
+
+	декораторы можно объявлять двумя способами:
+
+		1. в конфиге (как в примере выше)  
+		2. в модуле на одном уровне с компонентами, контроллерами, фильтрами и т.д.
+
+
+	если декорируется директива, то обращаеться в ней нужно через индекс массива $delegate[0].
+
+	тут больше примеров:
+	https://devtut.github.io/angularjs/decorators.html#decorate-directive
+
+=====================================
+подписаться на изменение переменной в $scope можно при помощи $watch:
+
+	angular.module('app').controller('values', function ($scope) {
+	  $scope.val = 'qwer';
+	  $scope.num = 1;
+
+	  $scope.increment = function () {
+	    $scope.num++;
+	  };
+
+	  $scope.$watch('val', function (newval, oldval) {
+	    console.log('val', newval, oldval);
+	  });
+
+	  $scope.$watch('num', function (newval, oldval) {
+	    console.log('num', newval, oldval);
+	  });
+	});
+
+
+	<div id="app" ng-controller="values">
+	  <input type="text" ng-model="val" />
+	  <br />
+	  <button ng-click="increment()">increm {{ num }}</button>
+	</div>
+
+
+
+=====================================
+пример отправки в $rootScope значения и подписки на него:
+
+	var app = angular.module('app', []);
+
+	app.directive('receiver', function($rootScope) {
+	  return {
+	    restrict: 'E',
+	    replace: true,
+	    template: '<div>msg={{ msg }}</div>',
+	    scope: {
+	      msg: '@'
+	    },
+	    link: function(scope, element, attrs) {
+	      $rootScope.$on('foobar', function(e, data) { 
+	        console.log(data);
+	        scope.msg = data.msg;
+	      });
+	    }
+	  }
+	});
+
+	app.directive('sender', function($rootScope) {
+	  return {
+	    restrict: 'A',
+	    link: function(scope, element, attrs) {
+	      scope.sendMsg = function(id, msg) {
+	        $rootScope.$emit('foobar', { id: id, msg: msg });
+	      }
+	    }
+	  }
+	});
+
+
+	  <body ng-controller="Ctrl">
+	    <button sender ng-click="sendMsg('myId', 'hello');">so click me!</button>
+	    <receiver id="myId" msg=""></receiver>
+	  </body>
+
+
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================
+=====================================

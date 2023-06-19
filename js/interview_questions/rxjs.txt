@@ -75,11 +75,6 @@ console.log(sum)
 
 share() преобразует холодный поток в горячий.
 
-	import { of, from, interval } from 'rxjs'; 
-	import { map, switchMap, pluck, share, tap } from 'rxjs/operators';
-	import { ajax } from 'rxjs/ajax';
-
-
 	const endpoint = 'https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty';
 
 	const obs1 = interval(4000).pipe(
@@ -479,6 +474,69 @@ partition оператор
 
 
 ================================
+catchError
+
+	решает какой и трёх коллбеков должен сработать, если в запросе произошла ошибка.
+
+	если произошла ошибка, то не даёт потоку выпасть в error callback. вместо этого catchError эмитит новый обсервабл  и срабатывает коллбек next()
+
+	  ngOnInit() {
+	    this.stateService
+	      .getBeers()
+	      .pipe(catchError(() => of([{ title: 'my default beer' }])))
+	      .subscribe(
+	        (data: Ititles[]) => {
+	          console.log(data);
+	        },
+	        (err) => {
+	          console.log('error', err);	// не сработает
+	        },
+	        () => console.log('done')			// сработает
+	      );
+	  }	
+
+	если catchError возвращает сконструированный объект ошибки, то срабатывает коллбек error, в который предаётся объект ошибки:
+
+	  ngOnInit() {
+	    this.stateService
+	      .getBeers()
+	      .pipe(
+	        catchError(() => {
+	          return throwError(() => new Error('ups something happened'));
+	        })
+	      )
+	      .subscribe(
+	        (data: Ititles[]) => {
+	          console.log(data);
+	        },
+	        (err) => {
+	          console.log('error', err.message);	// сработает и выведет: error ups something happened
+	        },
+	        () => console.log('done')
+	      );
+	  }	
+
+ 	если catchError возвращает EMPTY, то сразу срабатывает complete(). при этом не выбрасывается исключение, но и next-коллбек не срабатывает.
+
+	  ngOnInit() {
+	    this.stateService
+	      .getBeers()
+	      .pipe(
+	        catchError(() => {
+	          return EMPTY;
+	        })
+	      )
+	      .subscribe(
+	        (data: Ititles[]) => {
+	          console.log(data);
+	        },
+	        (err) => {
+	          console.log('error', err.message);
+	        },
+	        () => console.log('done')			// только это сработает и выведет: done
+	      );
+	  } 	
+
 ================================
 ================================
 ================================
