@@ -550,6 +550,26 @@ export class UserComponent implements OnInit, OnChange {
 
 
 ================================
+задача:
+	написать форму с полями login и password. эту форму можно будет отправить по адресу /action_page.php. текстовые метки к полям сделать двумя способами. кнопку отправки формы тоже сделать двумя способами.
+
+доп. вопросы:
+	1. как отключить браузерную валидацию.
+	2. как сделать обход фокуса в обратном порядке?
+	3. будет ли отправляться форма, если вынести кнопки сабмита за пределы тега form?
+
+решение:
+	<form action="/action_page.php" method="POST" novalidate>
+	  <label for="f1">login<input type="text" id="f1" tabindex="3" required /></label>
+	  
+	  <label for="f2">password</label>
+	  <input type="password" id="f2" tabindex="2" required />
+	  
+	  <br />
+	  <button type="submit" tabindex="1" >submit</button>
+	  <input type="submit" value="send"/>
+	</form>
+
 ================================
 ================================
 ================================
