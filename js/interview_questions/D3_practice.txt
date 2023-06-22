@@ -1,0 +1,306 @@
+простая гистограмма с масштабированием
+
+import * as d3 from 'd3';
+import './style.css';
+
+const width = 600;
+const height = 600;
+const data = [
+  [0, 55],
+  [100, 62],
+  [200, 84],
+  [300, 123],
+  [400, 255],
+  [500, 276],
+  [600, 390],
+  [700, 412],
+  [800, 550],
+  [900, 877],
+  [1000, 1232],
+  [1100, 2505],
+  [1200, 2777],
+  [1300, 3987],
+];
+
+const widths = data.map((x) => x[0]);
+const heights = data.map((x) => x[1]);
+const barWidth = width / widths.length;
+
+console.log(barWidth, width, widths.length);
+
+const scaleY = d3
+  .scaleLinear()
+  .domain([d3.min(heights), d3.max(heights)])
+  .range([0, height]);
+
+const scaleX = d3
+  .scaleLinear()
+  .domain([d3.min(widths), d3.max(widths)])
+  .range([0, width]);
+
+const svg = d3
+  .select('body')
+  .append('svg')
+  .attr('width', width)
+  .attr('height', height);
+
+const g = svg
+  .selectAll('g')
+  .data(data)
+  .enter()
+  .append('g')
+  .attr('x', function (d, i) {
+    return i * barWidth;
+  });
+
+g.append('rect')
+  .attr('class', 'bar')
+  .attr('x', function (d, i) {
+    return i * barWidth;
+  })
+  .attr('width', function (d) {
+    return barWidth - 1;
+  })
+  .attr('height', function (d) {
+    return scaleY(d[1]);
+  });
+
+g.append('text')
+  .attr('class', 'label')
+  .attr('x', function (d, i) {
+    return i * barWidth;
+  })
+  .attr('y', barWidth / 4)
+  .attr('dx', barWidth / 4)
+  .text(function (d) {
+    return d[1];
+  });
+
+
+====================================
+гисторгамма с двумя осями. есть отражение столбцов и масштабирование. есть отступы для осей.
+
+import * as d3 from 'd3';
+import './style.css';
+
+const width = 600;
+const height = 400;
+const data = [
+  [0, 55],
+  [100, 62],
+  [200, 84],
+  [300, 123],
+  [400, 255],
+  [500, 276],
+  [600, 390],
+  [700, 412],
+  [800, 550],
+  [900, 877],
+  [1000, 1232],
+  [1100, 2505],
+  [1200, 2777],
+  [1300, 3987],
+];
+
+const widths = data.map((x) => x[0]);
+const heights = data.map((x) => x[1]);
+const barWidth = width / widths.length;
+const textOffsetY = 2;
+const textOffsetYFlip = 12;
+
+const scaleY = d3
+  .scaleLinear()
+  .domain([d3.min(heights), d3.max(heights)])
+  .range([0, height]);
+
+const scaleYReverse = d3
+  .scaleLinear()
+  .domain([d3.max(heights), d3.min(heights)])
+  .range([0, height]);
+
+const scaleX = d3
+  .scaleLinear()
+  .domain([d3.min(widths), d3.max(widths)])
+  .range([0, width]);
+
+const box = d3.select('body').append('div').attr('class', 'padding');
+const svg = box.append('svg').attr('width', width).attr('height', height);
+
+const g = svg
+  .selectAll('g')
+  .data(data)
+  .enter()
+  .append('g')
+  .attr('x', function (d, i) {
+    return i * barWidth;
+  });
+
+g.append('rect')
+  .attr('class', 'bar')
+  .attr('x', function (d, i) {
+    return i * barWidth;
+  })
+  .attr('y', function (d, i) {
+    return height - scaleY(d[1]);
+  })
+  .attr('width', function (d) {
+    return barWidth - 1;
+  })
+  .attr('height', function (d) {
+    return scaleY(d[1]);
+  });
+
+g.append('text')
+  .attr('class', 'label')
+  .attr('x', function (d, i) {
+    return i * barWidth;
+  })
+  .attr('y', function (d, i) {
+    console.log(height, scaleY(d[1]));
+    return height > scaleY(d[1])
+      ? height - scaleY(d[1]) - textOffsetY
+      : height - scaleY(d[1]) + textOffsetYFlip;
+  })
+  .attr('dx', barWidth / 4)
+  .text(function (d) {
+    return d[1];
+  });
+
+svg
+  .append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .call(d3.axisBottom().scale(scaleX));
+
+svg.append('g').call(d3.axisLeft().scale(scaleYReverse));
+
+
+
+
+// https://stackblitz.com/edit/js-cm3gtj?file=index.js
+
+
+====================================
+простейший тултип без динамического контента. при наведении сам объект меняет цвет.
+
+var w = 960,
+  h = 500;
+
+var tooltip = d3
+  .select('body')
+  .append('div')
+  .style('position', 'absolute')
+  .style('z-index', '10')
+  .style('visibility', 'hidden')
+  .style('background-color', '#ffffff');
+
+var vis = d3
+  .select('body')
+  .append('svg:svg')
+  .attr('width', w)
+  .attr('height', h);
+
+vis
+  .append('svg:circle')
+  .style('stroke', 'gray')
+  .style('fill', 'white')
+  .attr('r', 40)
+  .attr('cx', 50)
+  .attr('cy', 50)
+  .on('mouseover', function () {
+    d3.select(this).style('fill', 'lightgreen');
+    tooltip.text('This is my tooltip');
+    tooltip.style('visibility', 'visible');
+  })
+  .on('mouseout', function () {
+    d3.select(this).style('fill', 'white');
+    tooltip.style('visibility', 'hidden');
+  })
+  .on('mousemove', function (event) {
+    tooltip
+      .style('top', event.pageY - 10 + 'px')
+      .style('left', event.pageX + 10 + 'px');
+  });
+
+====================================
+простейший бублик. данные в форме массива.
+
+var data = [20, 60, 10, 10];
+var colors = ['red', 'blue', 'green', 'orange'];
+var width = 250;
+var height = 250;
+var outerRadius = width / 2;
+var innerRadius = 50;
+
+//Create SVG element
+var svg = d3
+  .select('body')
+  .append('svg')
+  .attr('width', width)
+  .attr('height', height);
+
+// pie layout function
+var pie = d3.pie();
+var piedata = pie(data);
+
+//Set up pie groups
+var arcs = svg
+  .selectAll('g')
+  .data(piedata)
+  .enter()
+  .append('g')
+  .attr('transform', 'translate(' + outerRadius + ',' + outerRadius + ')');
+
+// Create arc function with parameters
+var arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+
+// Draw arc paths
+arcs.append('path').attr('d', arc);
+
+// Draw arc paths
+arcs
+  .append('path')
+  .attr('d', arc)
+  .attr('fill', function (d, i) {
+    return colors[i];
+  }); // Fill color
+
+arcs
+  .append('text')
+  .attr('transform', function (d) {
+    console.log(d);
+    return 'translate(' + arc.centroid(d) + ')';
+  })
+  .attr('text-anchor', 'end')
+  .text(function (d) {
+    return d.value;
+  });
+
+// https://stackblitz.com/edit/js-tey1vr?file=index.js
+
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================
+====================================

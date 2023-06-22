@@ -108,9 +108,81 @@ datum()
 если нет цели отловить ошибки, то коллбек будет содержать только один аргумент.
 
 ========================
+.axisRight() отличается от .axisLeft() только тем на какой стороне будут цифры. сами оси всё равно нужно переносить при помощи transform и разворачивать при помощи .tickSize(-width):
+
+	svg
+	  .append('g')
+	  .attr('transform', 'translate(' + width + ', 0)')
+	  .call(
+	    d3
+	      .axisRight()
+	      .scale(scaleYreverse)
+	      .tickSize(-width)
+	  )
+
 ========================
+есть возможность получить набор предопределённых цветов:
+
+	var accent = d3.scaleOrdinal(d3.schemeAccent);
+	console.log(accent(0));
+	console.log(accent(1));
+	console.log(accent(2));
+	console.log(accent(3));
+	console.log(accent(4));
+	console.log(accent(5));
+	console.log(accent(6));
+
+справочник цветовых схем здесь:
+https://github.com/d3/d3-scale-chromatic/blob/main/README.md#schemeCategory10
+
+если индекс превышает количество элементов, то элементы начинают повторяться:
+
+	var accent = d3.scaleOrdinal(['q', 'ww']);
+		console.log(accent(0));		// q
+		console.log(accent(1));		// ww
+		console.log(accent(2));		// q
+		console.log(accent(3));		// ww
+
+scaleOrdinal создаёт ту же самую формулу масштабирования, что и domain_range, но подразумевает, что вместо входящих значений(domain) будет набор инкрементальных чисел.
+
 ========================
+пример дискретного масштабирования.
+
+	var myData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+	var linearScale = d3.scaleLinear()
+		.domain([0, 11])
+		.range([0, 600]);
+
+	var ordinalScale = d3.scaleOrdinal()
+		.domain(myData)
+		.range(['black', '#ccc', '#ccc']);	// значения будут зацикленно повторяться
+
+	d3.select('#wrapper')
+		.selectAll('text')
+		.data(myData)
+		.enter()
+		.append('text')
+		.attr('x', function(d, i) {
+			return linearScale(i);	// тексту выставляем x-координату, прошёдшую через линейную формулу масштабирования
+		})
+		.text(function(d) {
+			return d;		// выводим сам текст
+		})
+		.style('fill', function(d) {
+			return ordinalScale(d);		// закрашиваем текст, но значение берём из дискретной формулы масштабирования.
+		});
+
+	console.log(ordinalScale('Jan'));	// black
+	console.log(ordinalScale('Feb'));	// #ccc
+
 ========================
+функция pie генерирует набор объектов на основе диапазона значений в итерируемом объекте. каждый из этих объектов содержит значение и, соответсвующие ему, 2 угла.
+
+    var data = [2, 4, 8, 10];
+    var pie = d3.pie()
+    console.log(pie(data))	// результатом будут 4 объекта
+
 ========================
 ========================
 ========================

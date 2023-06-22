@@ -560,10 +560,10 @@ export class UserComponent implements OnInit, OnChange {
 
 решение:
 	<form action="/action_page.php" method="POST" novalidate>
-	  <label for="f1">login<input type="text" id="f1" tabindex="3" required /></label>
+	  <label for="f1">login<input type="text" id="f1" tabindex="3" required name="login" /></label>
 	  
 	  <label for="f2">password</label>
-	  <input type="password" id="f2" tabindex="2" required />
+	  <input type="password" id="f2" tabindex="2" required name="password" />
 	  
 	  <br />
 	  <button type="submit" tabindex="1" >submit</button>
