@@ -206,9 +206,9 @@ vis
   .attr('r', 40)
   .attr('cx', 50)
   .attr('cy', 50)
-  .on('mouseover', function () {
+  .on('mouseover', function (event, d) {
     d3.select(this).style('fill', 'lightgreen');
-    tooltip.text('This is my tooltip');
+    tooltip.text(d);
     tooltip.style('visibility', 'visible');
   })
   .on('mouseout', function () {
@@ -278,6 +278,47 @@ arcs
 // https://stackblitz.com/edit/js-tey1vr?file=index.js
 
 ====================================
+тултипы с динамическим контентом
+
+const data = [
+  [90, 123],
+  [120, 55],
+  [55, 13],
+];
+
+const svg = d3
+  .select('body')
+  .append('svg')
+  .attr('width', 200)
+  .attr('height', 200);
+
+const circles = svg
+  .selectAll('circle')
+  .data(data)
+  .enter()
+  .append('circle')
+  .attr('cx', (d) => d[0])
+  .attr('cy', (d) => d[1])
+  .attr('r', 10);
+
+circles
+  .on('mouseover', function (event, d) {
+    tooltip
+      .style('opacity', 1)
+      .html('coords: ' + d.join(', '))
+      .style('left', 25 + 'px')
+      .style('top', 75 + 'px');
+  })
+  .on('mouseout', (d) => tooltip.style('opacity', 0));
+
+var tooltip = d3
+  .select('body')
+  .append('div')
+  .attr('class', 'tooltip')
+  .style('opacity', 0);
+
+// https://stackblitz.com/edit/js-hxsxci?file=index.js
+
 ====================================
 ====================================
 ====================================

@@ -184,8 +184,36 @@ scaleOrdinal создаёт ту же самую формулу масштаби
     console.log(pie(data))	// результатом будут 4 объекта
 
 ========================
+выборка и фильтрация:
+
+	<div id="parent">
+	  <div class="child">1</div>
+	  <div class="child marked">2</div>
+	  <div class="child marked">3</div>
+	</div>
+
+	const parent = d3.select('#parent');
+	const childs = parent.selectAll('.child');
+
+	console.log(childs.filter(':first-child').size()); // 1 элемент
+	console.log(childs.filter('.marked').size()); // 2 элемента
+	console.log(childs.filter('.child').size()); // 3 элемента
+	console.log(childs.filter((d, i) => i === 0).size()); // 1 элемент с индексом 0
+
 ========================
+установка, удаление и получение значений у подобных операторов осуществляется подобным способом:
+
+	selection.attr(name[, value]) 
+
+	если value не передано, то получение.
+	если null, то удаление.
+	если значение, то установка.
+
 ========================
+tickSizeInner это деления, которые располагаются между началом и концом оси.
+tickSizeInner это деления, которые располагаются на крайних точках оси.
+tickSize задаёт размеры для tickSizeInner и tickSizeInner.
+
 ========================
 ========================
 ========================
