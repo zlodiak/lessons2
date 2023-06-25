@@ -320,6 +320,84 @@ var tooltip = d3
 // https://stackblitz.com/edit/js-hxsxci?file=index.js
 
 ====================================
+4 оси с координатной сеткой. объекты - круги, есть запасы для них величиной в половину радиуса 
+// https://stackblitz.com/edit/js-kmjqka?file=index.js
+
+const data = [
+  { month: 'January', value: 13 },
+  { month: 'February', value: 6 },
+  { month: 'March', value: 30 },
+  { month: 'April', value: 63 },
+  { month: 'May', value: 120 },
+  { month: 'June', value: 13 },
+  { month: 'July', value: 66 },
+  { month: 'August', value: 23 },
+  { month: 'September', value: 163 },
+  { month: 'October', value: 76 },
+  { month: 'November', value: 2 },
+  { month: 'December', value: 63 },
+];
+
+const width = 600;
+const height = 600;
+const padding = 60;
+
+const months = data.map((v) => v.month);
+const heights = data.map((v) => v.value);
+
+const scaleX = d3.scaleBand().domain(months).range([0, width]);
+const scaleY = d3
+  .scaleLinear()
+  .domain([0, d3.max(heights)])
+  .range([0, height]);
+const scaleYreverse = d3
+  .scaleLinear()
+  .domain([0, d3.max(heights)])
+  .range([height, 0]);
+const ordinalScale = d3
+  .scaleOrdinal()
+  .domain(months)
+  .range(['blue', 'red', 'lime', 'orange', 'navy', 'green', 'maroon']);
+
+const box = d3
+  .select('body')
+  .append('div')
+  .attr('class', 'box')
+  .attr('style', 'padding: ' + padding + 'px')
+  .attr('width', width)
+  .attr('height', height);
+const svg = box.append('svg').attr('width', width).attr('height', height);
+const chart = svg.append('g').attr('class', 'chart');
+const axis = svg.append('g').attr('class', 'axis');
+
+const bars = chart
+  .selectAll('rect')
+  .data(data)
+  .enter()
+  .append('rect')
+  .attr('x', (d) => scaleX(d.month))
+  .attr('y', (d) => height - scaleY(d.value))
+  .attr('height', (d) => scaleY(d.value))
+  .attr('width', (d) => scaleX.bandwidth())
+  .attr('style', (d) => 'fill:' + ordinalScale(d));
+
+const axisX = axis
+  .append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .call(d3.axisBottom().scale(scaleX).tickSizeOuter(0));
+const labelsX = axisX
+  .selectAll('text')
+  .style('text-anchor', 'end')
+  .attr('dx', '-.8em')
+  .attr('dy', '.15em')
+  .attr('transform', 'rotate(-45)');
+
+const axisY = axis
+  .append('g')
+  // .attr('transform', 'translate(0,' + height + ')')
+  .call(d3.axisLeft().scale(scaleYreverse).tickSizeOuter(0));
+
+
 ====================================
 ====================================
 ====================================

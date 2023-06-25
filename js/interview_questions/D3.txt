@@ -177,6 +177,23 @@ scaleOrdinal создаёт ту же самую формулу масштаби
 	console.log(ordinalScale('Feb'));	// #ccc
 
 ========================
+scaleBand
+
+	это отображение дискретного набора на непрерывный набор.
+
+		var A = d3
+		  .scaleBand()
+		  .domain(['January', 'February', 'March', 'April', 'May'])
+		  .range([10, 50]);
+
+		console.log(A('January'));		// 10
+		console.log(A('February'));		// 18
+		console.log(A('March'));		// 26
+		console.log(A('April'));		// 34
+		console.log(A('May'));			// 42
+
+
+========================
 функция pie генерирует набор объектов на основе диапазона значений в итерируемом объекте. каждый из этих объектов содержит значение и, соответсвующие ему, 2 угла.
 
     var data = [2, 4, 8, 10];
