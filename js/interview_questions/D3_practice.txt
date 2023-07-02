@@ -321,7 +321,154 @@ var tooltip = d3
 
 ====================================
 4 оси с координатной сеткой. объекты - круги, есть запасы для них величиной в половину радиуса 
-// https://stackblitz.com/edit/js-kmjqka?file=index.js
+// https://stackblitz.com/edit/js-3vhgap?file=index.js
+
+const width = 400;
+const height = 400;
+const data = [
+  [0, 1200, 10],
+  [1200, 62, 11],
+  [666, 84, 5],
+  [300, 123, 11],
+  [400, 255, 7],
+  [123, 333, 11],
+  [600, 390, 11],
+  [700, 412, 15],
+  [1222, 550, 11],
+  [0, 900, 20], //
+  [1000, 1200, 20], //
+
+  [1000, 0, 20], //
+  [1200, 0, 20], //
+  [1100, 25, 7],
+  [23, 345, 11],
+];
+
+const xCollection = data.map((val) => val[0]);
+const yCollection = data.map((val) => val[1]);
+const rCollection = data.map((val) => val[2]);
+const limitPadding = 100; // ?
+const boxPadding = 60;
+
+const scaleX = d3
+  .scaleLinear()
+  .domain([0 - limitPadding, d3.max(xCollection) + limitPadding])
+  .range([0, height]);
+
+const scaleY = d3
+  .scaleLinear()
+  .domain([0 - limitPadding, d3.max(yCollection) + limitPadding])
+  .range([0, height]);
+
+const scaleYreverse = d3
+  .scaleLinear()
+  .domain([d3.max(yCollection) + limitPadding, -limitPadding])
+  .range([0, height]);
+
+const box = d3
+  .select('body')
+  .append('div')
+  .style('padding', boxPadding + 'px')
+  .style('width', width + 'px')
+  .style('height', height + 'px');
+
+const svg = box.append('svg').attr('width', width).attr('height', height);
+
+const g = svg
+  .selectAll('g')
+  .data(data)
+  .enter()
+  .append('g')
+  .attr('x', function (d, i) {
+    return i;
+  });
+
+g.append('circle')
+  .attr('fill', 'red')
+  .attr('class', 'circle')
+  .attr('cx', function (d, i) {
+    return scaleX(d[0]);
+  })
+  .attr('cy', function (d, i) {
+    return height - scaleY(d[1]);
+  })
+  .attr('r', function (d) {
+    return d[2];
+  });
+
+svg
+  .append('g')
+  .attr('transform', 'translate(0, 0)')
+  .attr('class', 'axis-top')
+  .call(
+    d3
+      .axisTop()
+      .scale(scaleX)
+      .ticks(20)
+      .tickFormat((x) => `${x}м`)
+      .tickSize(-height)
+      .tickPadding(5)
+  )
+  .selectAll('text')
+  .style('text-anchor', 'start')
+  .attr('dx', '10px')
+  .attr('dy', '7px')
+  .attr('transform', 'rotate(-90)')
+  .style('stroke', 'blue');
+
+svg
+  .append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .attr('class', 'axis-bottom')
+  .call(
+    d3
+      .axisBottom()
+      .scale(scaleX)
+      .ticks(5)
+      .tickFormat((x) => `${x}м`)
+      .tickSize(-height)
+      .tickPadding(5)
+  )
+  .selectAll('text')
+  .style('text-anchor', 'end')
+  .attr('dx', '-.8em')
+  .attr('dy', '.15em')
+  .attr('transform', 'rotate(-45)')
+  .style('stroke', 'magenta');
+
+svg
+  .append('g')
+  .attr('transform', 'translate(' + width + ', 0)')
+  .attr('class', 'axis-right')
+  .call(
+    d3
+      .axisRight()
+      .scale(scaleYreverse)
+      .ticks(10)
+      .tickFormat((x) => `${x}шт`)
+      .tickSize(-width)
+      .tickPadding(5)
+  )
+  .selectAll('text');
+
+svg
+  .append('g')
+  .attr('transform', 'translate(0, 0)')
+  .attr('class', 'axis-right')
+  .call(
+    d3
+      .axisLeft()
+      .scale(scaleYreverse)
+      .tickFormat((x) => `${x}шт`)
+      .tickPadding(5)
+  )
+  .selectAll('text');
+
+
+====================================
+пример работы с scaleBand. обычная гистограмма с автоматическим расчётом ширины столбика. использован scaleOrdinal для раскраски столбиков.
+// https://stackblitz.com/edit/js-vmv4kb?file=index.js
+
 
 const data = [
   { month: 'January', value: 13 },
@@ -394,11 +541,9 @@ const labelsX = axisX
 
 const axisY = axis
   .append('g')
-  // .attr('transform', 'translate(0,' + height + ')')
   .call(d3.axisLeft().scale(scaleYreverse).tickSizeOuter(0));
 
 
-====================================
 ====================================
 ====================================
 ====================================
