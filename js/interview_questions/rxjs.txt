@@ -113,19 +113,49 @@ share() преобразует холодный поток в горячий.
 
 холодные потоки производят всю последовательность данных сами. каждому новому подписчику отдаётся новая отдельная последовательность.
 
-	const s = interval(1000);
-	s.subscribe(v => { console.log('first', v); });
+	const stream$ = interval(1000);
+
+	stream$.subscribe((d) => {
+	  console.log('first:', d);
+	});
+
 	setTimeout(() => {
-		s.subscribe(v => { console.log('second', v); });
-	}, 2500)
+	  stream$.subscribe((d) => {
+	    console.log('second:', d);
+	  });
+	}, 2500);
+
 
 горячие потоки производят последовательность данных не сами, а просто получают их, например, при клике по экрану. горячие потоки отдают каждому новому подписчику одну и ту же последовательность.
 
-	const s = interval(1000);
-	s.subscribe(v => { console.log('first', v); });
+	const stream$ = interval(1000).pipe(share());
+
+	stream$.subscribe((d) => {
+	  console.log('first:', d);
+	});
+
 	setTimeout(() => {
-	  s.subscribe(v => { console.log('second', v); });
-	}, 2500)  
+	  stream$.subscribe((d) => {
+	    console.log('second:', d);
+	  });
+	}, 2500);
+
+
+пример с кликом по экрану:
+
+	const stream$ = fromEvent(document.body, 'click');
+
+	stream$.subscribe((d) => {
+	  console.log('first:', d.x);
+	});
+
+	setTimeout(() => {
+	  stream$.subscribe((d) => {
+	    console.log('second:', d.x);
+	  });
+	}, 2500);
+
+
 
 ================================
 что такое subject? какие виды subject существуют?
@@ -441,6 +471,10 @@ debounce
 	когда приходит новое значение, то запускается вложенный observable, происходит подписка на вложенный observable. когда из вложенного observable приходит значение или комплит, то значение из внешнего observable проходит дальше. при этом, если во время ожидания внутреннего observable приходит из внешнего новое значение, то старое значение исчезает.
 
 	тут больше: https://indepth.dev/reference/rxjs/operators/debounce
+
+finalize
+
+
       
 ================================
 shareReplay(1) vs share()

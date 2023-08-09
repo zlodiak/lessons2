@@ -104,6 +104,50 @@
 // console.log(f(arr));
 
 ===========================
+есть массив объектов. нужно удалить из него объекты с неуникальным значением определённого ключа.
+
+// способ1
+const array = [
+  { name: 'Joe', age: 17 },
+  { name: 'Bob', age: 17 },
+  { name: 'Carl', age: 35 },
+];
+
+const key = 'age';
+
+const arrayUniqueByKey = [
+  ...new Map(array.map((item) => [item[key], item])).values(),
+];
+
+console.log(arrayUniqueByKey);
+
+/*OUTPUT
+       [
+        { "name": "Bob", "age": 17 },
+        { "name": "Carl", "age": 35 }
+       ]
+   */
+
+тут пример: https://stackblitz.com/edit/js-tqkslf?file=index.js
+
+
+
+  
+  const array = [
+    { name: 'Joe', age: 17 },
+    { name: 'Joe', age: 17 },
+    { name: 'Carl', age: 35 },
+  ];
+  
+  const strArr = array.map(item => JSON.stringify(item));
+  const uniqStrSet = new Set(strArr);
+  const uniqStrArr = Array.from(uniqStrSet);
+  const resultArr = uniqStrArr.map(item => JSON.parse(item));
+  
+  console.log(resultArr);
+  
+
+
 ===========================
 ===========================
 ===========================
