@@ -2023,21 +2023,26 @@ pipe
 =========================================================
 использование мультикастинга для уменьшения количества запросов в случае с async pipe
 
+	import { Component } from '@angular/core';
+	import { Observable } from 'rxjs';
+	import { ajax } from 'rxjs/ajax';
+	import { map, shareReplay } from 'rxjs/operators';
+
 	@Component({
-	  selector: 'my-app',
+	  selector: 'app-root',
 	  templateUrl: './app.component.html',
 	  styleUrls: ['./app.component.css'],
 	})
 	export class AppComponent {
-	  users$: Observable<any> | null = ajax(
-	    'https://jsonplaceholder.typicode.com/users'
-	  ).pipe(
-	    map((res) => res.response),
-	    share()
-	  );
-
-	  constructor(private http: HttpClient) {}
+	    users$: Observable<any> = ajax(
+	      'https://jsonplaceholder.typicode.com/users'
+	    )
+	    .pipe(
+	      map((res: any) => res?.response),
+	      shareReplay()
+	    );
 	}
+
 
 	<div *ngIf="users$ | async">
 	  <li *ngFor="let item of users$ | async">
@@ -2052,6 +2057,7 @@ pipe
 	    {{ item.name }}
 	  </li>
 	</div>
+
 
 =========================================================
 query params

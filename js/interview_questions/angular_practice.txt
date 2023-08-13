@@ -1,0 +1,157 @@
+
+
+использование мультикастинга для уменьшения количества запросов в случае с async pipe
+
+	import { Component } from '@angular/core';
+	import { Observable } from 'rxjs';
+	import { ajax } from 'rxjs/ajax';
+	import { map } from 'rxjs/operators';
+
+	@Component({
+	  selector: 'app-root',
+	  templateUrl: './app.component.html',
+	  styleUrls: ['./app.component.css'],
+	})
+	export class AppComponent {
+	    users$: Observable<any> = ajax(
+	      'https://jsonplaceholder.typicode.com/users'
+	    )
+	    .pipe(
+	      map((res: any) => res?.response)
+	    );
+	}
+
+	---
+
+
+	<div *ngIf="users$ | async">
+	  <li *ngFor="let item of users$ | async">
+	    {{ item.name }}
+	  </li>
+
+	  <li *ngFor="let item of users$ | async">
+	    {{ item.name }}
+	  </li>
+
+	  <li *ngFor="let item of users$ | async">
+	    {{ item.name }}
+	  </li>
+	</div>
+
+	---
+
+	https://codesandbox.io/p/sandbox/fervent-voice-cwvg4m?file=%2Fsrc%2Fapp%2Fapp.component.ts%3A15%2C11
+
+
+задачи:
+	1. уменьшить количество запросов (share(), sharedReplay(), "users$ | async as a")
+	2. выводить только первое имя
+	3. вынести запрос в сервис, используя subject
+	4. 
+
+
+решение:
+
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { map, shareReplay, tap } from 'rxjs/operators';
+
+import { UserService } from './user.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent {
+
+  users$ = this.userService.sub;
+
+  constructor(private userService: UserService) {}
+
+}
+
+
+----
+
+import { Injectable } from '@angular/core';
+
+import { Subject, Observable } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { map, shareReplay, tap } from 'rxjs/operators';
+
+@Injectable()
+export class UserService {
+
+    sub = new Subject<any>();
+
+    constructor() {
+        this.getData();
+    }
+
+    getData() {
+        ajax(
+            'https://jsonplaceholder.typicode.com/users'
+        )
+        .pipe(
+            map((res: any) => res?.response),
+            map((r: any) => [r[0]]),
+            tap((x: any) => console.log('---', x)),
+            shareReplay()
+        )
+        .subscribe(x => {
+            this.sub.next(x);
+        });
+    }
+
+}
+
+
+
+------
+
+
+<div *ngIf="users$ | async">
+  <li *ngFor="let item of users$ | async">
+    {{ item.name }}
+  </li>
+
+  <li *ngFor="let item of users$ | async">
+    {{ item.name }}
+  </li>
+
+  <li *ngFor="let item of users$ | async">
+    {{ item.name }}
+  </li>
+</div>
+
+
+
+
+
+
+
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
