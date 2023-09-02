@@ -1,0 +1,122 @@
+сверстать трёхколоночный макет на флексах.
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="header">header</div>
+
+      <div class="main">
+        <div class="column column1">1</div>
+        <div class="column column2">2</div>
+        <div class="column column3">3</div>
+      </div>
+
+      <div class="footer">footer</div>
+    </div>
+  </body>
+</html>
+
+------------------
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main {
+  background: yellow;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+}
+
+.column1 {
+  width: 200px;
+}
+
+.column2 {
+  background: red;
+  flex-grow: 1;
+}
+
+.column3 {
+  width: 200px;
+}
+
+----------------
+
+исходный код для студента:
+
+https://stackblitz.com/edit/web-platform-dvmplf?file=styles.css
+
+
+=============================
+есть два блока, один вложен в другой. нужно позиционировать вложенный блок по центру родительского блока.
+
+  <body>
+    <div class="wrap">
+      <div class="in">in</div>
+    </div>
+  </body>
+
+
+ .wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: lime;
+  width: 300px;
+  height: 300px;
+}
+
+.in {
+  background: red;
+  width: 30px;
+  height: 30px;
+}
+
+---------------
+
+исходные данные для студента: 
+https://stackblitz.com/edit/web-platform-pigkdb?file=styles.css
+
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================
+=============================

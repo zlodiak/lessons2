@@ -149,6 +149,24 @@ console.log(arrayUniqueByKey);
 
 
 ===========================
+поиск индекса элемента в массиве объектов по признаку:
+
+первый способ:
+
+  const arr = [{id: 'a'}, {id: 'b'}, {id: 'c'}];
+  const index = arr.findIndex(object => {
+    return object.id === 'b';
+  });
+  console.log(index); // 👉️ 1
+
+второй способ:
+
+  const arr = [{id: 'a'}, {id: 'b'}, {id: 'c'}];
+  const index = arr.map(object => object.id).indexOf('c');
+  console.log(index); // 👉️ 2
+
+
+
 ===========================
 ===========================
 ===========================

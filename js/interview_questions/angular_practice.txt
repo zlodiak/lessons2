@@ -42,6 +42,10 @@
 
 	https://codesandbox.io/p/sandbox/fervent-voice-cwvg4m?file=%2Fsrc%2Fapp%2Fapp.component.ts%3A15%2C11
 
+	или тут:
+
+	https://stackblitz.com/edit/base-angular-12-app-wzimrq?file=src%2Fapp%2Fapp.component.ts
+
 
 задачи:
 	1. уменьшить количество запросов (share(), sharedReplay(), "users$ | async as a")
