@@ -1,3 +1,55 @@
+=====================================
+=====================================
+простейшее приложение:
+
+  объявляется модуль и компоненты, которые к нему относятся:
+
+    angular
+      .module('app', [])
+      .component('angularComponent', AngularComponent)
+      .component('childAngularComponent', ChildAngularComponent)
+      .component('childChildAngularComponent', ChildChildAngularComponent);  
+
+  в шаблоне один из родительских тегов помечается имененм модуля. далее внутри этого тега можно использовать все объявленные ранее компоненты(вложенные или не вложенные друг в друга).
+
+    <div id="app">
+      <angular-component></angular-component>
+    </div>
+
+  при этом имя тега компонента формируется из имени, которое было объявлено в модуле путём преобразования:
+
+    'angularComponent' -> <angular-component>
+
+  пример компонента:
+
+    const AngularComponent = {
+      template: `
+        <h1>I'm the angular component</h1>
+        <p>form.value: {{$ctrl.form.value}}
+          <button ng-click="$ctrl.add(1)">+1</button>
+          <button ng-click="$ctrl.add(-1)">-1</button>
+        </p>
+        
+        <child-angular-component form="$ctrl.form"></child-angular-component>`,
+      controller: class {
+          constructor() {
+            this.form = {value: 1};
+          }
+          add(val) {
+            this.form = {...{value: this.form.value+val}};
+            // this.form.value = this.form.value++; // NOT working bcoz not changing fully
+          }
+        }
+    };
+
+    export default AngularComponent;  
+
+  живой пример: 
+
+    https://stackblitz.com/edit/angularjs-components-demo-7yyyec?file=angular-component.js
+
+
+=====================================
 простейшая форма с валидацией
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>

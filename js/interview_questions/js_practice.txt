@@ -168,6 +168,18 @@ console.log(arrayUniqueByKey);
 
 
 ===========================
+// выделить часть строки 'src_ip' из строки '{table.src_ip}' и вывести результат в консоль
+// const str = '{table.src_ip}';
+// console.log(?????);
+
+первый способ:
+  const str = '{table.src_ip}';
+  const regex = /^{table.(.*)}/i;
+  const res = str.match(regex);
+
+  console.log(res[1]); // src_ip
+  // https://stackblitz.com/edit/js-clpc3v?file=index.js
+
 ===========================
 ===========================
 ===========================
