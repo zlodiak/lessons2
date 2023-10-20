@@ -1,0 +1,211 @@
+какой результат будет выведен в консоль?
+// Uncaught ReferenceError: inner is not defined
+
+
+'use strict';
+
+const obj = {
+  a: 10,
+  inner: function () {
+    console.log('inner', this);
+  },
+};
+
+inner = obj.inner;
+inner();
+
+-----------
+а так? почему?
+// Uncaught ReferenceError: inner is not defined
+
+'use strict';
+
+const obj = {
+  a: 10,
+  inner: () => {
+    console.log('inner', this);
+  },
+};
+
+inner = obj.inner;
+inner();
+
+
+=======================================
+какой будет вывод в консоль?
+// Our Group: John
+// Our Group: Alice
+
+let group = {
+  title: 'Our Group',
+  students: ['John', 'Alice'],
+
+  showList() {
+    this.students.forEach((student) => {
+      console.log(this.title + ': ' + student);
+    });
+  },
+};
+
+group.showList();
+
+
+--------------
+а так?
+// undefined: John
+// undefined: Alice
+
+
+let group = {
+  title: 'Our Group',
+  students: ['John', 'Alice'],
+
+  showList() {
+    this.students.forEach(function (student) {
+      console.log(this.title + ': ' + student);
+    });
+  },
+};
+
+group.showList();
+
+
+
+=======================================
+какой будет вывод в косоль?
+// 1 2 3 4
+
+console.log(1);
+const p = new Promise((resolve, reject) => {
+  console.log(2);
+  resolve('resolve!');	// reject('reject!');
+  console.log(3);
+});
+console.log(4);
+
+----------
+а так?
+// 1 2 3 4 6 5
+
+
+console.log(1);
+const p = new Promise((resolve, reject) => {
+  console.log(2);
+  resolve('resolve!'); // reject('reject!');
+  console.log(3);
+});
+console.log(4);
+p.then((res) => console.log(5));
+console.log(6);
+
+
+=======================================
+какой будет вывод в консоль?
+// 222
+
+function A() {
+  this.qwe = 222;
+}
+A.prototype.qwe = 111;
+const a = new A();
+console.log(a.qwe);
+
+
+=======================================
+какой будет вывод в консоль? 
+// true
+
+const a = { name: 'Joe Bloggs' };
+const b = Object.assign(a, { age: 27 });
+console.log(a === b); 
+
+
+=======================================
+какой будет вывод в консоль?
+// 1 2 4 value 3
+
+const f = async function () {
+  console.log(2);
+  const value = await Promise.resolve('value');
+  console.log(value);
+  console.log(3);
+};
+
+console.log(1);
+f();
+console.log(4);
+
+
+-------
+а так?
+// 1 3 2 value
+
+
+const f = async function () {
+  console.log(3);
+  return await Promise.resolve('value');
+  console.log(4);
+};
+
+console.log(1);
+f().then(
+  (s) => console.log(s),
+  (e) => console.log('error')
+);
+console.log(2);
+
+------
+а так?
+// 1 3 2 4 undefined
+
+const f = async function () {
+  console.log(3);
+  await Promise.resolve('value');
+  console.log(4);
+};
+
+console.log(1);
+f().then(
+  (s) => console.log(s),
+  (e) => console.log('error')
+);
+console.log(2);
+
+
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
+=======================================
