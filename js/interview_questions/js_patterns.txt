@@ -15,6 +15,30 @@
 	f1 = f2(f1);
 	f1();
 
+-----
+пример декоратора, который добавляет новое свойство в прототип класса:
+
+	function deco(target) {
+	  Object.defineProperty(target.prototype, 'lastName', {
+	    value: 'lastname',
+	  });
+	}
+
+	@deco
+	class Person {
+	  firstName;
+
+	  constructor(firstName, lastName) {
+	    this.firstName = firstName;
+	  }
+	}
+
+	const person = new Person('firstname', 'll');
+
+	console.log(person.firstName);
+	console.log(person.lastName);
+
+
 ===================================
 наблюдатель это паттерн, который позволяет объектам-подписчикам получать рассылки от объекта-издателя. 
 

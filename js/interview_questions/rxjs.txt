@@ -474,12 +474,40 @@ debounce
 
 finalize
 
+	аналог try/catch/finally для нативного JS. finalize() выполняется и после next и после error. 
 
+	важно, что finalize выполняется даже после того как произошла отписка от потока: 
+
+		const Observable = Rx.Observable; 
+
+		const sub = Observable.of(42)
+		  .delay(110)
+		  .finally(() => console.log('finally'))
+		  .subscribe(null, null, () => console.log('complete'));
+
+		sub.unsubscribe();
+
+		// вывод в консоль: "finally"
+		//если здесь удалить отписку, то вывод в консоль будет: "complete" "finally"
+
+	важно понимать, что complete отрабатывает только в сдучае успешного next. а если отработает коллбек error, то complete не сработает.
       
+================================
+спосбо вручную выбросить исключение
+
+	.throwError(() => new Error(response))
+
 ================================
 shareReplay(1) vs share()
 
 	оба этих оператора делают поток горячим, но для новых подписчиков shareReplay(1) сразу отдаёт предыдущее значение.
+
+		const sub = Observable.of(42)
+		  .delay(110)
+		  .throwError(() => new Error(response))
+		  .finally(() => console.log('finally'))
+		  .subscribe(null, null, () => console.log('complete'));
+
 
 ================================
 приведение каждого элемента последовательности к будевому значению
@@ -572,6 +600,27 @@ catchError
 	  } 	
 
 ================================
+firstValueFrom instead of toPromise():
+
+	toPromise устарел, его не будет в >=rxJs8
+
+	import { interval, firstValueFrom } from 'rxjs';
+
+	async function execute() {
+	  const source$ = interval(2000);
+	  const firstNumber = await firstValueFrom(source$);
+	  console.log(`The first number is ${firstNumber}`);
+	}
+
+	execute();
+
+	// Expected output:
+	// "The first number is 0"
+
+	демо: https://stackblitz.com/edit/qvv5vg?file=index.ts
+
+
+
 ================================
 ================================
 ================================
