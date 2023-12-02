@@ -530,7 +530,7 @@ as const
 		const user = {
 		  id: 1,
 		  name: 'qwe',
-		} as string;
+		} as const;
 
 		user.name = 'zzz';
 

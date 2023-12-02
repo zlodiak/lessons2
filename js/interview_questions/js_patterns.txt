@@ -621,6 +621,32 @@ angular bridge
 		https://www.youtube.com/watch?v=2rQOu9TmuxE&list=PLX7eV3JL9sfk0tbUkZwGCD1Y-kJ05NvOR&index=2&ab_channel=DecodedFrontend
 
 ===================================
+пример мемоизации в сервисе анлудара:
+
+	@Injectable({
+	    providedIn: 'root'
+	})
+	export class CachedHttpClient
+	{
+	    cachedItems : any[] = [];
+
+	    constructor(private http : HttpClient) { 
+
+	    }
+
+	    getCached<T>(url : string) : Observable<T> {
+	        if(this.cachedItems[url])
+	        {
+	            return of(this.cachedItems[url] as T);
+	        }
+
+	        return this.http.get<T>(url).pipe(map((item : T) => {
+	            this.cachedItems[url] = item;
+	            return item;
+	        }));
+	    }
+	}
+
 ===================================
 ===================================
 ===================================
