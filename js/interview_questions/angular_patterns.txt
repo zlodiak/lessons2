@@ -1,0 +1,217 @@
+dumb components content
+
+	глупые компоненты могут принимать кроме значений ещё и разметку типа ng-template. причём с контекстом.
+
+	это даёт возможность расширять функционал расшаренных компонентиков. например, к карточке пользователья можно дополнительно передать кнопки удаления, причём вместе с обработчиками клика по этим кнопкам. в рузуотате после того как пользователь кликнет по кнопке аделения сработает функция, которая находится вне глупого компонента.
+
+	dumb component
+
+		@Component({
+		  selector: 'users-list',
+		  templateUrl: './users-list.component.html',
+		  styleUrls: ['./users-list.component.scss'],
+		  changeDetection: ChangeDetectionStrategy.OnPush
+		})
+		export class UsersListComponent {
+		    @Input()
+		    public users: User[];
+
+		    @Input()
+		    public actionButtons: TemplateRef<unknown>;
+		}
+
+		<os-list>
+		    <os-list-item *ngFor="let user of users">
+		        <user-avatar
+		            class="avatar"
+		            [user]="user">
+		        </user-avatar>
+
+		        <os-text>
+		            {{ user.name }}<br />
+		            {{ user.age }} years old
+		        </os-text>
+
+		        <ng-container *ngIf="actionButtons">
+		            <ng-container
+		                *ngTemplateOutlet="actionButtons; context: { $implicit: user }">
+		            </ng-container>
+		        </ng-container>
+		    </os-list-item>
+		</os-list>
+
+	умный компонент:
+
+		@Component({
+		    selector: 'app-actual-users-list',
+		    templateUrl: './actual-list.component.html',
+		    styleUrls: ['./actual-list.component.scss'],
+		    changeDetection: ChangeDetectionStrategy.OnPush
+		})
+		export class ActualListComponent implements OnInit {
+		    public users$: Observable<User[]>;
+
+		    constructor(
+		        private readonly usersService: LocalUsersService
+		    ) {}
+
+		    public ngOnInit(): void {
+		        this.users$ = this.usersService.data$;
+		    }
+
+		    public onUserDeleteButtonClick(user: User): void {
+		        this.usersService.delete(user);
+		    }
+		}
+
+
+		<ng-container *ngIf="(users$ | async) as users">
+		    <os-header [size]="4">Actual</os-header>
+
+		    <users-list
+		        *ngIf="users?.length; else emptyUsersTemplate"
+		        [users]="users"
+		        [actionButtons]="actionButtonsTemplate">
+		    </users-list>
+		</ng-container>
+
+		<ng-template
+		    #actionButtonsTemplate
+		    let-user>
+		    <div class="action-buttons">
+		        <os-button
+		            (osClick)="onUserDeleteButtonClick(user)">
+		            Delete
+		        </os-button>
+		    </div>
+		</ng-template>
+
+		<ng-template #emptyUsersTemplate>
+		    <os-text class="text-bold">
+		        There is no actual local users.
+		    </os-text>
+		</ng-template>	
+
+		здесь видно, что мы передаём ##actionButtonsTemplate как входящий параметр users в UsersListComponent. после этого мы можем кликать по кнопке и в результате сработает обработчик onUserDeleteButtonClick, но с user, который вщял в момент клика в UsersListComponent
+
+
+
+	тут больше: https://github.com/dreyliky/dumb-and-smart-components-example
+
+===========================================
+emit gromGroup from dunb component
+
+	из глупого компонента можно сразу после создания эмититть formGroupю там образом в умном компоненте всегда будет доступна форма, даже после того как её поля были изменены пользователем.
+
+	умный компонентт:
+
+		@Component({
+		    selector: 'app-user-creation-window',
+		    templateUrl: './creation-window.component.html',
+		    styleUrls: ['./creation-window.component.scss'],
+		    changeDetection: ChangeDetectionStrategy.OnPush
+		})
+		export class CreationWindowComponent {
+		    public formGroup: FormGroup;
+
+		    constructor(
+		        @Inject(DYNAMIC_WINDOW_REF) private readonly windowRef: DynamicWindowRef
+		    ) {}
+
+		    public onFormGroupInit(formGroup: FormGroup): void {
+		        this.formGroup = formGroup;
+		    }
+
+		    public onCreateButtonClick(): void {
+		        this.windowRef.close(this.formGroup.value);
+		    }
+		}
+
+		<user-creation-form
+		    (formGroupInit)="onFormGroupInit($event)">
+		</user-creation-form>		
+
+	глупый компонент:
+
+		@Component({
+		    selector: 'user-creation-form',
+		    templateUrl: './user-creation-form.component.html',
+		    styleUrls: ['./user-creation-form.component.scss'],
+		    changeDetection: ChangeDetectionStrategy.OnPush
+		})
+		export class UserCreationFormComponent implements OnInit {
+		    @Output()
+		    public formGroupInit = new EventEmitter<FormGroup>();
+		    
+		    public readonly formGroup = new FormGroup({
+		        name: new FormControl(''),
+		        age: new FormControl(18)
+		    });
+
+		    public ngOnInit(): void {
+		        this.formGroupInit.emit(this.formGroup);
+		    }
+		}
+
+		<form [formGroup]="formGroup">
+		    <os-form-field [isStacked]="true">
+		        <os-label>Name</os-label>
+
+		        <os-text-box
+		            [placeholder]="'Enter user name'"
+		            [formControl]="formGroup.controls.name">
+		        </os-text-box>
+		    </os-form-field>
+
+		    <os-form-field [isStacked]="true">
+		        <os-label>Age</os-label>
+
+		        <os-number-box
+		            [placeholder]="'Enter user age'"
+		            [isAllowDecimal]="false"
+		            [formControl]="formGroup.controls.age">
+		        </os-number-box>
+		    </os-form-field>
+		</form>
+
+
+	тут больше: https://github.com/dreyliky/dumb-and-smart-components-example
+
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================
+===========================================

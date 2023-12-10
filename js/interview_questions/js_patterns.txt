@@ -181,16 +181,18 @@
 
 его можно реализовать в виде модуля(важно помнить, что модуль при импорте сначала выполняется, а затем предоставляет то, что экспортировано из него):
 
-	module Singleton {
-	  class Instance {
-		  constructor(public foo: number = 123) {}
-	  }
-	  
-	  let instance = new Instance;
-	  
-	  export function getInstance() :Instance {
-	     return instance;
-	  }
+	class DB {
+		url: number;
+		private static: Database;
+
+		constructor() {
+			if (Database.instance) {
+				return Database.instance;
+			}
+
+			this.url = Math.random();
+			Database.instance = this;
+		}
 	}
 
 можно реализовать в виде объектного литерала:
