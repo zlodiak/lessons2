@@ -42,7 +42,7 @@
 ===================================
 наблюдатель это паттерн, который позволяет объектам-подписчикам получать рассылки от объекта-издателя. 
 
-объект-издатель имеет массив для хранения подписавшихся, метод рассылающий в цикле сообщения подписчикам. а так же метод, который осуществляет подписку. и необязательный метод, который уничтожает подписку.
+объект-издатель имеет массив для хранения подписавшихся, метод рассылающий в цикле сообщения подписчикам. а также метод, который осуществляет подписку. и необязательный метод, который уничтожает подписку.
 
 	function Publisher(){
 	  this.subscribers = [];
@@ -689,6 +689,359 @@ MVC / MVP / MVVM
 	MVVM похож на MVP, но связи VIEW-CONTROLLER и CONTROLLER-MODEL реактивные. по сути они выглядят как двойная привязка. таким образом компоненты моментально узнают об изменении соседнего компонента без инициализирующего действия со стороны соседнего компонента. в частности в angular при измененеии переменной в CONTROLLER сразу происходит обновление VIEW. а при изменении данных в MODEL(например, сервис выполнил http-запрос) сразу срабатывает rxjs-подписка в CONTROLER.
 
 
+===================================
+builder
+
+	паттерн используется когда необходимо создать объект в несколько этапов. в частности когда при инициализации передаётся много параметров.
+
+	имеем 2 класса вместо одного. первый класс это чертёж целевого объекта:
+
+		class Drink {
+		  constructor(settings) {
+		    const { base, milk, sugar, cream } = settings;
+
+		    this.base = base;
+		    this.milk = milk;
+		    this.sugar = sugar;
+		    this.cream = cream;
+		  }
+		}
+
+	а второй класс это фабрика, которая формирует сложный параметр инициализации и создаёт целевой объект:
+
+		class DrinkBuilder {
+		  settings = {
+		    base: 'espresso',
+		  };
+
+		  addMilk = () => {
+		    this.settings.milk = true;
+		    return this;
+		  };
+
+		  addSugar = () => {
+		    this.settings.sugar = true;
+		    return this;
+		  };
+
+		  addCream = () => {
+		    this.settings.cream = true;
+		    return this;
+		  };
+
+		  build = () => new Drink(this.settings);
+		}
+
+	использование:
+
+		const drink1 = new DrinkBuilder().addMilk().build();
+
+		const drink2 = new DrinkBuilder();
+		// some code
+		drink2.addSugar();
+		// some code
+		drink2.addCream();
+		// some code
+		drink2.addMilk();
+		const drink2_ = drink2.build();
+
+		console.log(drink1);
+		console.log(drink2_);
+
+	пример кода тут: https://stackblitz.com/edit/js-qwohkv?file=index.js
+
+===================================
+singleton
+
+	это паттерн, который позволяет создать только один объект, а при попытке создать новый возвращает ранее созданный. таким образом всегда существует не более одного объекта.
+
+		var Singleton = (function () {
+		  var instance;
+
+		  function createInstance() {
+		    var object = new Object('I am the instance');
+		    return object;
+		  }
+
+		  return {
+		    getInstance: function () {
+		      if (!instance) {
+		        instance = createInstance();
+		      }
+		      return instance;
+		    },
+		  };
+		})();
+
+		function run() {
+		  var instance1 = Singleton.getInstance();
+		  var instance2 = Singleton.getInstance();
+
+		  console.log('Same instance? ' + (instance1 === instance2));
+		}
+
+		run();
+
+
+	также можно создать синглтон на основе клсаа, но в этом случае необходимо ввести соглашение, по которому инстансы не будут создаваться через конструктор. то есть у синглтона будет определённая точка входа в виде метода instance(). 
+
+	или, если есть возможность, сделать конструктор приватным:
+
+		class Sun {
+		  private static instance = null;
+
+		  private constructor() {}
+
+		  static getInstance() {
+		    if (!Sun.instance) {
+		      Sun.instance = new Sun();
+		    }
+		    return Sun.instance;
+		  }
+
+		  shine() {
+		    console.log('shine method');
+		  }
+
+		  mass = 9999;
+		}
+
+		// let something = new Sun(); // Ошибка: конструктор 'Sun' является приватным.
+
+		let instance = Sun.getInstance(); // сделать что-нибудь с экземпляром...
+
+		console.log(instance);
+		console.log(instance.mass);
+		instance.shine();
+
+	демо: https://stackblitz.com/edit/typescript-vvkhwv?file=index.ts
+
+	нужно помнить, что синглтон это аналог глобальной переменной, что является антипаттерном потому что увеличивает зацепление(coupling -  степень взаимозависимости между программными модулями) кода.
+
+	ещё одна вредная сторона синглтона это сложность тестирования. потому что он доступен из любой точки программы, изолировать отдельные куски программы сложно.
+
+
+===================================
+command
+
+	это паттерн, который оборачивает действие в объект команды, таким образом получается экшен, который содержит полезную нагрузку в виде методов и данных. затем этот экшен отдаётся потребителю, который:
+
+		1. выполняет его
+		2. в зависимости от результата меняет своё состояние
+		3. логирует экшен в стек
+
+	таким образом потребитель всегда имеет возможность ходить по истории команд, разгружая стек и соответсвенно откатывая состояние.
+
+	вот пример калькулятора с возможностью отмены операций:
+
+		const add = (x, y) => x + y;
+		const sub = (x, y) => x - y;
+		const mul = (x, y) => x * y;
+		const div = (x, y) => x / y;
+
+		const AddAction = (value) => new Command(add, sub, value);
+		const SubAction = (value) => new Command(sub, add, value);
+		const MulAction = (value) => new Command(mul, div, value);
+		const DivAction = (value) => new Command(div, mul, value);
+
+		class Command {
+		  constructor(execute, undo, value) {
+		    this.execute = execute;
+		    this.undo = undo;
+		    this.value = value;
+		  }
+		}
+
+		class Calculator {
+		  current = 0;
+		  commands = [];
+
+		  execute(command) {
+		    this.current = command.execute(this.current, command.value);
+		    this.commands.push(command);
+		  }
+
+		  undo() {
+		    const command = this.commands.pop();
+		    this.current = command.undo(this.current, command.value);
+		  }
+
+		  getCurrentValue() {
+		    return this.current;
+		  }
+		}
+
+		const calculator = new Calculator();
+
+		calculator.execute(AddAction(100));
+		calculator.execute(SubAction(24));
+		calculator.execute(MulAction(6));
+		calculator.execute(DivAction(2));
+
+		calculator.undo();
+		calculator.undo();
+
+		console.log(calculator.getCurrentValue()); // 76
+
+	демо здесь: https://stackblitz.com/edit/js-slw7z6?file=index.js
+
+
+===================================
+iterator
+
+	это объект, который принимает итерируемый объект и имеет методы для его перебора. также он имеет индекс, который увеличивается по мере перебора. когда индекс превышает количество элементов, то выбрасывается сигнал завершения.
+
+		class Iterator {
+		  constructor(items) {
+		    this.index = 0;
+		    this.items = items;
+		  }
+
+		  first() {
+		    this.reset();
+		    return this.next();
+		  }
+
+		  next() {
+		    return this.items[this.index++];
+		  }
+
+		  hasNext() {
+		    return this.index <= this.items.length;
+		  }
+
+		  reset() {
+		    this.index = 0;
+		  }
+		}
+
+		const items = ['one', 2, 'circle', true, 'Applepie'];
+		const iter = new Iterator(items);
+
+		for (let item = iter.first(); iter.hasNext(); item = iter.next()) {
+		  console.log(item);
+		}	
+
+	вариант без использования класса:
+
+		function makeIterator(array) {
+		  let nextIndex = 0;
+
+		  return {
+		    next: function () {
+		      if (nextIndex < array.length) {
+		        const result = { value: array[nextIndex], done: false };
+		        nextIndex++;
+		        return result;
+		      } else {
+		        return { done: true };
+		      }
+		    },
+		  };
+		}
+
+		let iterator = makeIterator(['Hello', 'world']);
+
+		console.log(iterator.next().value);
+		console.log(iterator.next().value);
+		console.log(iterator.next().done);
+
+	чтобы в js объект был итерируемым необходимо чтобы он или его прототип имел свойство [Symbol.iterator]. это свойство ссылается на вариант итератора, описанный выше. 
+
+	в цикле for происходит неявное обращение к методу next().
+
+
+===================================
+template method
+
+	метод, который последовательно вызывает составные части алгоритма, при этом эти части работают по-разному в зависимости от инстанса.
+
+	например, есть класс сотрудника, в котором есть метод templateMethod полного жизненного цикла сотрудника (hire/pay/fire). инстансы этого класса будут иметь отличные метод полного жизненного цикла templateMethod потому что в инстансах часть методов hire/pay/fire будет переопределена, но сам метод полного жизненного цикла templateMethod не будет переопределён.
+
+		class Employee {
+		    constructor(name, salary) {
+		        this._name = name;
+		        this._salary = salary;
+		    }
+		    templateMethod() {
+		        this.hiring();
+		        this.work();
+		        this.getPaid();
+		        if (this.needSack()) {
+		            this.sacking();
+		        }
+		    }
+		    hiring() {
+		        console.log(`Hiring ${this._name}`);
+		    }
+		    work() {
+		        console.log(`${this._name} handles ${this.responsibilities() /* gap to be filled by subclass */}`);
+		    }
+		    getPaid() {
+		        throw new  Error(`Не описан метод getPaid() в классе ${this.constructor.name}`)
+		    }
+		    needSack() { 
+		        return false;
+		    }
+		    sacking() { 
+		        console.log(`Sacking ${this._name}`);
+		    }
+		}
+
+		class Developer extends Employee {
+		    constructor(name, salary) {
+		        super(name, salary);
+		    }
+		    getPaid() {
+		        console.log(`${this._name} got paid ${this._salary}. It's more then Tester.`);
+		    }
+		    needSack() { 
+		        return true;
+		    }
+		    responsibilities() {
+		        return 'application development';
+		    }
+		}
+
+		class Tester extends Employee {
+		    constructor(name, salary) {
+		        super(name, salary);
+		    }
+		    needSack() { 
+		        let suckQuestion = confirm(`Уволить сотрудника ${this._name}?`);
+		        return suckQuestion;
+		    }
+		    getPaid() {
+		        console.log(`${this._name} got paid ${this._salary}. It's less then Developer.`);
+		    }
+		    responsibilities() {
+		        return 'testing';
+		    }
+		}
+
+		const dev = new Developer('Nathan', 100000);
+		dev.templateMethod();
+
+		const tester = new Tester('Brian', 90000);
+		tester.templateMethod();	
+
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
+===================================
 ===================================
 ===================================
 ===================================

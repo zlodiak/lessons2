@@ -24,26 +24,57 @@
 ================================
 описать тип enum
 
-это объект, который состоит из констант. если контанты - числа, то возможна двусторонняя ассоциация:
+	это объект с ограниченным числом пар ключ-значение, значения являются константамиы. если контанты - числа, то возможна двусторонняя ассоциация:
 
-	enum Nuts {
-	  Peanuts = 0,
-	  Walnut = 1,
-	  Hazelnut = 2,
-	  Cedar = 3,
-	}
-	console.log(Nuts[2]); // Hazelnut
-	console.log(Nuts.Cedar); // 3
+		enum Nuts {
+		  Peanuts = 0,
+		  Walnut = 1,
+		  Hazelnut = 2,
+		  Cedar = 3,
+		}
+		console.log(Nuts[2]); // Hazelnut
+		console.log(Nuts.Cedar); // 3
 
-если констнты  - строки, то ассоциация односторонняя:
+	если констнты  - строки, то ассоциация односторонняя:
 
-	enum Nuts {
-	    Peanuts = 'qwe', // 0
-	    Walnut = 'asd', // 1
-	}
-	console.log(Nuts[0]);       // undefined
-	console.log(Nuts['qwe']); 	// undefined
-	console.log(Nuts.Peanuts);  // qwe
+		enum Nuts {
+		    Peanuts = 'qwe', // 0
+		    Walnut = 'asd', // 1
+		}
+		console.log(Nuts[0]);       // undefined
+		console.log(Nuts['qwe']); 	// undefined
+		console.log(Nuts.Peanuts);  // qwe
+
+	enum используется когда нужно определить несколько фиксированных значений для переменной. например, seasons это время года, оно может иметь только 4 значения.
+
+	если вместо enum использовать объекты, то возможно равенство различных enum:
+
+		const Seasons = {
+		  Summer: 0,
+		  Autumn: 1,
+		  Winter: 2,
+		  Spring: 3,
+		};
+
+		const Fruits = {
+		  Apple: 1,
+		  Orange: 1,
+		};
+
+		// sad but true
+		console.log(Seasons.Autumn === Fruits.Apple);
+
+	также если использовать объекты, то можно переназначить значение внутри enum:
+
+		const Seasons = {
+			Summer: Symbol("summer"),
+			Autumn: Symbol("autumn"),
+			Winter: Symbol("winter"),
+			Spring: Symbol("spring")
+		}
+
+		Seasons.Winter = "winter" // this will overwrite the `Symbol` with a string 
+
 
 
 ================================
