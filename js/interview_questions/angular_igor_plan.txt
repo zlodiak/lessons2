@@ -417,6 +417,52 @@ ngTemplateOutlet можно использовать на странице не�
 		</ng-container>	
 		//  ctx = {estimate: this.totalEstimate};
 
+ngComponentOutlet аналогична ngTemplateOutlet. Различие лишь в том, что она формирует представление Host View по переданному ей названию компонента:
+
+	import { Component } from '@angular/core';
+	import { HelloComponent } from './hello.component';
+	import { ByeComponent } from './bye.component';
+
+	@Component({
+	  selector: 'my-app',
+	  template: `
+	    <button (click)="render()">Render dynamic component</button>
+	    <ng-container *ngComponentOutlet="currentComponent"></ng-container>
+	  `
+	})
+	export class AppComponent  {
+	  public components = [HelloComponent, ByeComponent];
+	  public currentComponent = null;
+
+	  public render(): void {
+	    const index = Math.round(Math.random());
+	    this.currentComponent = this.components[index];
+	  }
+	}
+
+	фактически это ленивая загрузка компонента потому что до последнего момента фреймворк не знает какой именно компонент будет встроен и насколько он тяжёл.
+
+	демо тут: https://stackblitz.com/edit/angular-ng-component-outlet-example-7bte9w?file=src%2Fapp%2Fapp.component.ts
+
+		однако в 17 версии фреймворка появился более продвинутый механизм ленивого встраивания одного standalone компонента в другой не standalone or ngModule. этот механизм предполагает отображение заглушек и ошибок в процесс встраивания:
+
+	    <button type="button" #loadButton>Click Me</button>
+	    @defer(on interaction(loadButton)) {
+	      <app-lazy-component />
+	    }@placeholder {
+	      showed until the chunk file not begin to load
+	    }@loading {
+	      showed during the loading of the chunk
+	    }@error {
+	      showed if an error happen during loading
+	    }		
+
+
+	    триггер расположен после @defer. триггер может быть декларативным (hover) или императивным (пользовательская логика, возвращающая boolean, например, qwe$ | async)
+
+	    демо: https://stackblitz.com/edit/angular-defer-example-fbmqbq?file=src%2Fmain.ts
+
+
 =========================================================
 через ng-content можно передавать отдельный части разметки и отображать их соответственно в разных целевых контейнерах.
 
@@ -2742,7 +2788,66 @@ dependency injection
 	сам инжектор представляет из себя класс, который содержит набор сервисов в виде объекта. ключами этого объекта являются имена сервисов, а значениями этого объекта являются инстансы. также инжектор имеет метод, которые получает имя класса-зависимости, по этому имени он извлекает из вышеописанного объекта нужный инстанс и возвращает его классу-компоненту.
 
 =========================================================
+в Input() можно использовать функцию transform, которая действует аналогично сеттеру. то есть при получении входного параметра сразу обрабатывает его:
+
+	function characterNameUppercase(character: Character): Character {
+	  return {
+	    ...character,
+	    name: character.name.toUpperCase()
+	  }
+	}
+	    
+	@Component({
+	  standalone: true,
+	  //...
+	  template: `<h1>{{ character.name }}`
+	})
+	export class CharactersComponent {
+	  @Input({ $required: true, transform: characterNameUppercase }) 
+	  character!: Character;
+	}
+
+при этом существуют встроенные преобразователи в число или в булево значение.:
+
+	export class ProductComponent {
+	  @Input({ transform: booleanAttribute }) 
+	  showDetails!: boolean;
+	}
+
+
+	export class ProductComponent {
+	  @Input({ transform: booleanAttribute }) 
+	  showDetails!: boolean;
+	}
+
+
+
 =========================================================
+в 17 версии фреймворка появился альтенативный синтаксис для if-else, switch, for. 
+
+	его можно использовать без импорта NgIf и прочих подобных директив:
+
+		@if (streamingService === 'Netflix'){
+		  <div>Peaky Blinders</div>
+		} @else {
+		  <div>Ted Lasso</div>
+		}
+
+	кроме того можно в цикле использовать плейсхолдер пустого блока, если массив цикла пустой:
+
+		@for (streamingService of streamingServices; track stramingService) {
+		  <div>{{ streamingService }}</div>
+		} @placeholder {
+		  <div>No streaming services available</div>
+		}
+
+	также в цикле можно использовать инлайновый trackBy:
+
+		@for (product of products; track product.id) { 
+		 {{ product.title }} 
+		}
+
+
 =========================================================
 =========================================================
 =========================================================
