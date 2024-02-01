@@ -30,6 +30,26 @@ const obj = {
 inner = obj.inner;
 inner();
 
+--------
+а так? почему?
+// Uncaught ReferenceError: inner is not defined
+
+'use strict';
+
+const obj = {
+  a: 10,
+  inner: function () {
+    console.log('inner');
+  },
+};
+
+inner = obj.inner;
+inner();
+
+----
+
+в строгом режиме this = undefined
+в нестрогом режиме this = window
 
 =======================================
 какой будет вывод в консоль?
@@ -173,6 +193,47 @@ console.log(2);
 
 
 =======================================
+какой будет вывод в консоль?
+
+<style>
+  div {
+    padding: 50px;
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+</style>
+
+<div id="d3">
+  DIV3
+  <div id="d2">
+    DIV 2
+    <div id="d1">DIV 1</div>
+  </div>
+</div>
+
+<script>
+  const el1 = document.getElementById('d1');
+  const el2 = document.getElementById('d2');
+  const el3 = document.getElementById('d3');
+
+  el1.addEventListener('click', (e) => {
+    console.log('div1 was clicked'); 
+  });
+
+  el2.addEventListener('click', (e) => {
+    e.stopPropagation();
+    console.log('div2 was clicked'); 
+  });
+
+  el3.addEventListener('click', (e) => {
+    console.log('div3 was clicked'); 
+  });
+</script>
+
+ответ:
+  // div1 was clicked
+  // div2 was clicked
+
+
 =======================================
 =======================================
 =======================================
