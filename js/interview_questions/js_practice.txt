@@ -213,7 +213,166 @@ console.log(arrayUniqueByKey);
 
 
 ===========================
+// Необходимо обработать массив таким образом, чтобы распределить людей по группам городов
+
+// Данные на вход
+const people = [
+  {
+    name: 'Alex',
+    city: 'Moscow',
+  },
+  {
+    name: 'Ivan',
+    city: 'Moscow',
+  },
+  {
+    name: 'Joe',
+    city: 'New York'
+  },
+  {
+    name: 'Johan',
+    city: 'Berlin'
+  },
+]
+
+// Данные на выход
+{
+  'Moscow': [ 'Alex', 'Ivan' ],
+  'New York': 'Joe',
+  'Berlin': 'Johan'
+}
+
+
+const groupByCity = (array) => {};
+console.log(groupByCity(people));
+
+
+первый способ:
+
+  const groupByCity = (array) => {
+    const cities = array.reduce((acc, p) => [...acc, p.city], []);
+    const citiesUnique = [...new Set(cities)];
+    const groups = {};
+
+    citiesUnique.forEach((c) => {
+      const names = array
+        .map((p) => {
+          if (p.city === c) {
+            return p.name;
+          }
+        })
+        .filter((item) => item);
+
+      groups[c] = names;
+    });
+
+    citiesUnique.forEach((c) => {
+      if (groups[c].length === 1) {
+        groups[c] = groups[c][0];
+      }
+    });
+
+    return groups;
+  };
+
+
+второй способ:
+
+  const groupByCity = (array) => {
+    const result = {};
+
+    for (const item of array) {
+      const { city, name } = item;
+
+      if (!result[city]) {
+        result[city] = name;
+      } else if (Array.isArray(result[city])) {
+        result[city].push(name);
+      } else {
+        result[city] = [result[city], name];
+      }
+    }
+
+    return result;
+  };
+
+
 ===========================
+// написать функцию, которая проверяла бы является ли слово палиндромом или нет. пробелы и знаки препинания не учитывать. регистр букв тоже не учитывать.
+
+const words = [
+  `Казак`,
+  `Madam, I'm Adam`,
+  `А в Енисее - синева`,
+  `О, духи, от уборки микробу-то и худо`,
+  `Не палиндром`,
+];
+
+words.forEach((word) => {
+  console.log(poly(word));
+});
+
+function poly(word) {
+
+}
+
+
+первый способ:
+
+  const words = [
+    `Казак`,
+    `Madam, I'm Adam`,
+    `А в Енисее - синева`,
+    `О, духи, от уборки микробу-то и худо`,
+    `Не палиндром`,
+  ];
+
+  words.forEach((word) => {
+    console.log(poly(word));
+  });
+
+  function poly(word) {
+    let isPoly = true;
+    const restrictedSymbols = [
+      '~',
+      '`',
+      '!',
+      '@',
+      '#',
+      '$',
+      '%',
+      '^',
+      '&',
+      '*',
+      '(',
+      ')',
+      '_',
+      '-',
+      '+',
+      '=',
+      ' ',
+      ',',
+      '.',
+      '?',
+      ';',
+      ':',
+    ];
+
+    const wordWithoutSigns = word
+      .replaceAll(/['.,\/#!$%\^&\*;:{}=\-_`~() ]/g, '')
+      .toLowerCase();
+
+    const wordWithoutSignsRevert = wordWithoutSigns.split('').reverse().join('');
+
+    for (let i = 0; i < wordWithoutSigns.length; ++i) {
+      isPoly = wordWithoutSigns[i] === wordWithoutSignsRevert[i];
+    }
+
+    return isPoly;
+  }
+
+
+
 ===========================
 ===========================
 ===========================
