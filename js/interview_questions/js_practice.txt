@@ -215,36 +215,36 @@ console.log(arrayUniqueByKey);
 ===========================
 // Необходимо обработать массив таким образом, чтобы распределить людей по группам городов
 
-// Данные на вход
-const people = [
-  {
-    name: 'Alex',
-    city: 'Moscow',
-  },
-  {
-    name: 'Ivan',
-    city: 'Moscow',
-  },
-  {
-    name: 'Joe',
-    city: 'New York'
-  },
-  {
-    name: 'Johan',
-    city: 'Berlin'
-  },
-]
+  // Данные на вход
+  const people = [
+    {
+      name: 'Alex',
+      city: 'Moscow',
+    },
+    {
+      name: 'Ivan',
+      city: 'Moscow',
+    },
+    {
+      name: 'Joe',
+      city: 'New York'
+    },
+    {
+      name: 'Johan',
+      city: 'Berlin'
+    },
+  ]
 
-// Данные на выход
-{
-  'Moscow': [ 'Alex', 'Ivan' ],
-  'New York': 'Joe',
-  'Berlin': 'Johan'
-}
+  // Данные на выход
+  {
+    'Moscow': [ 'Alex', 'Ivan' ],
+    'New York': 'Joe',
+    'Berlin': 'Johan'
+  }
 
 
-const groupByCity = (array) => {};
-console.log(groupByCity(people));
+  const groupByCity = (array) => {};
+  console.log(groupByCity(people));
 
 
 первый способ:
@@ -300,21 +300,21 @@ console.log(groupByCity(people));
 ===========================
 // написать функцию, которая проверяла бы является ли слово палиндромом или нет. пробелы и знаки препинания не учитывать. регистр букв тоже не учитывать.
 
-const words = [
-  `Казак`,
-  `Madam, I'm Adam`,
-  `А в Енисее - синева`,
-  `О, духи, от уборки микробу-то и худо`,
-  `Не палиндром`,
-];
+  const words = [
+    `Казак`,
+    `Madam, I'm Adam`,
+    `А в Енисее - синева`,
+    `О, духи, от уборки микробу-то и худо`,
+    `Не палиндром`,
+  ];
 
-words.forEach((word) => {
-  console.log(poly(word));
-});
+  words.forEach((word) => {
+    console.log(poly(word));
+  });
 
-function poly(word) {
+  function poly(word) {
 
-}
+  }
 
 
 первый способ:
@@ -374,6 +374,76 @@ function poly(word) {
 
 
 ===========================
+// Проверить, является ли 2 переданных строки анаграммой
+
+  console.log(anagram('finder', 'Friend')); // true
+  console.log(anagram('hello', 'bye')); // false
+
+  function anagram(strA, strB) {}
+
+первый способ:
+
+  console.log(anagram('finder', 'Friend')); // true
+  console.log(anagram('hello', 'bye')); // false
+
+  function anagram(strA, strB) {
+    const aLower = strA.toLowerCase();
+    const bLower = strB.toLowerCase();
+
+    const aStorage = aLower.split('');
+    const bStorage = bLower.split('');
+
+    bStorage.forEach((bLetter) => {
+      const bIndex = aStorage.findIndex((l) => l === bLetter);
+
+      if (bIndex > -1) {
+        aStorage.splice(bIndex, 1);
+      }
+    });
+
+    return !aStorage.length;
+  }
+
+
+второй способ:
+
+  const buildCharObject = str => {
+    const charObj = {}
+    for(let char of str.replace(/[^\w]/g).toLowerCase()) {
+      if (charObj[char]) {
+        charObj[char] = charObj[char] + 1
+      } else {
+        charObj[char] = 1
+      }
+    }
+    return charObj
+  }
+
+
+  const anagram = (strA, strB) => {
+    const aCharObject = buildCharObject(strA)
+    const bCharObject = buildCharObject(strB)
+    
+    console.log(aCharObject)
+    console.log(bCharObject)
+
+    if(Object.keys(aCharObject).length !== Object.keys(bCharObject).length) {
+      return false
+    }
+
+    for(let char in aCharObject) {
+      if(aCharObject[char] !== bCharObject[char]) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  console.log(anagram('finder', 'Friend'))
+  console.log(anagram('hello', 'bye'))
+
+
 ===========================
 ===========================
 ===========================
