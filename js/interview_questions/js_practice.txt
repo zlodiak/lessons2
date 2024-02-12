@@ -445,10 +445,189 @@ console.log(arrayUniqueByKey);
 
 
 ===========================
+// реобразовать строку в объект, разделяя свойства по точке.
+
+  const str = 'one.two.three.four.five';
+
+  // RESULT
+  // {
+  //   one: {
+  //     two: {
+  //       three: {
+  //         four: {
+  //           five: {}
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
+  toObject(str);
+
+  function toObject(str) {
+
+  }
+
+
+первый способ:
+
+  const str = 'one.two.three.four.five';
+
+  toObject(str);
+
+  function toObject(str) {
+    const values = Object.values(str.split('.'));
+    console.log(values);
+
+    const result = values.reduceRight((acc, val) => {
+      return { [val]: acc };
+    }, {});
+
+    console.log(result);
+  }
+
+
+
 ===========================
+// вычислить факториал заданного числа
+
+  function factorial(n) {
+
+  }
+
+  console.log(factorial(5)); // 120
+  console.log(factorial(0)); // 1
+  console.log(factorial(1)); // 1
+  console.log(factorial(10)); // 3628800
+
+
+первый способ:
+
+  function factorial(n) {
+    if (n === 0 || n === 1) {
+      return 1;
+    }
+
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+      result *= i;
+    }
+
+    return result;
+  }
+
+  console.log(factorial(5)); // 120
+  console.log(factorial(0)); // 1
+  console.log(factorial(1)); // 1
+  console.log(factorial(10)); // 3628800
+
 ===========================
+// написать функцию, которая вычисляет число финобаччи для заданного индекса
+
+  function fibonacci(n) {
+  }
+
+  console.log(fibonacci(6)); // 8
+  console.log(fibonacci(10)); // 55
+  console.log(fibonacci(15)); // 610
+  
+
+первый способ:
+
+  function fibonacci(n) {
+    if (n <= 1) {
+      return n;
+    }
+
+    const result = fibonacci(n - 1) + fibonacci(n - 2);
+
+    return result;
+  }
+
+  console.log(fibonacci(6)); // 8
+  console.log(fibonacci(10)); // 55
+  console.log(fibonacci(15)); // 610
+
+
 ===========================
+// развернуть вложенные массивы при помощи рекурсии
+
+  const nestedArray = [1, [2, [3, 4], 5], 6];
+  console.log(flattenArray(nestedArray)); // [1, 2, 3, 4, 5, 6]
+
+
+первый способ:
+
+  function flattenArray(arr) {
+    const stack = [...arr];
+    const result = [];
+
+    while (stack.length) {
+      const element = stack.pop();
+      if (Array.isArray(element)) {
+        stack.push(...element);
+      } else {
+        result.unshift(element);
+      }
+    }
+
+    return result;
+  }
+
+  const nestedArray = [1, [2, [3, 4], 5], 6];
+  console.log(flattenArray(nestedArray)); // [1, 2, 3, 4, 5, 6]
+
 ===========================
+// реализовать собственный метод map
+
+первый способ:
+
+  const arr = [1, 2, 3];
+
+  Array.prototype.mapCustom = function (f) {
+    let result = [];
+    result = this.map((el) => f(el));
+    return result;
+  };
+
+  const newArr = arr.mapCustom((arg) => arg * 2);
+  console.log(newArr);
+
+
+второй способ:
+
+const arr = [1, 2, 3];
+
+  Array.prototype.mapCustom = function (f) {
+    let result = [];
+    this.forEach((el) => result.push(f(el)));
+    return result;
+  };
+
+  const newArr = arr.mapCustom((arg) => arg * 2);
+  console.log(newArr);
+  
+
+третий способ:
+
+  const arr = [1, 2, 3];
+
+  Array.prototype.mapCustom = function (f) {
+    let result = [];
+
+    for (let i = 0; i < this.length; i++) {
+      result.push(f(this[i]));
+    }
+
+    return result;
+  };
+
+  const newArr = arr.mapCustom((arg) => arg * 2);
+  console.log(newArr);
+
+
+
+
 ===========================
 ===========================
 ===========================
