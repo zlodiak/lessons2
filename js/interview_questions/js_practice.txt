@@ -298,7 +298,7 @@ console.log(arrayUniqueByKey);
 
 
 ===========================
-// написать функцию, которая проверяла бы является ли слово палиндромом или нет. пробелы и знаки препинания не учитывать. регистр букв тоже не учитывать.
+// написать функцию, которая проверяла бы является ли слово палиндромом или нет. пробелы и знаки препинания не учитывать. регистр букв тоже не учитывать. палиндром это слово, которое одинаково читаются слева направо и справа налево.
 
   const words = [
     `Казак`,
@@ -371,6 +371,24 @@ console.log(arrayUniqueByKey);
     return isPoly;
   }
 
+второй способ:
+
+  const words = [
+    `Казак`,
+    `Madam, I'm Adam`,
+    `А в Енисее - синева`,
+    `О, духи, от уборки микробу-то и худо`,
+    `Не палиндром`,
+  ];
+
+  words.forEach((word) => {
+    console.log(poly(word));
+  });
+
+  function poly(word) {
+    word = word.toLowerCase();
+    return word === word.split('').reverse().join('');
+  }
 
 
 ===========================
@@ -442,6 +460,22 @@ console.log(arrayUniqueByKey);
 
   console.log(anagram('finder', 'Friend'))
   console.log(anagram('hello', 'bye'))
+
+третий способ:
+
+  var firstWord = 'Логика';
+  var secondWord = 'Иголка';
+
+  console.log(isAnagram(firstWord, secondWord));
+
+  function isAnagram(first, second) {
+    var a = first.toLowerCase();
+    var b = second.toLowerCase();
+
+    a = a.split('').sort().join('');
+    b = b.split('').sort().join('');
+    return a === b;
+  }
 
 
 ===========================
@@ -626,8 +660,216 @@ const arr = [1, 2, 3];
   console.log(newArr);
 
 
+===========================
+// реализовать собственный метод filter
+
+первый способ:
+
+  const arr = new Array(1, 2, 3, 4, 5, 6);
+
+  Array.prototype.filterCustom = function (f) {
+    let result = [];
+
+    for (let i = 0; i < this.length; ++i) {
+      if (f(this[i])) {
+        result.push(this[i]);
+      }
+    }
+
+    return result;
+  };
+
+  const newArr = arr.filterCustom((arg) => arg % 2 === 0);
+
+  console.log(newArr); // [2, 4, 6]
 
 
+===========================
+// реализовать собственный метод reduce
+
+первый способ (без начального значения):
+
+  const arr = new Array(1, 2, 3, 4);
+
+  Array.prototype.reduceCustom = function (f) {
+    let result = this[0];
+
+    for (let i = 1; i < this.length; ++i) {
+      result = f(result, this[i]);
+    }
+
+    return result;
+  };
+
+  const newArr = arr.reduceCustom((acc, item) => acc + item);
+  console.log(newArr); // 10
+
+
+второй способ (с начальным значением):
+
+  const arr = new Array(1, 2, 3, 4);
+
+  Array.prototype.reduceCustom = function (f, init) {
+    let result = init ? init : this[0];
+
+    for (let i = init ? 0 : 1; i < this.length; ++i) {
+      result = f(result, this[i]);
+    }
+
+    return result;
+  };
+
+  const newArr = arr.reduceCustom((acc, item) => acc + item, 5);
+  console.log(newArr); // 15
+
+третий способ (когда начальное значение является объектом):
+
+  const arr = new Array(1, 2, 3, 4);
+
+  Array.prototype.reduceCustom = function (f, init) {
+    let result = init ? init : this[0];
+
+    for (let i = init ? 0 : 1; i < this.length; ++i) {
+      result = f(result, this[i]);
+    }
+
+    return result;
+  };
+
+  const newArr = arr.reduceCustom((acc, item) => {
+    return { ['key_' + item]: acc };
+  }, {});
+  console.log(newArr); // nested structure
+
+
+===========================
+// добавить методы в прототип, которые помогли бы из строки (2).plus(3).minus(1) получить результат: 4
+
+  const r = (2).plus(3).minus(1);
+  console.log(r);
+
+первый способ:
+
+  Number.prototype.plus = function (value) {
+    return this + value;
+  };
+
+  Number.prototype.minus = function (value) {
+    return this - value;
+  };
+
+  const r = (2).plus(3).minus(1);
+  console.log(r);
+
+
+===========================
+// написать функцию, которая проверяет целове ли число ей передано или дробное?
+
+  const a = 5;
+  const b = 8.6;
+
+  function isDecimal(num) {}
+
+  console.log(isDecimal(a));
+  console.log(isDecimal(b));
+
+
+способ первый:
+
+  const a = 5;
+  const b = 8.6;
+
+  function isDecimal(num) {
+    const str = num.toString().split('');
+
+    return !!str.find((s) => s === '.');
+  }
+
+  console.log(isDecimal(a));
+  console.log(isDecimal(b));
+
+
+второй способ:
+
+  const a = 5;
+  const b = 8.6;
+
+  function isDecimal(num) {
+    return num % 1 === 0;
+  }
+
+  console.log(isDecimal(a));
+  console.log(isDecimal(b));
+
+
+===========================
+// есть массив, в котором каждый элемент повторяется дважды. и есть массив, в котором не каждый элемент повторяется дважды. нужно написать функцию, которая проверяет наличие неповторяющегося дважды элемента
+
+const arrayExample = [1, 2, 3, 4, 1, 2, 3];
+console.log(hasUniqueElement(arrayExample)); // true
+
+const arrayExample2 = [1, 2, 3, 4, 1, 2, 3, 4];
+console.log(hasUniqueElement(arrayExample2)); // false
+
+function hasUniqueElement(arr) {}
+
+первый способ:
+
+  const arrayExample = [1, 2, 3, 4, 1, 2, 3];
+  console.log(hasUniqueElement(arrayExample));
+
+  const arrayExample2 = [1, 2, 3, 4, 1, 2, 3, 4];
+  console.log(hasUniqueElement(arrayExample2));
+
+  function hasUniqueElement(arr) {
+    const dict = {};
+
+    arr.forEach((el) => {
+      if (dict[el]) {
+        dict[el] += 1;
+      } else {
+        dict[el] = 1;
+      }
+    });
+
+    for (let prop in dict) {
+      if (dict[prop] === 1) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
+===========================
 ===========================
 ===========================
 ===========================
