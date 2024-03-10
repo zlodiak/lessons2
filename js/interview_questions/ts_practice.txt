@@ -1,0 +1,99 @@
+проверить строку на наличие повторяющихся символов. регистр не учитывать. то есть если в строке нет повторяющизся подряд или не подряд символов, то функция проверки возвращает true, если есть, то false. если функция проверки получает пустую строку, то вернёт true.
+
+function isIsogram(str: string): boolean {
+	// ????
+}
+
+console.log(isIsogram(''));
+console.log(isIsogram('Dermatoglyphics'));
+console.log(isIsogram('isogram'));
+console.log(isIsogram('aba'));
+console.log(isIsogram('moOse'));
+console.log(isIsogram('isIsogram'));
+
+
+первое решение:
+
+	function isIsogram(str: string): boolean {
+	  const lower = str.toLocaleLowerCase();
+	  let db: Record<string, number> = {};
+
+	  lower.split('').forEach((item) => {
+	    return db[item] ? db[item]++ : (db[item] = 1);
+	  });
+
+	  return Object.values(db).every((i) => i === 1);
+	}
+
+
+второе решение:
+
+	function isIsogram (str: string): boolean {
+	  return (new Set(str.toLowerCase())).size === str.length
+	}
+
+==============================
+пример использования индекса объекта вместо конструкции switch. важно то, что используется значение по умолчанию
+
+const likes = (names : string[]) : string => {
+  return {
+    0 : 'no one likes this',
+    1 : `${names[0]} likes this`,
+    2 : `${names[0]} and ${names[1]} like this`,
+    3 : `${names[0]}, ${names[1]} and ${names[2]} like this`,
+    4 : `${names[0]}, ${names[1]} and ${names.length - 2} others like this`,
+  }[Math.min(4, names.length)] as string
+}
+
+console.log(likes([]))
+console.log(likes(["Peter"]))
+console.log(likes(["Jacob", "Alex"]  ))
+console.log(likes(["Max", "John", "Mark"] ))
+console.log(likes(["Alex", "Jacob", "Mark", "Max"]))
+
+// результат должен быть таким:
+
+	[LOG]: "no one likes this" 
+	[LOG]: "Peter likes this" 
+	[LOG]: "Jacob and Alex like this" 
+	[LOG]: "Max, John and Mark like this" 
+	[LOG]: "Alex, Jacob and 2 others like this" 
+
+==============================
+поиск уникального элемента в массиве [ 1, 1, 1, 2, 1, 1 ]
+
+	export function findUniq(arr: Array<number>): number {
+	  return arr.find(n => arr.indexOf(n) === arr.lastIndexOf(n));
+	}
+
+	// суть в том, что индекс первого и индекс последнего элемента совпадают
+
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
+==============================
