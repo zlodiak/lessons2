@@ -69,6 +69,47 @@ console.log(likes(["Alex", "Jacob", "Mark", "Max"]))
 	// суть в том, что индекс первого и индекс последнего элемента совпадают
 
 ==============================
+функци принимает массив чисел. поерделить числа в этом массиве:
+	1. расположена по возрастанию,
+	2. расположены по убыванию
+	3. хаотично
+
+function isSortedAndHow(array: number[]): string {
+	??????
+}
+
+console.log(isSortedAndHow([1, 2])) // asc
+console.log(isSortedAndHow([15, 7, 3, -8])) // desc
+console.log(isSortedAndHow([4, 2, 30])) // no
+
+
+первое решение:
+
+	function isSortedAndHow(array: number[]): string {
+	  const asc = array.map((x) => x).sort((a, b) => a - b)
+	  const desc = array.map((x) => x).sort((a, b) => b - a)
+
+	  const isAsc = asc.every((item, index) => item === array[index])
+
+	  const isDesc = desc.every((item, index) => item === array[index])
+
+	  switch (true) {
+	    case isAsc:
+	      return 'yes, ascending';
+	    case isDesc:
+	      return 'yes, descending';
+	    default:
+	       return 'no';
+	  }
+	}
+
+
+второе решение:
+
+	function isSortedAndHow(array:number[]): string {
+	  return [ ...array ].sort((a,b) => a - b).join('') === array.join('') ? 'yes, ascending' : ([ ...array ].sort((a,b) => a - b).reverse().join('') === array.join('') ? 'yes, descending' : 'no');
+	}
+
 ==============================
 ==============================
 ==============================

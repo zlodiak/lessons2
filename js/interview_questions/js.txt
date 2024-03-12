@@ -2788,6 +2788,82 @@ HTTP2
 
 		глубокая копия
 
+
+
+-----------------
+
+способы клонирования массива:
+
+numbers = [1, 2, 3];
+numbersCopy = [...numbers];
+
+----
+
+numbers = [1, 2, 3];
+numbersCopy = [];
+
+for (i = 0; i < numbers.length; i++) {
+  numbersCopy[i] = numbers[i];
+}
+
+----
+
+numbers = [1, 2, 3];
+numbersCopy = numbers.map((x) => x);
+
+----
+
+numbers = [1, 2, 3];
+numbersCopy = numbers.filter(() => true);
+
+----
+
+numbers = [1, 2, 3];
+
+numbersCopy = numbers.reduce((newArray, element) => {
+  newArray.push(element);
+
+  return newArray;
+}, []);
+
+----
+
+numbers = [1, 2, 3, 4, 5];
+numbersCopy = numbers.slice();
+
+----
+
+nestedNumbers = [[1], [2]];
+numbersCopy = JSON.parse(JSON.stringify(nestedNumbers));
+
+----
+
+var numbers = [1, 2, 3];
+var numbersCopy = numbers.concat([]); 
+console.log(numbersCopy === numbers)
+
+----
+
+numbers = [1, 2, 3];
+numbersCopy = Array.from(numbers);
+
+----
+
+var numbers = [1, 2, 3];
+var numbersCopy = structuredClone(numbers)
+console.log(numbersCopy === numbers)
+
+----
+----
+----
+----
+----
+----
+----
+----
+
+
+
 ================================
 что такое глубокая и мелкая копия объекта?
 
