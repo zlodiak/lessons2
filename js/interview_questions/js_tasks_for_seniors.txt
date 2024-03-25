@@ -1,5 +1,8 @@
 какой результат будет выведен в консоль?
-// Uncaught ReferenceError: inner is not defined
+
+-----
+
+// undefined
 
 
 'use strict';
@@ -11,12 +14,29 @@ const obj = {
   },
 };
 
-inner = obj.inner;
+const inner = obj.inner;
+inner();
+
+-----------
+// window
+
+
+const obj = {
+  a: 10,
+  inner: function () {
+    console.log('inner', this);
+  },
+};
+
+const inner = obj.inner;
 inner();
 
 -----------
 а так? почему?
-// Uncaught ReferenceError: inner is not defined
+
+// window
+// несмотря на то что режим строгий, стрелочная функция имеет конткстром window
+
 
 'use strict';
 
@@ -27,23 +47,22 @@ const obj = {
   },
 };
 
-inner = obj.inner;
+const inner = obj.inner;
 inner();
 
---------
-а так? почему?
-// Uncaught ReferenceError: inner is not defined
 
-'use strict';
+----------
+
+// window
 
 const obj = {
   a: 10,
-  inner: function () {
-    console.log('inner');
+  inner: () => {
+    console.log('inner', this);
   },
 };
 
-inner = obj.inner;
+const inner = obj.inner;
 inner();
 
 ----
@@ -74,6 +93,9 @@ group.showList();
 а так?
 // undefined: John
 // undefined: Alice
+
+// потому что функция запускается в глобальном контексте, в котором нет title
+// исправляется добавлением в глобальную область видимости let title ='Our Group'
 
 
 let group = {
@@ -193,7 +215,7 @@ console.log(2);
 
 
 =======================================
-какой будет вывод в консоль?
+какой будет вывод в консоль после клика по самому внутреннему элементу??
 
 <style>
   div {
