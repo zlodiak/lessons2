@@ -310,7 +310,37 @@ position
 
 	absolute
 
-		схлопывается высота/ширина. left/top/right/bottom действуют относительно родителя с position: relative/absolute
+		схлопывается высота/ширина, если нет внутреннего содержимого в виде текста или блока. left/top/right/bottom действуют относительно родителя с position: relative/absolute
+
+		важная особенность в том, что если не заданы позиционирование left/top/right/bottom и при этом в родителе имеется текстовое содержание на одном уровне с абсолютно позиционированным элементом, то абсолютно позиционированный элемент на находится в левом верхнем углу родитльского. то есть текст выталкивает текст
+
+		    <div class="out">
+		      out
+		      <div class="in">
+		        in
+		        <div class="deep">depp</div>
+		      </div>
+		    </div>
+
+			.out {
+			  background: red;
+			  position: relative;
+			  width: 600px;
+			  height: 600px;
+			}
+
+			.in {
+			  background: lime;
+			  position: absolute;
+			}
+
+			.deep {
+			  background: orange;
+			  width: 100px;
+			  height: 100px;
+			}
+
+		https://stackblitz.com/edit/stackblitz-starters-nd13us?file=styles.css
 
 	fixed
 

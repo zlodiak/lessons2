@@ -962,6 +962,64 @@ angular elements это npm-пакет, который позволяет отд
 
 			.pipe(untilDestroyed(this))
 
+	пятый способ:
+
+		я 16 версии появился DestroyRef, он позволяет не задействовать хук ngOnDestroy:
+
+			export class Component implements OnInit {
+			  destroyRef = inject(DestroyRef);
+			 
+			  ngOnInit(): void {
+			    const destroyed = new Subject();
+			 
+			    this.destroyRef.onDestroy(() => {
+			      destroyed.next();
+			      destroyed.complete();
+			    });
+			 
+			    this.service.getData()
+			      .pipe(takeUntil(destroyed))
+			      .subscribe(response => this.data = response)
+			  }
+			}
+
+	шестой способ:
+
+		import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+		 
+		export class Component implements OnInit{
+		  data;
+		 
+		  constructor(private service: DataService) {
+		    this.service.getData()
+		      .pipe(takeUntilDestroyed())
+		      .subscribe(response => this.data = response)
+		  }
+		}
+
+
+	седьмой способ:
+
+		унаследовать компонент при помощи super() от другого:
+
+			@Component({
+			  selector: 'app-base-component',
+			  template: '',
+			})
+			export class BaseComponent implements OnDestroy {
+			  protected readonly $destroy = new Subject();
+
+			  ngOnDestroy() {
+			    this.$destroy.next(true);
+			    this.$destroy.complete();
+			  }
+			}		
+
+		теперь в наследнике будет срабатывать хук ngOnDestroy, который будет посылать сигнал сюда:
+
+			this.checkList$.pipe(takeUntil(this.$destroy)).subscribe(
+
+
 	что будет, если не отписываться?
 		будет происходить утечка памяти. например, если пользователь 10 раз зайдёт на одн и туже страницу, то будет работать 10 коллбеков.
 
@@ -1385,6 +1443,14 @@ reactive forms
 
 	из шаблона можно получить доступ к состоянию полей через .get(). это нужно для вывода сообщений валидации. также доступ к состоянию полей можно получить в контроллере.
 
+	onlySelf запрещает событию всплывать в родительский блок по аналогии с stopPropagation(). поэтому valuesChanged не сможет поймать событие. onlySelf действует с: 
+
+		setValue, patchValue, markAsUntouched, markAsDirty, markAsPristine, markAsPending, disable, enable, and updateValueAndValidity
+
+	пример:
+
+		setValue, patchValue, markAsUntouched, markAsDirty, markAsPristine, markAsPending, disable, enable, and updateValueAndValidity
+
 =========================================================
 ленивая загрузка модулей 
 
@@ -1533,7 +1599,7 @@ viewChild(ren)
 
 viewChild это декоратор, который позволяет обращаться к свойствам компонентов/директив, которые были встроены в шаблон. а так же к провайдерам, сервисам встроенных компонентов. 
 
-в качестве встроенных компонентов могут рассматриваться обычные html элементы такие как span.
+в качестве встроенных компонентов могут рассматриваться обычные html элементы такие как span. или хост-теги дочерних элементов, выведенные через ngFor.
 
 viewChildren возвращает то же самое но в виде queryList, по кторому нужно ходить при помощи toArray().foreach()
 
@@ -1574,6 +1640,26 @@ viewChildren возвращает то же самое но в виде queryLis
 
 
 https://dev-gang.ru/article/ponimanie-dekoratorov-viewchild-i-viewchildren-v-angular--bpb46hqf3i/
+
+--------------
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <alert></alert>
+    <alert type="danger"></alert>
+    <alert type="info"></alert>
+  `,
+})
+export class App {
+  @ViewChildren(AlertComponent) alerts: QueryList<AlertComponent>
+  
+  ngAfterViewInit() {
+    this.alerts.forEach(alertInstance => console.log(alertInstance));
+  }
+}
+
+
 
 ----------------
 @Component({
@@ -1806,6 +1892,23 @@ CVA validation
 
 	setDisabledState() срабатывает каждый раз когда из родителя поле делаю disabled/enabled. в этот обработчик можно поместить полезное действие, например, чтобы cva-поле дизейблилось изнутри(извне его задизейблить не получится)
 
+
+	-------------
+
+	метод validate срабатывает каждый раз. но если форма иметт вложенную структуру (например formArray), то события валидации будут всплывать до родительского уровня. в этом случае нужно реализовать метод registerOnValidatorChange так:
+
+		  ngOnInit(): void {
+		    this.form.valueChanges.subscribe(() => {
+		      this.onValidationChange();
+		    });
+		  }
+
+		  onValidationChange: any = () => {};
+
+		  validate({value}: FormGroup): ValidationErrors | null {
+		    return value.every(control => control.valid) ? null : {deviations: {valid: false}};
+		  }
+
 =========================================================
 что такое control value accessor?
 
@@ -1961,6 +2064,10 @@ change detection
 =========================================================
 ViewEncapsulation 
 
+  encapsulation: ViewEncapsulation.Emulated, 
+  encapsulation: ViewEncapsulation.None, 
+  encapsulation: ViewEncapsulation.ShadowDom, 
+
   отвечает за использование механизма работы со стилями. 
 
   по умолчанию он равен emulated. в этом случае стили, прописанные в css-файле компонента ограничены компонентом. это достигается добавлением уникального атрибута к каждомк DOM-элементу шаблона компонента и последующим использованием этого атрибута для каждого селектора.
@@ -1993,7 +2100,7 @@ changeDetectorRef
 =========================================================
 ngZone
 
-  создаёт отдельный контекст выполнения для определённого участка кода. появляется возможность выполнять хуки для этого участка кода, в частности для начала выполнения, для появления исключения, для конца выполнения. важно то, что этот участко кода может содержать асинхронные вызовы. таки образом, например, можно измерить время выпонения.
+  создаёт отдельный контекст выполнения для определённого участка кода. появляется возможность выполнять хуки для этого участка кода, в частности для начала выполнения, для появления исключения, для конца выполнения. важно то, что этот участок кода может содержать асинхронные вызовы. таки образом, например, можно измерить время выпонения.
 
   для ангуляра использование зон особенно важно потому что эта библиотека патчит все асинхронные события. в результате после завершения работы каждого события можно запускать обнаружение изменений.
 
@@ -2412,6 +2519,8 @@ componentless router
 
 	это може пригодиться, если мы имеем на одном уровне несколько роутов, каждый из которых проверяет аутентификацию пользователя. вместо того чтобы много раз повторять вызов canActivate, можно сгруппировать роуты при помощи безкомпонентного роутинга и на верхнем уровне только один раз прописать canActivate
 
+
+
 =========================================================
 именованная маршрутизация
 
@@ -2611,6 +2720,18 @@ service locator
 
 	// https://stackblitz.com/edit/stackblitz-starters-vys1z3?file=src%2Fmain.ts
 
+	-------
+
+	важно то, что если нужно standalone компонент подключить в модуль, то имя этого компонента нужно прописывать в блоке imports, а не в блоке decalrations:
+
+
+		@NgModule({
+		  imports: [
+		    CommonModule,
+		    SharedModule,
+		    DeviationCreateGroupComponent,
+		    DeviationUpdateGroupComponent,
+		  ],
 
 =========================================================
 singnals
@@ -2855,6 +2976,41 @@ dependency injection
 
 
 =========================================================
+что такое директива?
+
+	свойства компонента, которые поступают через декоратор Input обрабатываются обработчикаи, которые находятся внутри компонента. но свойства компонента, которые поступают через директивы обрабатываются вне компонента. при этом чтобы компонент знал об этих внешних обработчиках(directives) их нужно привязать к компоненту:
+
+		1. или через модуль, к которому относятся и директива и компонент
+		2. или, если компонент автономный, непосредственно через импорты компонента. важно, что при этом способе директива д=тоже должна быть автономной.
+
+	вот пример отключения автозаполнения полю ввода внешней библиотеки:
+
+		@Directive({
+		  selector: '[autoComplete]',
+		})
+		export class AutoCompleteDirective {
+		  @Input() autoComplete = 'off';
+		  constructor(private elementRef: ElementRef) {}
+
+		  ngAfterViewInit() {
+		    const input = this.elementRef.nativeElement.querySelector('input');
+		    input.setAttribute('autocomplete', this.autoComplete);
+		  }
+		}
+
+
+		<tui-input
+		  autoComplete="off"
+		  formControlName="testValue"
+		  [tuiTextfieldCleaner]="true"
+		  [tuiTextfieldLabelOutside]="true"
+		  [tuiTextfieldSize]="'m'"
+		>
+		  enter text
+		</tui-input>
+
+		пример: https://stackblitz.com/edit/angular-hdvmao-6h1bkx?file=src%2Fapp%2Fapp.component.ts
+
 =========================================================
 =========================================================
 =========================================================
