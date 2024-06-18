@@ -200,6 +200,22 @@ emit gromGroup from dunb component
     тут больше : https://github.com/dreyliky/event-handlers-optimization-example/blob/master/src/app/pages/example-two/grid-item/grid-item.component.ts
 
 ===========================================
+добавить реактивное поле без создания формы
+
+	issueIdSearchDescriptionControl = new UntypedFormControl();
+
+    <tui-input
+        *ngIf="(remarksCurrentStage$ | async) === 'warranty'"
+        tuiTextfieldIconLeft="tuiIconSearchLarge"
+        tuiTextfieldSize="m"
+        class="search__description"
+        [formControl]="issueIdSearchDescriptionControl"
+    >
+        Поиск по описанию
+    </tui-input>
+
+
+
 ===========================================
 ===========================================
 ===========================================
