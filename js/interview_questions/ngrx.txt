@@ -1,0 +1,253 @@
+эффект может обрабатывать несколько экшенов и возвращать или один новый экшен (в этом случае редюсер первоначального, слушающий первоначальный экшен не отработает) или ничего (в этом случае нужно вторым аргументом в createEffect прописать dispatch: false)
+
+в эффекте экшены слушаются через ofType 
+
+один из *Map операторов обрабатывает все поступающие сигналы с их полезной нагрузкой. внутри pipe можно использовать catchError для отправки экшена ошибки в редюсер.
+
+если в эффекте нужны данные из стора, то после ofType их нужно получить при помощи withLatestFrom(тут селект)
+
+редюсер также может обрабатывать несколько экшенов, если их прописать так:
+
+	case: 'qwe':
+	case 'asd':
+		// code;
+		break;
+
+в файле редюсера прописывается начальное состояние стора. при этом нужно не забыть указать редюсер в массиве providers модуля. там же указать эффекты.
+
+============================================
+в эффекте происходит выполнение блока, который помечен определённым экшеном:
+
+	ofType(loadPostsAction),
+
+если несколько dispatch отправят в эффект экшены в течение малого промежутка времени, то соответствующие запросы будут выполняться не по порядку, а в зависимости от времени, потраченного на запрос. поэтому в эффекте используется mergeMap:
+
+	  public loadUnitList$ = createEffect(() => {
+	    return this.actions$.pipe(
+	      ofType(loadPostsAction),
+	      // map(action => action.obj), // тут может быть предобработка полученных данных
+	      mergeMap(() => {
+	        return this.postsApiService.getPosts().pipe(
+	          map((response: any[]) => {
+	            loadPostsSuccessAction();
+	            return setPostsAction({payload: { posts: response }});
+	          }),
+	          catchError(() => of(loadPostsFailedAction()))
+	        );
+	      })
+	    );
+	  });
+
+, который должен вернуть экшен, который отправится в редюсер. при этом перед return могут быть выполнены другие экшены.
+
+эффект может вернуть не тот экшен, который получил в ofType, в результате в редюсере сработает другой блок, а не тот, что планировался ранее.
+
+но эффект не обязан возвращать экшен, если вторым аргументом в createEffect прописать dispatch: false 
+
+для обработки случая ошибки ответа сервера catchError должен тоже вернуть экшен, но завёрнутый в of
+
+----
+
+выборка делается обращением к стору напрямую: 
+
+	this.posts$ = this.store.select('posts');
+
+	в редюсере стор определён так:
+
+		export interface Post {
+		  userId: number;
+		  id: number;
+		  title: string;
+		  body: string;
+		}
+
+		export interface PostState {
+		  posts: Post[];
+		}
+
+		const initialState: PostState = {
+		  posts: []
+		};
+
+	при этом важно указать какой именно редюсер со своим стейтом помещён в стор. это делается в файле модуля:
+
+		@NgModule({
+		  imports: [ 
+		    BrowserModule, 
+		    FormsModule,
+		    StoreModule.forRoot({ 
+		      post: postReducer 
+		    })
+		  ],
+		  declarations: [ 
+		    AppComponent
+		  ],
+		  bootstrap: [ 
+		    AppComponent 
+		  ]
+		})
+		export class AppModule { }	
+
+	сам стейт прописывается в редюсере и помещается в стор в виде первого аргумента createReducer():
+
+		export const postReducer = createReducer(
+		  initialState,
+		  on(PostsActions.loadPostsAction, state => ({ ...state })),
+		  on(PostsActions.loadPostsSuccessAction, state => ({ ...state })),
+		  on(PostsActions.loadPostsFailedAction, state => ({ ...state })),
+		  on(PostsActions.setPostsAction, (state, { payload }) => ({
+		    posts: [...payload.posts]
+		  }))
+		);
+
+	важно не забыть там же прописать и эффекты, даже если они не используются
+
+
+тут больше: 
+
+	https://stackblitz.com/edit/angular-ngrx-effects-jsonplaceholder-o4jnvo?file=src%2Fapp%2Fstore%2Feffects.ts
+
+============================================
+иногда в качестве экшенов используются классы, которые для удобствва объединяются в юнион тип. при этом полезная нагрузка прописывается в конструкторе:
+
+	export const EDIT_TEXT = '[Post] Edit';
+	export const UPVOTE = '[Post] Upvote';
+	export const DOWNVOTE = '[Post] Downvote';
+	export const RESET = '[Post] Reset';
+
+	export class EditText implements Action {
+	  readonly type = EDIT_TEXT;
+	  
+	  constructor(public payload: string) {}
+	}
+
+	export class Upvote implements Action {
+	  readonly type = UPVOTE;
+	}
+	export class Downvote implements Action {
+	  readonly type = DOWNVOTE;
+	}
+	export class Reset implements Action {
+	  readonly type = RESET;
+	}
+
+	export type All 
+	  = Upvote
+	  | Downvote
+	  | Reset
+	  | EditText
+
+в этом случае в редюсере вторым аргументом используется этот юнион тип:
+
+	export type Action = PostActions.All;
+
+	const defaultState: Post = {
+	  text: 'Hello. I am the default post',
+	  likes: 0
+	}
+
+	const newState = (state, newData) => {
+	  return Object.assign({}, state, newData)
+	}
+
+	export function postReducer(state: Post = defaultState, action: Action) {
+	  console.log(action.type, state)
+	  
+	  switch (action.type) {
+	    case PostActions.EDIT_TEXT:
+	      return newState(state, { text: action.payload })
+	            
+	    case PostActions.UPVOTE:
+	      return newState(state, { likes: state.likes + 1 })
+	          
+	    case PostActions.DOWNVOTE:
+	      return newState(state, { likes: state.likes - 1 })
+	      
+	    case PostActions.RESET:
+	      return defaultState;
+
+	    default:
+	      return state;
+	  }
+	}
+
+тут живой пример: https://stackblitz.com/edit/ngrx-with-object-unm6ds?file=src%2Fapp%2Freducers%2Fpost.reducer.ts
+
+
+============================================
+если в эффекте нужно использовать выбеорку из стора, то применяется withLatestFrom:
+
+	@Effect getUsers$ = this.actions$.pipe(
+	  ofType('GET_USERS'),
+	  withLatestFrom(this.userSelectors.needUsers$),
+	  filter(([action, needUsers]) => needUsers),
+	  switchMap(() => this.getUsers()),
+	  map(users => ({type: 'RECEIVE_USERS', users})),
+	);
+
+при этом следующий за withLatestFrom оператор получает первым аргументом экшен, а вторым аргументом - значение, полученное при помощи withLatestFrom:
+
+      ofType(searchButtonClicked),
+      withLatestFrom(this.store.select(selectInputValue)),
+      switchMap(([action, inputValue]) => {...}
+
+============================================
+эффекты нужно регистрировать или в:
+
+	1. корневом модуле:
+
+		@NgModule({
+		  imports: [
+		    EffectsModule.forFeature(MoviesEffects, actorsEffects)
+		  ],
+		})
+		export class MovieModule {}
+
+	2. на уровне компонента:
+
+		providers: [
+		  MoviesEffects,
+		  {
+		    provide: USER_PROVIDED_EFFECTS,
+		    multi: true,
+		    useValue: [MoviesEffects],
+		  },
+		]	
+
+	3. на уровне роута:
+
+		export const routes: Route[] = [
+		  {
+		    path: 'movies',
+		    providers: [
+		      provideEffects(MoviesEffects, actorsEffects)
+		    ]
+		  }
+		];	
+
+
+
+
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
+============================================
