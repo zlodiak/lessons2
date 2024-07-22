@@ -3040,6 +3040,82 @@ dependency injection
 		пример: https://stackblitz.com/edit/angular-hdvmao-6h1bkx?file=src%2Fapp%2Fapp.component.ts
 
 =========================================================
+standalone компонент Page4Component можно встроить в модульный роутинг:
+
+app-routing.module.ts
+
+	const routes: Routes = [
+	  { path: 'page1', component: Page1Component },
+	  { path: 'page2', component: Page2Component },
+	  { path: 'page3', component: Page3Component },
+	  {
+	    path: "page4",
+	    loadComponent: () =>
+	      import("./pages/page4/page4.component")
+	      .then((m) => m.Page4Component),
+	  },
+	];
+
+	@NgModule({
+	  imports: [RouterModule.forRoot(routes)],
+	  exports: [RouterModule]
+	})
+	export class AppRoutingModule { }
+
+
+app.module.ts:
+
+	@NgModule({
+	  declarations: [
+	    AppComponent,
+	    Page1Component,
+	    Page2Component,
+	    Page3Component,
+	  ],
+	  imports: [
+	    BrowserModule,
+	    AppRoutingModule,
+	    Page4Component,
+	  ],
+	  providers: [],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
+
+
+app.component.html:
+
+	<nav>
+	  <a routerLink="/page1" routerLinkActive="active">page1</a>
+	  <a routerLink="/page2" routerLinkActive="active">page2</a>
+	  <a routerLink="/page3" routerLinkActive="active">page3</a>
+	  <a routerLink="/page4" routerLinkActive="active">page4</a>
+	</nav>
+
+	<router-outlet></router-outlet>
+
+
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
 =========================================================
 =========================================================
 =========================================================
