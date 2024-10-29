@@ -1,0 +1,20 @@
+function ConvertMinutes(num) {
+  d = Math.floor(num / 1440); // 60*24
+  h = Math.floor((num - d * 1440) / 60);
+  m = Math.round(num % 60);
+
+  if (d > 0) {
+    return d + ' days, ' + h + ' hours, ' + m + ' minutes';
+  } else {
+    return h + ' hours, ' + m + ' minutes';
+  }
+}
+
+var input1 = 340;
+console.log(ConvertMinutes(input1));
+
+var input2 = 1000;
+console.log(ConvertMinutes(input2));
+
+var input3 = 3000;
+console.log(ConvertMinutes(input3));
