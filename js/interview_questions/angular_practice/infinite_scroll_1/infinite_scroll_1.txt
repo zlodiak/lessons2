@@ -1,0 +1,154 @@
+использование бесконечного скролла для material-таблицы
+
+	есть:
+
+		компонент таблицы,
+		радительский компонент, в котором отрисовывается таблица,
+		директива, которой помечается таблица
+
+	основной смысл в том, что данные при первой загрузке загружаются все, но отрисовываются частями. момент следующей отрисовки вычисляется на отношении высоты прокрутки скролла и высоты уже отрисованного контента. важно то, что отрисовка следующей порции начинается чуть раньше чем пользователь упрётся скроллом с низ экрана.
+
+
+	directive:
+
+		@Directive({
+		  selector: '[appScrolling]'
+		})
+		export class ScrollingDirective {
+
+		  @Output() nearEnd: EventEmitter<void> = new EventEmitter<void>();
+		  @Input() threshold = 120;
+
+		  private window!: Window;
+
+		  constructor(private el: ElementRef) {}
+
+		  ngOnInit(): void {
+		    this.window = window;
+		  }
+
+		  @HostListener('window:scroll', ['$event.target'])
+		  windowScrollEvent(event: KeyboardEvent) {
+		    // height of whole window page
+		    const heightOfWholePage = this.window.document.documentElement.scrollHeight;
+
+		    // how big in pixels the element is
+		    const heightOfElement = this.el.nativeElement.scrollHeight;
+
+		    // currently scrolled Y position
+		    const currentScrolledY = this.window.scrollY;
+
+		    // height of opened window - shrinks if console is opened
+		    const innerHeight = this.window.innerHeight;
+
+		   /**
+		    * the area between the start of the page and when this element is visible
+		    * in the parent component
+		    */
+		    const spaceOfElementAndPage = heightOfWholePage - heightOfElement;
+
+		    // calculated whether we are near the end
+		    const scrollToBottom =
+		      heightOfElement - innerHeight - currentScrolledY + spaceOfElementAndPage;
+
+		    // if the user is near end
+		    if (scrollToBottom < this.threshold) {
+		      this.nearEnd.emit();
+		    }
+		  }  
+
+		}	
+
+
+	app.component:
+
+		dummyDataObs$ = dummyDataObs$;
+
+		<ng-container *ngIf="dummyDataObs$ | async as dummyDataSignal">
+		    <app-simple-table [dummyData]="dummyDataSignal"></app-simple-table>
+		</ng-container>	
+
+	data:
+
+		export interface DummyData {
+		    id: number;
+		    firstName: string;
+		}
+
+		export const dummyDataObs$: Observable<DummyData[]> = of(
+		    [...Array(10_000).keys()].map((index) => ({
+		        id: index,
+		        firstName: `firstName_${index}`,
+		    }))
+		);	
+
+
+	table component:
+
+		  @Input() set dummyData(data: DummyData[]) {
+		    this.dummyData$.next(data);
+		    this.limit$.next(30);
+		  }
+
+		  private defaultValue = 30;
+
+		  private dummyData$ = new BehaviorSubject<DummyData[]>([]);
+
+		  private limit$ = new BehaviorSubject<number>(30);
+
+		  dataSource$ = new BehaviorSubject<any>(null);
+
+		  displayedColumns: string[] = ['id', 'firstName'];
+
+		  identity: TrackByFunction<DummyData> = (_, item: DummyData) => item.id;
+
+		  constructor(private scrollService: ScrollService) {
+		    this.limit$.subscribe(d => {
+		      const data = this.dummyData$.value.slice(0, this.limit$.value);
+		      this.dataSource$.next(new MatTableDataSource<DummyData>(data));
+		    });
+		  }
+
+		  onNearEndScroll() {
+		    this.limit$.next(this.limit$.value + this.defaultValue);
+		  }	
+
+
+		  <table
+		    appScrolling
+		    (nearEnd)="onNearEndScroll()"
+		    mat-table
+		    [dataSource]="dataSource$ | async"
+		    [trackBy]="identity"
+		  >
+		    <ng-container matColumnDef="id">
+		      <th mat-header-cell mat-sort-header *matHeaderCellDef>Id</th>
+		      <td mat-cell *matCellDef="let row">
+		        {{ row.id }}
+		      </td>
+		    </ng-container>
+		  
+		    <ng-container matColumnDef="firstName">
+		      <th mat-header-cell mat-sort-header *matHeaderCellDef>First Name</th>
+		      <td mat-cell *matCellDef="let row">
+		        {{ row.firstName }}
+		      </td>
+		    </ng-container>
+		  
+		    <ng-container matColumnDef="lastName">
+		      <th mat-header-cell mat-sort-header *matHeaderCellDef>Last Name</th>
+		      <td mat-cell *matCellDef="let row">
+		        {{ row.lastName }}
+		      </td>
+		    </ng-container>
+		  
+		    <ng-container matColumnDef="age">
+		      <th mat-header-cell mat-sort-header *matHeaderCellDef>Age</th>
+		      <td mat-cell *matCellDef="let row">
+		        {{ row.age }}
+		      </td>
+		    </ng-container>
+		  
+		    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+		  </table>  

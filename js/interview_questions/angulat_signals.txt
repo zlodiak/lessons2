@@ -1,0 +1,402 @@
+важно менять сигналы через set() и update(). если этого не делать, то зависящие переменные не будут реагировать на изменение источника.
+
+	@Component({
+	  selector: 'app-root',
+	  standalone: true,
+	  template: `
+	  <h3>List value: {{list()}}</h3>
+	  <button (click)="action()">press</button>
+	  `,
+	})
+	export class App {
+	  list = signal(['Hello', 'World']);
+
+	  constructor(private cdr: ChangeDetectorRef) {}
+
+	  action() {
+	    // bad
+	    // this.list().push(Math.random().toString());
+
+	    // good
+	    this.list.set(['qwe']);
+
+	    console.log(this.list());
+	    this.cdr.detectChanges();
+	  }
+	}
+
+	демо: https://stackblitz.com/edit/angular-17-starter-project-nrkaxu?file=src%2Fmain.ts
+
+	это говорит, что changeDetection работает в обход сигналов. исправить ситуацию не получится даже при помощи detectChanges()
+
+
+========================
+мутировать объекты можно только из конструктора. в более поздних фазах это не сработает:
+
+	@Component({
+	  selector: 'app-root',
+	  standalone: true,
+	  template: `
+	  <h3>List value: {{list()}}</h3>
+	  `,
+	})
+	export class App {
+	  list = signal(['Hello', 'World']);
+
+	  constructor() {
+	    this.list().push('Again');
+	  }
+
+	  ngAfterViewInit() {
+	    this.list().push('zzzzz');
+	    console.log(this.list());
+	  }
+	}
+
+	вывод в шаблон будет: 
+
+		List value: Hello,World,Again
+
+	однако вывод в консоль будет:
+
+		["Hello", "World", "Again", "zzzzz"]
+
+	это говорит, что changeDetection работает в обход сигналов. исправить ситуацию не получится даже при помощи detectChanges()
+
+========================
+не происходит повторное вычисление computed(), если примитивное значение не изеняется. если имеем дело с объектом, то значение изменяется только если изменяется ссылка на объект.
+
+но это поведение можно изменить, если добавить в сигнал вторым аргументом кастомную функцию сравнения:
+
+	@Component({
+	  selector: 'app-root',
+	  standalone: true,
+	  template: `
+	  <h3>Object title: {{title()}}</h3>
+
+	<button (click)="updateObject()">Update</button>
+	  `,
+	})
+	export class App {
+	  object = signal(
+	    {
+	      id: 1,
+	      title: 'Angular For Beginners',
+	    },
+	    {
+	      equal: (a, b) => {
+	        return a.id === b.id && a.title == b.title;
+	      },
+	    }
+	  );
+
+	  title = computed(() => {
+	    console.log(`Calling computed() function...`);
+	    const course = this.object();
+	    return course.title;
+	  });
+
+	  updateObject() {
+	    this.object.set({
+	      id: 1,
+	      title: 'Angular For Beginners',
+	    });
+	  }
+	}
+
+	в этом примере в консоль не будет выводиться консоль лог после кликов по кнопке.
+
+	демо: https://stackblitz.com/edit/angular-17-starter-project-ndrwgy?file=src%2Fmain.ts
+
+========================
+нельзя использовать set() внутри эффекта, но существует способ обойти это ограничение:
+
+	@Component({...})
+	export class CounterComponent {
+	  count = signal(0);
+
+	  constructor() {
+
+	    effect(() => {
+	      this.count.set(1);
+	    },
+	        {
+	            allowSignalWrites: true
+	        });
+
+	  }
+	}
+
+
+========================
+существует возможность в эффект добавить хук, который сработает при удалении эффекта. а удаление эффекта случается когда удаляется компонент, директива или другая подобная сущность:
+
+	@Component({...})
+	export class CounterComponent {
+
+	  count = signal(0);
+
+	  constructor() {
+
+	    effect((onCleanup) => {
+	    
+	      console.log(`current value: ${this.count()}`);
+
+	      onCleanup(() => {
+	        console.log("Perform cleanup action here");
+	      });
+	    });
+	  }
+	}
+
+========================
+сигналы, полученные в результате computed() можно только читать. по отношению к ним нельзя использовать методы set, update:
+
+	@Component(
+	    selector: "app",
+	    template: `
+
+	  <h3>Counter value {{counter()}}</h3>
+
+	  <h3>Derived counter: {{derivedCounter()}}</h3>
+
+	`)
+	export class AppComponent {
+
+	    counter = signal(0);
+
+	    derivedCounter = computed(() => this.counter() * 10)
+
+	    constructor() {
+
+	        // this works as expected
+	        this.counter.set(5);
+
+	        // this throws a compilation error
+	        this.derivedCounter.set(50);
+
+	    }
+
+	}
+
+
+или можно сделать сигнал readonly явным способом:
+
+	@Component(
+	    selector: "app",
+	    template: `
+
+	  <h3>Counter value {{counter()}}</h3>
+
+	  <h3>Derived counter: {{derivedCounter()}}</h3>
+
+	`)
+	export class AppComponent {
+
+	    counter = signal(0);
+
+	    derivedCounter = computed(() => this.counter() * 10)
+
+	    constructor() {
+
+	        // this works as expected
+	        this.counter.set(5);
+
+	        // this throws a compilation error
+	        this.derivedCounter.set(50);
+
+	    }
+
+	}
+
+	обратное невозможно.
+
+========================
+сигналы можно экспортировать из отдельного файла. тем самым шарить между несколькими сущностями:
+
+	export const count = signal(0);
+
+	но нужно помнить, что таким образом мы создаём глобальную переменную и усложняем поддержку кода. правильнее было бы поместить такой сигнал в сервис.
+
+		Injectable({
+		  providedIn: "root",
+		})
+		export class CounterService {
+
+		  // this is the private writeable signal
+		  private counterSignal = signal(0);
+
+		  // this is the public read-only signal
+		  readonly counter = this.counterSignal.asReadonly();
+
+		  constructor() {
+		    // inject any dependencies you need here
+		  }
+
+		  // anyone needing to modify the signal 
+		  // needs to do so in a controlled way
+		  incrementCounter() {
+		    this.counterSignal.update((val) => val + 1);
+		  }
+		}	
+
+========================
+если сигнал используется в компоненте, то при изменении сигнала перерисутеся шаблон этого компонента. при этом не имеет значения установлена ли стратегия onPush или нет.
+
+========================
+сигналы предоставляют альтернативный синтаксис для @Input.
+
+	заменить @Input() можно так, причём здесь входящее значение можно только читать:
+
+		book = input<Book>()
+
+		передавать из родительского компонента в дочерний при помощи синтаксиса []:
+
+			@Component({
+			  selector: 'app-root',
+			  template: `<app-second [book2]="'someValue'"></app-second>`,
+			  styleUrls: ['./app.component.scss'],
+			})
+			export class AppComponent {}
+
+			@Component({
+			  selector: 'app-second',
+			  template: `<p>input value is: {{ book2() }}</p>`,
+			  styleUrls: ['./second.component.css'],
+			})
+			export class SecondComponent {
+			  book2 = input<string>();
+			}
+
+
+	так как входящий сигнал не обязательный параметр, то разрешается встраивать хост-тег, не передавая в него значение:
+
+		<app-second></app-second>`
+
+
+		причём можно использовать начальное значение:
+
+			book2 = input<ыекштп>('qwerty')		
+
+		причём можно входящий сигнал объявить обязательным:
+
+			book2 = input.required<string>('qwerty')		
+
+		можно для входящего сигнала установить псевдоним:
+
+			book = input<Book>(null, {
+			  alias: "bookInput",
+			});	
+
+			в этом случае шаблон будет выглядеть так:	
+
+				<book [bookInput]="angularBook" />
+
+				в этом случае по старому названию уже нельзя будет обращаться
+
+
+		есть возможность к входящему сигналу применять предварительную обработку:
+
+			book = input(null, {
+			  transform: (value: Book | null) => {
+			    if (!value) return null;
+
+			    value.title += " :TRANSFORMED";
+
+			    return value;
+			  },
+			});		
+
+
+		теперь отпадает необходимость использовать хук ngOnChanges:
+
+			class BookComponent {
+			  book = input.required<Book>();
+
+			  constructor() {
+			    effect(() => {
+			      console.log("Book changed: ", this.book());
+			    });
+			  }
+			}		
+
+========================
+сигналы предоставляют альтернативный синтаксис для @Output.
+
+	@Component({
+	  selector: 'app-second',
+	  template: `<p>inner</p>`,
+	  styleUrls: ['./second.component.css'],
+	})
+	export class SecondComponent {
+	  deleteBook = output<number>();
+
+	  ngOnInit() {
+	    this.deleteBook.emit(555);
+	  }
+	}
+
+	@Component({
+	  selector: 'app-root',
+	  template: `<app-second (deleteBook)="deleteBookEvent($event)"></app-second>`,
+	  styleUrls: ['./app.component.scss'],
+	})
+	export class AppComponent {
+	  deleteBookEvent(book: number) {
+	    console.log(book);
+	  }
+	}
+
+	причём по-прежнему нельзя работать с отправляемым значением из конструктора.
+
+	есть возможность использовать псевдонимы:
+
+		deleteBook = output<Book>({
+		  alias: "deleteBookOutput",
+		});	
+
+		<book (deleteBookOutput)="deleteBookEvent($event)" />
+
+	эмитить можно не только значения, но и поток:
+
+		 deleteBook = outputFromObservable<Book>(
+		    of(123)
+		 );
+
+	можно при обернуть в поток значение, которое эмитится и, например, подписаться на него в этом же компоненте:
+
+		@Component({...})
+		class BookComponent {
+
+		 deleteBook = output<Book>();
+
+		 deleteBookObservable$ = 
+		   outputToObservable(this.deleteBook);
+
+		 constructor() {
+			 this.deleteBookObservable$.subscribe((book: Book) => {
+			 	console.log("Book emitted: ", book);
+			 });
+		 }
+		}
+
+========================
+с помощью сигналов можно организовать двустороннюю привязку, с помощью которой передавать в двух направлениях значения по иерархии компонентов. однако, это неудобный способ, его лучше избегать:
+
+	book = model<Book>();
+
+	тут больше:
+
+		https://blog.angular-university.io/angular-signal-components/
+
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================

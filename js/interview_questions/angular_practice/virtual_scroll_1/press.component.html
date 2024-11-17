@@ -1,0 +1,9 @@
+<p>press works!</p>
+
+<ng-container *ngIf="dummyDataObs$ | async as dummyDataSignal">
+    <cdk-virtual-scroll-viewport itemSize="10" style="height: 100px; background: cyan">
+        <div *cdkVirtualFor="let item of dummyDataSignal">
+            {{ item.id }} - {{ item.firstName }}
+        </div>
+    </cdk-virtual-scroll-viewport>
+</ng-container>

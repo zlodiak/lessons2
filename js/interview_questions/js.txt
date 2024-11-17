@@ -12,6 +12,131 @@
 ================================
 ================================
 ================================
+измерение производительности:
+
+	var t0 = performance.now();
+	doSomething();
+	var t1 = performance.now();
+	console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+
+	можно измерять производительность:
+
+		1. поставить перед блоком синхронного кода и после блка синхронного кода метки на основе data и в конце скрипта получить разницу вычитанием.
+
+			const a = new Date().getTime();
+			const arr = [1, 2, 3]
+			const arr2 = arr.map(d => d * 10000000000);
+			const b = new Date().getTime();
+			console.log(b, a , b - a);	// 1730589406665 1730589406664 1
+
+			можно сделать то же самое, но при помощи performance api:
+
+				метод performance.now() вернет текущее время в миллисекундах:
+
+					const firstNow = performance.now()
+					// This loop is just to simulate slow calculations
+					for (let i = 0; i < 100000; i++){
+					  var ii = Math.sqrt(i)
+					}
+					const secondNow = performance.now()
+
+					const howLongDidOurLoopTake = secondNow - firstNow				
+
+
+
+		2. применить тот же самый подход, но использовать performance api, то есть набор статических методов, которые есть в объекте window.performance:
+
+			Метод mark позволяет разместить маркер времени.
+
+				performance.mark('start');
+
+			Метод measure позволяет измерить разницу во времени между двумя маркерами.
+
+				async function timeDuration() {
+				    performance.mark('start');
+				    await new Promise(resolve => setTimeout(resolve, 100))
+				    performance.mark('end');
+				  
+				    return performance.measure('time', 'start', 'end').duration;
+				  }
+				  
+				  timeDuration().then((result) => console.log(result));		
+				  
+			Метод getEntriesByType позволяет получить доступ ко всем созданным объектам определённого типа	
+
+			Методы clearMarks/clearMeasures используются для удаления ранее добавленных маркеров и измерителей из кеша браузера	
+
+
+			полный пример:
+
+				performance.mark('start');
+				performance.mark('end');
+				performance.measure('time_duration', 'start', 'end');
+
+				console.log(performance.getEntriesByType('mark').length);
+				// output: 2
+				console.log(performance.getEntriesByType('measure').length);
+				// output: 1
+
+				performance.clearMarks();
+				performance.clearMeasures();
+				console.log(performance.getEntriesByType('mark').length);
+				// output: 0
+				console.log(performance.getEntriesByType('measure').length);
+				// output: 0		
+				
+
+		3. использовать инструменты разработчика в хроме:	
+
+			network:
+
+				предоставляет водопад для каждого ресурса и время загрузки этого ресурса. 
+
+				даёт возможность отключить кеширование
+
+			Performance Insights:
+
+				анализирует страницу и предоставляет подробный водопад, на котром показаны:
+
+					dom content loaded
+
+					время отрисовки первого элемента контента
+
+					время отрисовку крупнейшего элемента контента
+
+					время доступности интерактивных элементов
+
+			Performance
+
+				даёт созвомжность посмотреть внешний вид страницы на любой метке времени
+
+				выводит время каждого этапа:
+
+					загрузка
+
+					загрузка скриптов
+
+					отрисовка страницы
+
+					раскрашивание
+
+					и т.д.
+
+			lighthouse:
+
+				устанавливает может ли сайт работать офлайн
+
+				скорсоть загрузки оценивает
+
+				проверяет безопасность. например есть ли https
+
+				оценивает качество SEO
+
+
+
+
+
 ================================
 оператор ??
 
@@ -569,6 +694,25 @@ localStorage
 
 	одно хранилище для всех вкладок. не очищается после закрытия вкладок или браузера. Максимальный объем данных ограничен размером 5MB. принадлежит объекту window
 
+	Хранилище привязано к источнику (домен/протокол/порт). Это значит, что разные протоколы или поддомены определяют разные объекты хранилища, и они не могут получить доступ к данным друг друга.
+
+	При установке значения в хранилище срабатывает глобальное событие storage, с помощью которого можно отслеживать изменения в хранилище:
+
+		window.addEventListener('storage', function (evt) {
+		  console.log(evt)
+		})
+
+		Событие содержит свойства:
+
+			key — ключ, который был изменён (при вызове метода clear() ключ будет null);
+			oldValue — старое значение, записанное в поле;
+			newValue — новое значение, записанное в поле;
+			url — адрес страницы, на которой вызвано изменение.
+
+		 событие срабатывает на всех остальных объектах window, где доступно хранилище, кроме того окна, которое его вызвало.
+
+
+
 sessionStorage 
 
 	хранилище для отдельной вкладки (Другая вкладка с той же страницей будет иметь другое хранилище.). не очищается после рефреша. очищается после закрытия вкладки или браузера. Максимальный объем данных ограничен размером 5MB.
@@ -666,6 +810,31 @@ sessionStorage
 
 	тот же код в строгом режиме выдаст ошибку потому что у undefined нет свойства name
   
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
+================================
 ================================
 ================================
 ================================
@@ -1682,7 +1851,51 @@ promise vs async/await
 ===============================
 можно ли отменить выполнение промиса?
 
-	нет
+	до недавнего времени промис нельзя было отменить, но теперь можно при помощи AbortController. это API, которое предоставляет браузер. оно живёт в window:
+
+		function delay(duration, signal) {
+		  return new Promise((resolve, reject) => {
+		    if (signal.aborted) {
+		      return reject(new DOMException('Operation aborted', 'AbortError'));
+		    }
+
+		    const timeoutId = setTimeout(() => {
+		      resolve();
+		    }, duration);
+
+		    signal.addEventListener('abort', () => {
+		      clearTimeout(timeoutId);
+		      reject(new DOMException('Operation aborted', 'AbortError'));
+		    });
+		  });
+		}
+
+		const controller = new AbortController();
+		const signal = controller.signal;
+
+		delay(5000, signal)
+		  .then(() => {
+		    console.log('Promise resolved');
+		  })
+		  .catch(error => {
+		    if (error.name === 'AbortError') {
+		      console.log('Promise aborted');
+		    } else {
+		      console.error('Promise failed:', error);
+		    }
+		  });
+
+		// Отменяем промис через 3 секунды
+
+		setTimeout(() => {
+		  controller.abort();
+		}, 3000);
+
+
+		здесь new AbortController() это некоторая глобальная переменная, за которой можно следить при помощи конструкции:
+
+			if (signal.aborted) {}
+
 
 ===============================
 что такое ajax?
@@ -3115,6 +3328,129 @@ web workers
 		    console.log(e.data);
 		  };
 		}
+
+	существуют shared воркеры. с помощью них можно отправлять сообщения между вкладками, iframes. 
+
+		// Первая вкладка: app1.js
+		const sharedWorker = new SharedWorker('worker.js')
+
+		sharedWorker.port.onmessage = (event) => {
+		  console.log('data from worker', event)
+		}
+
+		const sendDataToWorker = () => {
+		  sharedWorker.port.postMessage(1)
+		}
+
+
+
+		// Вторая вкладка: app2.js
+		// то же самое
+
+
+
+		// Воркер: worker.js
+		let sum = 0
+
+		onconnect = (connect) => {
+		  const port = connect.ports[0] // В ports всегда один элемент
+
+		  port.onmessage = (event) => {
+		    sum += event
+		  }
+
+		  port.postMessage(sum)
+		}
+
+
+
+================================
+сервис воркеры
+
+	это часть js, а не часть angular. они похожи на резделяемые веб-воркеры.
+
+	это скрипт, работающий между сайтом и сетью и дающий вам, кроме прочего, возможность перехватывать сетевые запросы и отвечать на них различными способами.  для работы сервис-воркеров необходим HTTPS
+
+	сервис-воркер выполняется в отдельном потоке от потока страницы, которую он контролирует. в нём можно писать js-код.
+
+	Основная часть работы сервис-воркера заключается в прослушивании соответствующих событий и полезном реагировании на них. Различные события запускаются в разные моменты жизненного цикла сервис-воркера.
+
+	создадим сервис-воркер:
+
+		// serviceWorker.js:
+
+		self.addEventListener('install', event => {
+		  // Do install stuff
+		});
+
+		self.addEventListener('activate', event => {
+		  // Do activate stuff: This will come later on.
+		});	
+
+
+	далее на каждой странице сайта подключается этот сервис-воркер:
+
+		if ('serviceWorker' in navigator) {
+		  navigator.serviceWorker.register('/serviceWorker.js', {
+		    scope: '/'
+		  });
+		}
+
+	если мы хотим кешировать картинки и скрипты, то измененим наш сервис-воркер:
+
+		self.addEventListener('install', event => {
+
+		  function onInstall () {
+		    return caches.open('static')
+		      .then(cache => cache.addAll([
+		        '/images/lyza.gif',
+		        '/js/site.js',
+		        '/css/styles.css',
+		        '/offline/',
+		        '/'
+		      ])
+		    );
+		  }
+
+		  event.waitUntil(onInstall(event));
+		});	
+
+
+	тут больше: https://prgssr.ru/development/sozdaem-service-worker.html#heading-section
+
+================================
+широковещательный канал передачи данных.
+
+	позволяет передавать сообщения между вкладками браузера, iframes. это аналог разделяемых веб-воркеров. на этот канал можно подписаться из любого контекста. 
+
+	осуществляется только в контексте одного домена.
+
+		// создание канала
+		var bc = new BroadcastChannel('test_channel');
+
+		// отправка сообщений всем подписчикам
+		bc.postMessage('This is a test message.');
+
+		// Пример простого обработчика событий, который
+		// выводит сообщения в консоль
+		bc.onmessage = function (e) { 
+		  console.log(e.data); 
+		}
+
+		// Отключение от канала
+		bc.close()	
+
+
+		пример файла-отправителя:
+
+			var cannel = new BroadcastChannel('channel1');
+			cannel.postMessage('Привет другому окну');		
+
+		пример файла-получателя:
+
+			var cannel = new BroadcastChannel('channel1');
+			cannel.onmessage = function (ev) { console.log(ev); }
+
 
 ================================
 web api

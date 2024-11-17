@@ -1,0 +1,48 @@
+цель в том, чтобы отрисовывать только видимые элементы, а не все. то есть часть элементов сверху и часть элементов снизу обрезается при любом движении скролла.
+в angular cdk есть компонент, решающий эту задачу. его нужно установить и настроить. важно настроить высотку обёртки и количество элемемнтов внутри обёртки(возможно и их высоту).
+
+ограничение вирутуального скролла в том, что высоты всех элементов должны быть равными.
+
+
+component:
+
+	<ng-container *ngIf="dummyDataObs$ | async as dummyDataSignal">
+	    <cdk-virtual-scroll-viewport itemSize="10" style="height: 100px; background: cyan">
+	        <div *cdkVirtualFor="let item of dummyDataSignal">
+	            {{ item.id }} - {{ item.firstName }}
+	        </div>
+	    </cdk-virtual-scroll-viewport>
+	</ng-container>
+
+	  dummyDataObs$ = dummyDataObs$;
+	  STATES: any[];
+
+	  constructor() {
+	    this.dummyDataObs$.subscribe(console.log)
+
+	    function flatten(arr) {
+	      var array = [];
+	      while(arr.length) {
+	        var value = arr.shift();
+	        if(Array.isArray(value)) {
+	          // this line preserve the order
+	          arr = value.concat(arr);
+	        } else {
+	          array.push(value);
+	        }
+	      }
+	      return array;
+	    }
+	    
+	    const USA = [
+	        { name: 'Alabama', capital: 'Montgomery' },
+	        { name: 'Alaska', capital: 'Juneau' },
+	        { name: 'Arizona', capital: 'Phoenix' },
+	        { name: 'Arkansas', capital: 'Little Rock' },
+	      ];
+	    
+	    
+	    this.STATES = flatten(Array(1000).fill(1).map(i => USA));    
+	  }
+	}
+

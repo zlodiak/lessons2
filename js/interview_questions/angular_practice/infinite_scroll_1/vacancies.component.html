@@ -1,0 +1,6 @@
+<p>vacancies works!</p>
+
+
+<ng-container *ngIf="dummyDataObs$ | async as dummyDataSignal">
+    <app-simple-table [dummyData]="dummyDataSignal"></app-simple-table>
+</ng-container>
