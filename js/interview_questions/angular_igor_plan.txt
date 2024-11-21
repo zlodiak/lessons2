@@ -1256,12 +1256,71 @@ angular elements это npm-пакет, который позволяет отд
 		срабатывает при любой стратегии. и при любом изменении Input объекта (и по ссылке, и по внутренней части). кроме того этот хук срабатывает при любом событии компонента. по сути этот хук срабатывает на любой цикл обнаружения изменений.
 
 		таким образом при помощи ngDoCheck можно обойти ограничение стратегии OnPush:
-		  ngDoCheck() {
-		      if (this.id !== this.o.id) {
-		        this.cd.markForCheck();
-		        this.id = this.o.id;
-		      }
-		    }
+
+			appComponent:
+
+				@Component({
+				  selector: 'app-root',
+				  template: `
+				  <newsletter [user]="user"></newsletter>
+				`,
+				})
+				export class AppComponent {
+				  user: any = {
+				    firstName: 'Alice',
+				    lastName: 'Smith',
+				  };
+
+				  constructor() {
+				    setTimeout(() => {
+				      this.user.firstName = 'Bobby';
+				    }, 4000);
+				  }
+				}		
+				
+			secondComponent:
+
+				@Component({
+				  selector: 'newsletter',
+				  changeDetection: ChangeDetectionStrategy.OnPush,
+				  template: `
+				    <fieldset class="newsletter">     
+				      <h5>Hello {{user?.firstName}},
+				          enter your email below to subscribe:</h5>
+				      <form>
+				          
+				          <input #email type="email" name="email" placeholder="Enter your Email">
+				        
+				          <input  type="button" class="button button-primary" value="Subscribe"
+				                  (click)="subscribeToNewsletter(email.value)">
+				      </form>
+				            
+				    </fieldset>
+				`,
+				})
+				export class SecondComponent {
+				  @Input()
+				  user: any;
+
+				  @Output()
+				  subscribe = new EventEmitter();
+
+				  subscribeToNewsletter(email: string) {
+				    this.subscribe.emit(email);
+				  }
+
+				  constructor(private cdr: ChangeDetectorRef) {}
+
+				  ngDoCheck() {
+				    console.log('do check', this.user);
+				    this.cdr.detectChanges();
+				  }
+				}
+
+				в результате видно, что несмотря на changeDetection: ChangeDetectionStrategy.OnPush, всё же переменная user.firstname актуализируется после 4 секунд при помощи ngDoCheck()
+
+				живой пример тут: https://stackblitz.com/edit/stackblitz-starters-ru9hbq?file=src%2Fapp%2Fsecond%2Fsecond.component.ts
+
 
 	ngAfterContentInit, ngAfterContentChecked 
 
@@ -1661,6 +1720,27 @@ Resolver
 			}
 
 			демо здесь: https://stackblitz.com/edit/at-ng-14-router-mhm3d4?file=src%2Fapp%2Finner%2Finner.component.ts
+
+		если при помощи @viewChild мы обращаемся к DOM-элементу, например, к h2, то в переменной мы получим ссылку на DOM-элемент и работать будем с ней при помощи метода nativeElement.
+
+		но если мы при помощи @viewChild мы обращаемся к ангуляр-компоненту, то мы получим ссылку на инстанс этого компонента. однако, если мы вместо инстанса получить ссылку на DOM-элемент, который оборачивает этот компонент, то нужно @viewChild использовать со вторым аргументом:
+
+		  @ViewChild('primaryColorSample', {read: ElementRef})
+		  sample: ElementRef;
+
+		  ngAfterViewInit() {
+		    console.log('Values on ngAfterViewInit():');
+		    console.log("sample:", this.sample.nativeElement);
+		  }		
+
+		 также read пригодится когда нужно получить доступ к директиве, привязанной к DOM-элементу. например когда на инпут повещен датепикер. в этом случае в read нужно указать имя директивы:
+
+			@ViewChild('primaryInput', {read: ColorPickerDirective})
+			colorPicker: ColorPickerDirective;
+
+			openColorPicker() {
+				this.colorPicker.openDialog();
+			}		 
 
 
 =========================================================
@@ -2276,6 +2356,17 @@ createEmbeddedView
 			],		
 
 	11. отключение компонентов от changeDetection при помощи detach()	
+
+
+-----
+
+	lazy load это запрос части бандла по наличию перехода пользователя на роут. в случае автономныого компонента все зависимости этого компонента будут находиться в этом бандле тоже.
+
+	@defer это запрос части бандла на основе анализа составляющих страницы. то есть какого-то блока может не быть, например, куска в виде аудио или видео или текста. в этом случае код этого куска выделяется в отдельную часть бандла.
+
+	таким образом lazy load отвечает за ленивый вывод страницы полностью, а @defer отвечает за ленивый вывод частей страницы.
+
+
 
 =========================================================
 angular.json

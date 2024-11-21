@@ -391,6 +391,72 @@
 
 
 ========================
+сигнальный viewChild действует так же как viewChild(), но форма записи незначительно отличается. важно то, что при использовании сигнального viewChild не требуется использовать хук ngAfterViewInit()
+
+	@Component({
+	    selector: "book",
+	    template: `
+	    <div>
+	      <b #title>Title</b>
+	    </div>
+	  `,
+	})
+	class BookComponent {
+
+	    title = viewChild<ElementRef>("title");
+
+	    constructor() {
+	        effect(() => {
+	            console.log("Title: ", 
+	            this.title()?.nativeElement);
+	        });
+	    }
+
+	}
+
+не обязательно использовать шаблонную переменную:
+
+	@Component({
+	  template: `
+	    <div>
+	      <book></book>
+	    </div>
+	  `,
+	})
+	class BookListComponent {
+	  bookComponent = 
+	  viewChild<BookComponent>("book");
+	}
+
+в этом случае обращение происходит к инстансу, но можно сделать так чтобы обращение происходило к DOM-лементу, который оборачивает этот инстанс:
+
+	@Component({
+	  template: `
+	    <div>
+	      <book #book></book>
+	    </div>
+	  `,
+	})
+	class BookListComponent {
+	  bookComponent = viewChild("book", {
+	    read: ElementRef
+	  });
+	}
+
+или к директиве:
+
+    bookComponent = viewChild("book", {
+        read: MatTooltip
+    });
+
+можно сделать присутствие в шаблоне обязательным:
+
+	titleRef = viewChild.required("bold");
+
+сигнальный viewChildren действует подобно viewChildren(). то есть он отдаёт коллекцию, если встроено несколько однотипных компонентов/директив/элементов.
+
+сигнальный contentChild действует подобно contentChild(). для него справедливо всё то, что сказано выше для viewChild(ren).
+
 ========================
 ========================
 ========================
