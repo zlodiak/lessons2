@@ -217,6 +217,111 @@ emit gromGroup from dunb component
 
 
 ===========================================
+сервис-локатор
+
+	это способ создать альтернативный инжектор. выгода этого подхода в том, что классы-наследники не обязаны в своих конструкторах вызывать super() со всеми зависимостями родителя.
+
+	например , есть класс A, от него расширяются три класса: B, C, D. класс а через DI получает компонент спиннера SpinnerComponent. классы наследники при инициализации должны в своих конструкторах вызывать super(SpinnerComponent), хотя при этом не используют SpinnerComponent. такой подход загромождает код.
+
+	с 14 версии ангуляра появилась возможность испорльзовать в любом месте класса-родителя:
+
+		loader = inject(SpinnerComponent)
+
+		после этого наследники будут не обязаны прописывать super(SpinnerComponent) потому что inject() не связан с конструктором.
+
+		здесь inject это глобальный инжектор, не связанные с инжектором фреймворка.
+
+	такой же подход можно реализовать руками:
+
+	   export class ServiceLocator {
+	     static injector: Injector;	// global custom injector
+	   }	
+
+	затем инициализируем его до старта приложения при помощи APP_INITIALIZER:
+
+	   	export function setupServiceLocator(injector: Injector): void {
+	     	ServiceLocator.injector = injector;
+	   	}
+
+
+		export const appConfig: ApplicationConfig = {
+		     providers: [
+		       {
+		         provide: APP_INITIALIZER,
+		         useFactory: (injector: Injector) => () => setupServiceLocator(injector),
+		         deps: [Injector],	// глобальный инжектор, который импортируется из фреймвока
+		         multi: true
+		       }
+		     ]
+		  }
+
+
+	использовать так:
+
+
+		export class CustomClass {
+		  private logger: LoggerService;
+
+		  constructor() {
+		    this.logger = ServiceLocator.injector.get(LoggerService);
+		    this.logger.log('CustomClass initialized!');
+		  }
+		}	
+
+
+
+--------
+
+суть сервис-локатора без привязки к фреймворку:
+
+	есть класс-синглтон со статическим методом, который отдаёт глобальный инжектор:
+
+		export class ServiceLocatorComplex {
+		  static instance
+
+		  static getInstance() {
+		    if (this.instance === undefined) {
+		      this.instance = createTarget()
+		    }
+		    return this.instance
+		  }
+		}	
+
+	сам инжектор выглядит так:
+
+		export const createTarget = () => {
+		  const state = []
+
+		  const add = (str) => {
+		  	// перед помещением в state десь происходит создание инстанса и инжжектирование зависимостей второго и выше уровней, если они есть.
+		    state.push(str)
+		  }
+		  
+		  return {
+		    state,
+		    add
+		  }
+		}	
+
+		по сути это паттерн "наблюдатель"
+
+	теперь есть возможность получать содержание из инжектора:
+
+		const instanceFromComplex = ServiceLocatorComplex.getInstance()
+		instanceFromComplex.add('1')
+		instanceFromComplex.add('2')
+		instanceFromComplex.add('3')
+		console.log(instanceFromComplex.state[2])	
+
+	в реальной программе содержание будет представлять из себя проинициализированные инстансы, а не просто строки как в этом примере.
+
+	демо: https://stackblitz.com/edit/js-jyg4au?file=index.js
+
+	в ангуляре подобные инжекторы организованы в дерево. звенья этого дерева связаны через ссылки в форме ещё одного статического свойства. поиск нужного инстанса регулируется декораторами @Self и т.п.
+
+
+
+
 ===========================================
 ===========================================
 ===========================================

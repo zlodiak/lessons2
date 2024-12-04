@@ -829,6 +829,34 @@ retry
 		  error: val => console.log(`${val}: Retried 2 times then quit!`)
 		});
 
+retryWhen
+
+	тоже запускает поток, но когда выполнитеся условие. условием, например, может быть timer(2000), в этом случае задержка будет 2 секунды.
+
+	важно то, что величина задержки устанавливается только один раз. то есть внутри retryWhen функция выполняется только один раз, при этом выбросов ошибки может быть несколько.
+
+	пример, в котором http-запрос сначала отрабатывает с ошибками, но потом без ошибок:
+
+		const http$ = this.http.get<Course[]>('/api/courses');
+
+		http$.pipe(
+		        tap(() => console.log("HTTP request executed")),
+		        map(res => Object.values(res["payload"]) ),
+		        shareReplay(),
+		        retryWhen(errors => {
+		            return errors
+		                    .pipe(
+		                        delayWhen(() => timer(2000)),
+		                        tap(() => console.log('retrying...'))
+		                    );
+		        } )
+		    )
+		    .subscribe(
+		        res => console.log('HTTP response', res),
+		        err => console.log('HTTP Error', err),
+		        () => console.log('HTTP request completed.')
+		    );	
+
 ================================
 concatLatestFrom из библиотеки rxjs
 
