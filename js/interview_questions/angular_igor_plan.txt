@@ -3419,6 +3419,70 @@ DomSanitizer
 	}	
 
 =========================================================
+Resource API
+
+	это ещё один способ получать асинхронные данные на основе отслеживания сигналов. основное его преимущество в том, что он позволяет избежать написания шаблонного кода при получении статусов процесса (загружается, загружено, ошибка  и т.д.)
+
+	по сути своей Resource API это обёртка над сигналом, котрая возвращает набор свойств:
+
+		Value,
+		Status,
+		Error,
+		isLoading.
+
+	другими словами, Resource API, это сущность, которая принимает сигнал и возвращает обогащённый сигнал.
+
+	Resource API имеет два основных метода:
+
+		request
+
+			в него помещается отслеживаемый сигнал
+
+		loader
+
+			в него помещается конкретное действие (чаще всего http-запрос), которое будет запускаться когда отслеживаемая сущность из request изменит своё значение. например:
+
+				const id = signal(123)
+
+				productResource = resource({
+				    request: id,
+				    loader: async () => {
+				      let c = id();
+				      return Promise.resolve({ name: 'Book', price: 100 * c });
+				    }
+				})		
+
+			важно то, что в блоке loader выражение 	let c = id() не следит за сигналом и не является триггиром запуска блока loader
+
+
+		по аналогии с computed() можно создать внешнюю функцию, которая будет следить за наличием изменений в productResource:
+
+		    this.productResource.update((value: any) => {
+
+		      if (value.price == 500) {
+		        console.log('value if:', value);
+		        return { ...value, price: 1 };
+		      }
+		      console.log('value', value);
+		      return { ...value };
+		    })	
+
+	если в блоке request значение меняется слишком часто и при этом предыдущие запросы не успевают отработать до конца, то есть смысл отменять их по модели switchMap. для этого нужно использовать второй параметр fetch:
+
+		productId: WritableSignal<number> = signal(1);
+		  productApiResource = resource({
+		    request: () => ({ id: this.productId() }),
+		    loader: async (param) => {
+		      const { id } = param.request as { id: number };
+		      let url = `http://localhost:3000/products?id=${id}`;
+		      return fetch(url, { signal: param.abortSignal }).then((res) => res.json() as Promise<Product[]>);
+		    },
+		  });	
+
+
+	тут больше: https://www.telerik.com/blogs/getting-started-resource-api-angular
+
+
 =========================================================
 =========================================================
 =========================================================
