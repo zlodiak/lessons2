@@ -246,6 +246,36 @@ custom providers
 			  constructor(private selfDependency: SelfDepService){
 			    super();
 			  }
+			}	
+
+		второе преимущество в том, что не обязательно при таком виде инжектирования указывать тип. этот тип уже указан в new InjectionToken поэтому повторение излишне:
+
+
+			const TOKEN = new InjectionToken<string>('token');
+
+			@Component({
+			    // component metadata
+			})
+			export class AppComponent {
+			    private token = inject(TOKEN);
+			    // type "string" is inferred
+			}		
+
+		третье преимущество в том, что зависимость можно шарить между несколькими компонентами вместо того чтобы в конструкторе каждого компонента прописывать эту зависимость:
+
+			function getRouteParam(paramName: string): string {
+			  const route = inject(ActivatedRoute);
+			  return route.snapshot.paramMap.get(paramName);
+			}
+
+			@Component({
+			  selector: 'app-root',
+			    template: `
+			        <h1>Route param: {{ id }}</h1>
+			    `,
+			})
+			export class AppComponent {
+			  id = getRouteParam('id');
 			}		
 
 	есть возможность зарегистрировать частный провайдер в декораторе @Injectable. то есть в нём тоже можно использовать useClass/useExisting/useValue/useFactory. преимущество этого способа заключается в том, что включается treeShaking.
@@ -355,6 +385,39 @@ InjectionToken
 		1. type token - когда название токена совпадает с именем класса сервиса
 		2. string token - просто идентификатор в виде строки
 		3. injection token - сгненерированный при помощи new уникальный токен(строка, которая передаётся аргументом не обязана быть уникальной, она выводится только в случае ошибки)
+
+		пример string token:
+
+			@NgModule({
+			  imports: [BrowserModule, FormsModule],
+			  declarations: [AppComponent, HelloComponent],
+			  bootstrap: [AppComponent],
+			  providers: [
+			    { provide: 'APIURL', useValue: 'http://SomeEndPoint.com/api' },
+			  ]
+			})
+			export class AppModule {}
+
+			@Component({
+			  selector: 'my-app',
+			  templateUrl: './app.component.html',
+			  providers: [],
+			})
+			export class AppComponent {
+			  products: Product[];
+
+			  constructor(
+			    @Inject('APIURL') public ApiUrl: String,
+			  ) {
+			    console.log(ApiUrl);
+			  }
+
+			  getProducts() {
+			    this.products = this.productService.getProducts();
+			  }
+			}
+
+			демо: https://stackblitz.com/edit/angular-injection-token-string-token-example1-vmt99ska?file=src%2Fapp%2Fapp.component.ts
 
 
 =========================================================
@@ -489,6 +552,33 @@ ngComponentOutlet аналогична ngTemplateOutlet. Различие лиш
 	  <h4>Body</h4>
 	  <ng-content select="[body]"></ng-content>
 	</div>
+
+	также существует фоллбек для непомеченных проекций:
+
+		<app-card>
+		  <card-header>
+		    <h2>Header Content</h2>
+		  </card-header>
+		  <card-content>
+		    <p>This is the main content of the card.</p>
+		  </card-content>
+		  <card-footer>
+		    <button>Footer Button</button>
+		  </card-footer>
+		  <p>This will be projected into default ng content in the child</p>
+		</app-card>
+
+
+		<div class="card">
+		  <ng-content select="card-header"></ng-content>  
+		  <ng-content select="card-content"></ng-content>
+		  <ng-content select="card-footer"></ng-content>
+		  <!-- capture anything except "card-header, card-content and card-footer" -->
+		  <ng-content></ng-content>
+		</div>
+
+
+	
 
 =========================================================
 что такое пайп?
@@ -781,6 +871,19 @@ angular elements это npm-пакет, который позволяет отд
 	}
 
 то есть нужно просто получить элемент и выполнить на нём createComponent()
+
+можно настроить действие, которое будет происходит при удалении динамического компонента. это действие нужно описывать внутри динамического компонента:
+
+	<div class="c1" (click)="clicked.emit()">This is Component 1</div>
+
+	public destroyRef = inject(DestroyRef);
+	public clicked = output<void>();
+
+	ngOnInit() {
+	this.destroyRef.onDestroy(() => {
+	  console.log('Component 1 was destroyed');
+	});
+	}
 
 =========================================================
 <base href="/"> 
@@ -1245,7 +1348,7 @@ angular elements это npm-пакет, который позволяет отд
 =========================================================
 описать хуки жизненного цикла.
 
-	ngOnChange 
+	ngOnChanges 
 
 		срабатывает только когда ссылка Input элемента меняется или составляющая переданного объекта. срабатывает каждый раз при получении всех значений для входных переменных или они равны undefined.
 
@@ -1630,13 +1733,37 @@ reactive forms
 
 	из шаблона можно получить доступ к состоянию полей через .get(). это нужно для вывода сообщений валидации. также доступ к состоянию полей можно получить в контроллере.
 
-	onlySelf запрещает событию всплывать в родительский блок по аналогии с stopPropagation(). поэтому valuesChanged не сможет поймать событие. onlySelf действует с: 
+	onlySelf запрещает событию всплывать в родительский блок по аналогии с stopPropagation(). поэтому valuesChange не сможет поймать событие. onlySelf действует с: 
 
 		setValue, patchValue, markAsUntouched, markAsDirty, markAsPristine, markAsPending, disable, enable, and updateValueAndValidity
 
-	пример:
+	пример. есть форма с двумя полями. эти поля имеют свою валидацию, но и форма имеет свою, отдельную от них, валидацию:
 
-		setValue, patchValue, markAsUntouched, markAsDirty, markAsPristine, markAsPending, disable, enable, and updateValueAndValidity
+		this.userNameControl = this.formBuilder.control('Harry', Validators.required);
+		this.passwordControl = this.formBuilder.control('S3cReT', Validators.required);
+		this.loginForm = this.formBuilder.group({
+		  userName: this.userNameControl,
+		  password: this.passwordControl
+		});	
+
+		сделаем:
+
+			this.passwordControl.setValue('');
+
+			сейчас:
+
+				this.passwordControl.valid === false
+				this.loginForm.valid === false
+
+		но если сделаем:
+
+			this.passwordControl.setValue('', { onlySelf: true });
+
+			станет:
+
+				this.passwordControl.valid === false
+				this.loginForm.valid === true			
+
 
 	из-за того, что существует reset() любое поле может получить значение null даже если оно не было им типизировано при объявлении. чтобы этого избежать можно использовать настройку nonNullable. в этом случае после применения reset() значение сбросистся не к null, а к ничальному значению:
 
@@ -1655,7 +1782,17 @@ reactive forms
 		  password: new UntypedFormControl(''),
 		});	
 
+	можно подписываться на вводи значения и изменение статуса конкретного поля. но с 18-ой версии можно подписываться на поток всевозможных событий, отвеивая ненужные:
 
+		form.events
+		  .pipe(filter((event) => event instanceof ValueChangeEvent))
+		  .subscribe((event) => {
+		    console.log(event);
+		  });
+
+	при этом нужно помнить, что события всплывают в зависимости от вложенной структуры формы. остановить всплытие можно при помощи OnlySelf. во всплывающем событии есть указание источника события. а в случае отправки формы событие содержит ТОЛЬКО источник в виде ссылки на объект (конфиг) формы.
+
+	при этом событие reset более сложное потому что оно предполагает восстановление предудущих значениий, то есть взаимодействие с каждым полем и формой вцелом. это всё равно, что пользователь кликал бы по ним.
 
 =========================================================
 ленивая загрузка модулей 
@@ -3315,6 +3452,18 @@ dependency injection
 
 		пример: https://stackblitz.com/edit/angular-hdvmao-6h1bkx?file=src%2Fapp%2Fapp.component.ts
 
+	директива может предоставить доступ к своему инстансу элементам, на которых она используется:
+
+		@Directive({
+		  selector: 'input[type="password"]',
+		  exportAs: 'passwordStrength',
+		})		
+
+	в шаблоне доступ к свойству директивы strength выглядит так:
+
+		<input type="password" #evaluator="passwordStrength">
+		@switch (evaluator.strength) {		
+
 =========================================================
 standalone компонент Page4Component можно встроить в модульный роутинг:
 
@@ -3484,6 +3633,15 @@ Resource API
 
 
 =========================================================
+что такое package-lock.json?
+
+	существует файл package.json в нём указаны зависимости, который устанавливаются командой npm install. в нём зависимости могут быть указаны неконкретно. например больше или равно определённой версии. таким образом после npm install установятся актуальный на тот момент времени версии.
+
+	иногода, особенно в командной разработке, требуется у каждого разработчика установить строго определённые версии библиотек вне зависимости от состояния удалённых репозиториев на настоящий момент. для этого используется файл package-lock.json и команда npm ci.
+
+	при этом, файл package-lock.json обновляется после запуска каждой команды npm install. но после npm ci этот файл не обновляется.
+
+
 =========================================================
 =========================================================
 =========================================================
