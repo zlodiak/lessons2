@@ -915,6 +915,22 @@ angular elements это npm-пакет, который позволяет отд
 
 	существует приоритет гардов, по правилам котрого гарды в массиве выполняются параллельно, но все они прежде чем начать действовать, будут ждать завершения первого по счёту гарда в массиве. в случае редиректов есть нюансы: https://habr.com/ru/articles/689682/
 
+	передать параметр в гард можно так:
+
+		{ 
+		   path: 'teacher', 
+		   component: DashboardTeacherComponent, 
+		   canActivate: [AccessGuardTeacher], 
+		   data: { role: 'teacher' } 
+		}
+
+		export class AccessGuardTeacher implements CanActivate {
+		    canActivate(route: ActivatedRouteSnapshot): boolean {
+		        const role = route.data.role;
+		        return true;
+		    }
+		}	
+
 =========================================================
 что такое tree shaking? где для него прописываются настройки?
 
