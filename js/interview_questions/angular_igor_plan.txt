@@ -77,7 +77,9 @@ angular
 
 APP_INITIALIZER:
 
-	это возможность стартануть сервис перед началом работы модуля. таким образом из компонент можно сразу брать готовые данные, а не подписываться на них и ждать.
+	это возможность стартануть сервис перед началом работы модуля. таким образом из сервисов можно сразу брать готовые данные, а не подписываться на них и ждать. 
+
+	APP_INITIALIZER будет подгружать тяжёоые данные для определённой страницы пока пользователь ходит по другим страницам. Но, если пользователь загружает тяжёлую страницу по прямой ссылке, то ждать всё равно придётся. в этом случае разумно реализовать спиннер.
 
 	useFactory это функция внутри которой пинается метод сервиса.
 
@@ -85,35 +87,69 @@ APP_INITIALIZER:
 
 	обычно сервис создаётся таким образом чтобы его переменные содержали результат работы метода. иногда в виде subject
 
-		function initUser(curSrv: CurService) {
-		  return () => curSrv.init();
+		export class ContactsService {
+
+		  private contacts$ = new BehaviorSubject<string>('');
+
+		  constructor() {
+		    this.init();
+		  }
+
+		  init(){
+		    of('contacts contacts contacts ')
+		      .pipe(delay(2000))
+		      .subscribe(d => {
+		        this.contacts$.next(d)
+		      });
+		  }
+
+		  getContacts() {
+		    return this.contacts$.asObservable();
+		  }
+		}
+
+	в модуле прописывается следующее:
+
+		function initContacts(service: ContactsService) {
+		  return () => service.init();
 		}
 
 		@NgModule({
-		  imports: [
-		  	.....
-		  ],
+		  declarations: [...],
+		  imports: [...],
 		  providers: [
-		    CurService,
+		    ContactsService,
 		    {
 		      provide: APP_INITIALIZER,
-		      useFactory: initUser,
-		      deps: [CurService],
+		      useFactory: initContacts,
+		      deps: [ContactsService],
 		      multi: true
 		    }
 		  ],
-		  declarations: [AppComponent],
-		  bootstrap: [AppComponent],
+		  bootstrap: [...]
 		})
-		export class AppModule {}
+		export class AppModule { }	
 
-	здесь важно, что CurService прописан не только в deps, но и в providers.
+	здесь важно, что ContactsService прописан не только в deps, но и в providers.
 
 	multi необходим для того чтобы многократно добавлять подобные конструкции, в том числе интерсепторы. важно понимать, что у каждого типа токена свой multi
 
-	если метод curSrv.init() возвращает promise/observable, то приложение не стартанёт пока этот promise/observable не разрешится. таким образом, APP_INITIALIZER это аналог резолвера для роута.
+	шаблон со спиннером может выглядеть так:
 
-	https://upmostly.com/angular/using-the-app_initializer-token-to-bootstrap-your-application
+		<strong *ngIf="(contacts.getContacts() | async) as data else loading">
+		    <div *ngIf="data">{{ data }}</div>
+		</strong>
+
+		<ng-template #loading>loading...</ng-template>
+
+
+	если метод service.init() возвращает promise/observable, то приложение стартанёт сразу, но при заходе на определённый роут будет виден спиннер или пустая страница до тех пор пока этот promise/observable не разрешится. 
+
+	но это поведение можно изменить на такое: пока не загрузятся вообще все данные из всех сервисов, то показывать спиннер для ВСЕГО приложения в КОРНЕВОМ шаблоне. возможно, для этого придётся объединять потоки при помощи forkJoin.
+
+	прочая информация тут:
+
+		https://upmostly.com/angular/using-the-app_initializer-token-to-bootstrap-your-application
 
 =========================================================
 map
@@ -1862,6 +1898,72 @@ Resolver
 			  this.empList = response.employees;
 			})
 		}	
+
+	при этом нужно помнить, что если пользователь перейдёт на страницу по прямой ссылке, то во время работы резолвера будет виден несформированный шаблон.
+
+	допустим, имеется такой конфиг роутера:
+
+		const routes: Routes = [
+		  { 
+		    path: 'product/:id',
+		    component: ProductDetailsComponent,
+		    data: {aaa: 555, z: {q: 11}},
+		    resolve: {
+		      product: ProductResolver
+		    }
+		  },
+		];	
+
+		пользователь проходит по такому урлу:
+
+			http://localhost:4200/product/b924?qwe=123
+
+		как видно, в резолвер передаётся параметр роута, гет-параметр и произвольные параметр data. получить их в резолвере можно так:
+
+			export class ProductResolver {
+			    url = 'http://localhost:3000/products';
+
+			    constructor(private http: HttpClient) {}
+
+			    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+			        // параметр роута
+			        const id = route.params['id'];  // route.paramMap.get('id')
+			        console.log(id, typeof id)     // b924 string
+
+			        // гет-параметр
+			        const qwe = state.root.queryParams['qwe'];  // state.root.queryParamMap.get('qwe')
+			        console.log(qwe, typeof qwe)    // 123 string
+
+			        // произвольный аргумент
+			        const arg = route.data['aaa'];
+			        console.log(arg, typeof arg);   // 555 number
+
+			        // произвольный аргумент в виде объекта
+			        const obj = route.data['z'];
+			        console.log(obj, typeof obj);   // {q: 11} object
+
+			        return this.http.get(this.url + '?id=' + id).pipe(
+			            delay(2000),
+			            map(products => products[0])
+			        );
+			    }
+			}
+
+		чтобы получить все эти переданные данные в компоненте нужно подписаться в хуке компонента:
+
+  			constructor(private activatedRoute: ActivatedRoute) {}		
+
+			ngOnInit() {
+				this.activatedRoute.data.subscribe((d: any) => {
+				  this.product = d.product;
+				  console.log(d, d.aaa, d.z)
+				});
+			}		
+
+		при этом не имеет смысла в компоненте отображать спиннер по значению флага isLoading потому что шаблон компонента начнёт отрисовываться только после того как разрешится резолвер. то есть изменения видимости спиннера просто не будет видно. таким образом, если пользователь загружает страницу по прямому урлу, то не избежать показа несформированной страницы.
+
+		в ранних версиях сервис резолвера должен был имплементировать интерфейс Resolve. в свежих версиях не нужно прописывать implementation, хотя сам метод resolve() должен присутствовать в теле сервиса.
+
 
 =========================================================
 события роутера
