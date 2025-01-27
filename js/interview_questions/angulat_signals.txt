@@ -182,34 +182,14 @@
 
 или можно сделать сигнал readonly явным способом:
 
-	@Component(
-	    selector: "app",
-	    template: `
+	readonly count = signal(0);
 
-	  <h3>Counter value {{counter()}}</h3>
+или
 
-	  <h3>Derived counter: {{derivedCounter()}}</h3>
+	private counterSignal = signal(0);
 
-	`)
-	export class AppComponent {
-
-	    counter = signal(0);
-
-	    derivedCounter = computed(() => this.counter() * 10)
-
-	    constructor() {
-
-	        // this works as expected
-	        this.counter.set(5);
-
-	        // this throws a compilation error
-	        this.derivedCounter.set(50);
-
-	    }
-
-	}
-
-	обратное невозможно.
+	// this is the public read-only signal
+	readonly counter = this.counterSignal.asReadonly();
 
 ========================
 сигналы можно экспортировать из отдельного файла. тем самым шарить между несколькими сущностями:
@@ -276,7 +256,7 @@
 
 		причём можно использовать начальное значение:
 
-			book2 = input<ыекштп>('qwerty')		
+			book2 = input<string>('qwerty')		
 
 		причём можно входящий сигнал объявить обязательным:
 

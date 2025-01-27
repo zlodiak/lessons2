@@ -3761,6 +3761,88 @@ Resource API
 
 
 =========================================================
+runInInjectionContext 
+
+	ограничивает область видимости, в которой будет доступен серсис, взятый из инжектора.
+
+	если мы инжектируем сервис через конструктор или через коренвой уровень ser = inject(ser), то этот сервис будет доступен во всём инстансе класса.
+
+	при помощи runInInjectionContext мы может ограничить доступность сервиса блоком кода.
+
+	пример доступного сервиса во всём инстансе класса:
+
+		@Component({
+		  selector: 'app-root',
+		  template: `<button (click)="press()">press</butto`,
+		})
+		export class HomeComponent {
+		  service = inject(FirstService);
+
+		  press() {
+		    console.log(this.service.getValue());
+		  }
+		}
+
+	пример доступного сервиса только в методе press():
+
+		@Component({
+		  selector: 'app-second',
+		  template: `
+			<button (click)="press()">press second</button>
+			<button (click)="pressOut()">press second out</button>
+		  `,
+		  styleUrls: ['./second.component.css'],
+		})
+		export class SecondComponent {
+		  environmentInjector = inject(EnvironmentInjector);
+
+		  press() {
+		    runInInjectionContext(this.environmentInjector, () => {
+		      const service = inject(FirstService);
+		      console.log(service.getValue());
+		    });
+		  }
+
+		  pressOut() {
+		    // error
+		    // console.log(service.getValue());
+		  }
+		}	
+
+	сам сервис:
+
+		export class FirstService {
+		  getValue() {
+		    return [1, 2, 4];
+		  }
+		}
+
+	демо: 
+
+		https://stackblitz.com/edit/stackblitz-starters-6rm1q7bj?file=src%2Fapp%2Ffirst.service.ts
+
+
+
+	пример ошибки, заключающейся в том, что инжектирование не может случиться после того как пользователь нажмёт на кнопку и тем самым запустить метод:
+
+		export class SecondComponent {
+		  service;
+		  environmentInjector = inject(EnvironmentInjector);
+
+		  press() {
+		    // runInInjectionContext(this.environmentInjector, () => {
+		    this.service = inject(FirstService);
+		    console.log(this.service.getValue());
+		    // });
+		  }
+
+		инжектирование может произойти или при инициализации инстанса через конструктор. или при инициализации инстанса через определени переменной в корневом уровне.
+
+		если мы используем runInInjectionContext, то мы мемент инжектирования смещает от инициализации инстанса в более позднее время.
+
+
+
+
 =========================================================
 =========================================================
 =========================================================
