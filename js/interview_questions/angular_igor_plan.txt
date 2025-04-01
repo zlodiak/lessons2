@@ -8,6 +8,11 @@
 =========================================================
 =========================================================
 =========================================================
+повышение версии по одной:
+
+	ng update @angular/core@18 @angular/cli@18
+
+
 =========================================================
 @Injectable
 
@@ -3358,6 +3363,52 @@ signals
 
 		from$ = toObservable(this.from);
 		to$ = toObservable(this.to);	
+
+=========================================================
+	signal принимает 2 аргумента: 
+	 
+	    первый это начальное значение
+	 
+	    второй это функция сравнения в форме { equal: functionName }
+	 
+	таким образом эффект будет срабатывать только когда новое значение сравнится со старым через функцию сравнения и будет установлено, что новое значение отличается от старого. в любом случае функция сравнения возвращаетс true/false
+	 
+	    <h2>{{Product$() | json}}</h2>
+	    <button (click)="setProduct()">Set Products</button>
+	 
+	    product : IProduct = {
+	        Id:  "1",
+	        Title:"Pen",
+	        inStock: true,
+	        Price : 100
+	 
+	    }
+	 
+	    setProduct(){
+	       let p : IProduct = 
+	          {
+	            Id:"1",
+	            Title:"Pen",
+	            Price: 300,
+	            inStock: true
+	          }; 
+	        this.Product$.set(p);
+	    }    
+	 
+	    function signalEquality(a:IProduct, b: IProduct) {
+	      if(JSON.stringify(a)=== JSON.stringify(b)){
+	        return true;
+	      }
+	      return false; 
+	    }
+	 
+	    Product$ = signal<IProduct>(this.product,{equal:signalEquality});
+	 
+	    productEffect = effect(() => {
+	        console.log(this.Product$());
+	    });
+	 
+	в данном примере несмотря на то, что значение product устанавливается точно такое какое была раньше, всё же эффетк будет срабатывать.
 
 =========================================================
 router inputs

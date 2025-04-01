@@ -1,3 +1,138 @@
+effect 
+
+	это хук, который выполнится как минимум один раз при конструировании класса. 
+
+	  constructor() {
+	    effect(() => {
+	      console.log('t');	// выведется "t"
+	    });
+	  }	
+
+	но он будет выполняться повторно, если в нём будет помещён отслеживаемый сигнал. при этом такой сигнал можно ничему не присваивать, а просто записать:
+
+			products: WritableSignal<Product[]> = signal([]);
+
+			constructor() {
+				effect(() => {
+					this.products();
+					console.log('t');	// выведется "t" при конструировании класса и ещё когда в this.products придёт новое значение.
+				});
+			}	
+
+			ngOnInit() {
+				setTimeout(() => this.products.set(products), 2000);
+			}	
+
+	то есть весь код эффекта будет выполняться когда отслеживаемый сигнал, помещённый в этот же блок, изменится		
+
+========================
+computed
+
+	подобно effect() тоже отслеживает, помещённый в него сигнал, но при этом computed возвращает результат при помощи инструкции return. а следовательно computed должен быть к чему-нибудь приравнян.
+
+	например, есть склад и магазин. на склад товары поступают с одной ценой, а в магазин должны поступать с удвоенной ценой:
+
+		<button (click)="addProductsToWarehouse()">add product to warehouse</button>
+		warehouse: <pre>{{ warehouse() | json }}</pre>
+		shop: <pre>{{ shop() |json }}</pre>
+
+		const products: Product[] = [
+			{ id: 0, title: 'qwe', price: 1 },
+			{ id: 1, title: 'asd', price: 2 },
+			{ id: 2, title: 'zxc', price: 1 }
+		];
+
+		warehouse: WritableSignal<Product[]> = signal([]);
+		shop = computed(() => {
+			return this.warehouse().map(p => ({
+				id: p.id,
+				title: p.title,
+				price: p.price * 2
+			}));
+		});
+
+		addProductsToWarehouse() {
+			this.warehouse.set(products);
+		}
+
+	важно, что computed выполняется минимум 1 раз при инициализации сигнала, который отслеживается. и потом выполняется каждый раз когда сигнал изменяется потому что если сигнал не изменяется, то он кешируется computed-ом
+
+
+========================
+withMethods
+
+	содержит методы для изменения стора, по сути это редюсеры.
+
+	например у нас есть массив книг в сторе и нам нужно по нажатию на кнопку добавить книгу в стор:
+
+	компонент выглядит так:
+
+		export class Page2Component {
+		    store = inject(BooksStore);
+		    addBook() {
+		        this.store.addBook('aaa');
+		    }
+		}	
+
+	шаблон выглядит так:
+
+		<button (click)="addBook()">add book</button>
+
+	стор:
+
+		type BooksState = {
+		  books: string[];
+		  isLoading: boolean;
+		  filter: { query: string; order: 'asc' | 'desc' };
+		};
+
+		const initialState: BooksState = {
+		  books: ['qwe', 'asd'],
+		  isLoading: false,
+		  filter: { query: '', order: 'asc' },
+		};
+
+		export const BooksStore = signalStore(
+		    withState(initialState),
+		    withComputed((state) => ({
+		        booksCount: computed(() => {
+		            return state.books().length
+		        })
+		    })),
+		    withMethods((store) => ({
+		      addBook(title: string) {
+		        patchState(store, (oldState) => {
+		          return {
+		            ...oldState,
+		            books: [...oldState.books, title]
+		          }
+		        })
+		      }
+		    }))
+		);
+
+	здесь в withMethods:
+
+		store это весь стейт + computed-свойства
+
+		oldState это актуальный стейт до внесения изменения через patchState
+
+
+========================
+ngrx signals установить можно так:
+
+	npm i @ngrx/signals
+
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+========================
+
 важно менять сигналы через set() и update(). если этого не делать, то зависящие переменные не будут реагировать на изменение источника.
 
 	@Component({

@@ -22,6 +22,8 @@
 
 		nx g component components/employee-form --project=ui --export
 
+	npx nx g @nx/angular:library libs/products --standalone
+
 ==========================================
 если появится ошибка вида: Error from chokidar Error: ENOSPC: System limit for number of file watchers reached, watch .editorconfig
 
@@ -33,6 +35,12 @@
 запуск приложения
 	
 	nx start one-list
+
+	или 
+
+	npx nx serve one-list
+
+	здесь one-list это одно из приложений, которые находятся в каталоге app
 
 запускать одновременно можно несколько приложений. порт будет у всех разный(командная строка спросит)
 
