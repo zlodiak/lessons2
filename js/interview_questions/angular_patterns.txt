@@ -464,6 +464,72 @@ anticorruption layer
 
 
 ===========================================
+пример спиннера загрузки на основе ngrx signal store
+
+	стор:
+
+		type BooksState = {
+		  books: string[];
+		  isLoading: boolean;
+		};
+
+		const initialState: BooksState = {
+		  books: ['qwe', 'asd'],
+		  isLoading: false,
+		};
+
+		export const BooksStore = signalStore(
+		    withState(initialState),
+		    withComputed((state) => ({
+		        booksCount: computed(() => {
+		            return state.books().length
+		        })
+		    })),
+		    withMethods((store) => ({
+		      async addBook(title: string) {
+		        patchState(store, {isLoading: true});
+		        await delay();
+
+		        patchState(store, (oldState) => {
+		          return {
+		            ...oldState,
+		            books: [...oldState.books, title]
+		          }
+		        })
+
+		        patchState(store, {isLoading: false});
+		      },
+		    })),
+		);
+
+		function delay() {
+		  return new Promise((resolve) => {
+		    setTimeout(resolve, 2000);
+		  })
+		}
+
+	компонент:
+
+		export class Page2Component {
+		    store = inject(BooksStore);
+
+		    addBook() {
+		        this.store.addBook('aaa');
+		    }
+		}
+
+	шаблон:
+
+		<pre>{{ store.books() | json }}</pre>
+		booksCount: {{ store.booksCount() }}
+
+		<button (click)="addBook()">add book</button>
+
+		<div class="spinner" *ngIf="store.isLoading()">
+		    <span>is loading...</span>
+		</div>
+
+
 ===========================================
 ===========================================
 ===========================================

@@ -3572,7 +3572,7 @@ dependency injection
 
 	кроме того можно в цикле использовать плейсхолдер пустого блока, если массив цикла пустой:
 
-		@for (streamingService of streamingServices; track stramingService) {
+		@for (streamingService of streamingServices; track stramingService) { // или track $index
 		  <div>{{ streamingService }}</div>
 		} @placeholder {
 		  <div>No streaming services available</div>
@@ -3632,6 +3632,32 @@ dependency injection
 
 		<input type="password" #evaluator="passwordStrength">
 		@switch (evaluator.strength) {		
+
+	@HostBinding связывает свойство html-элемента и свойство компонента:
+
+		директива:
+
+			@Directive({
+			  selector: '[appColorized]'
+			})
+			export class ColorizedDirective {
+
+			  constructor() { }
+
+			  private fontWeight = "bold";
+			     
+			  @HostBinding("style.fontWeight") get getFontWeight(){
+			      return this.fontWeight;
+			  }
+
+			  @HostBinding('style.backgroundColor') bg = "red"; 
+
+			}
+
+		шабллон компонента:
+
+			<p appColorized>page2 works!</p>
+
 
 =========================================================
 standalone компонент Page4Component можно встроить в модульный роутинг:

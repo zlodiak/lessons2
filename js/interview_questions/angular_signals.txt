@@ -117,6 +117,229 @@ withMethods
 
 		oldState это актуальный стейт до внесения изменения через patchState
 
+		альтернативная форма записи patchState:
+
+			patchState(store, {isLoading: true})
+
+
+========================
+хуки жизненного цикла
+
+	представляют из себя методы, которые выполняются при наступлении определённого события. существуют два хука: onInit, onDestroy:
+
+	  withHooks({
+	    onInit(store) {
+	    	///
+	    },
+	    onDestroy(store) {
+	      ///
+	    },
+	  }),		
+
+	они записываются как отдельгные методы в блоке withHooks. однако существет альтернативный синтаксис, который полезен при существовании необходимости расшарить переменные между хуками:
+
+	  withHooks((store) => {
+	    const logger = inject(Logger);
+	    let interval = 0;
+
+	    return {
+	      onInit() {
+	        ///
+	      },
+	      onDestroy() {
+	        ///
+	      },
+	    };
+	  }),
+
+	хук onInit срабатывает когда один из компонентов инжектирует стор при помощи:
+
+		store = inject(BooksStore);
+
+		или при помощи инжектирования через конструктор.
+
+	при этом, если стор объявлен в providers, но не инжектирован, то хук onInit не сработает.
+
+	onInit сработает также, если на странице есть директива, в которой есть инжект стора. хук сработает при заходе на страницу.
+
+	хук onDestroy срабатывает когда пользователь уходит с компонента, который инжектировал стор. а также когда уходит со страницы, на которой была применена директива, если при этом в директиве есть инжект стора.
+
+
+========================
+withProps
+
+	позволяет добавить новые свойства стору, но в отличие от withComputed эти свойства будут не сигнальными:
+
+		type BooksState = {
+		  books: string[];
+		  isLoading: boolean;
+		  filter: { query: string; order: 'asc' | 'desc' };
+		};
+
+	    withProps(({ isLoading }) => ({
+	      isLoading$: toObservable(isLoading),
+	    })),
+
+	в компоненте использовать так:
+
+        this.store.isLoading$.subscribe(d => {
+            console.log('with props', d);
+        });
+
+    причём если названия свойств в непосредственно сторе и в withProps совпадают, то свойство из withProps замещает свойство из непосредственно стора:
+
+	    withProps(({ isLoading }) => ({
+	      isLoading: toObservable(isLoading),
+	    })),
+
+	    ngOnInit() {
+	        console.log(this.store.isLoading);	// subject
+
+	        this.store.isLoading.subscribe(d => {
+	            console.log('with props', d);	// with props false
+	        });
+	    }
+
+	можно вернуть не только observable, но любое значение
+
+	можно шарить зависимости для стора в целом:
+
+	  withProps(() => ({
+	    booksService: inject(BooksService),
+	    logger: inject(Logger),
+	  })),	
+
+	в результате logger и booksService можно будет использовать в любом месте стора
+
+
+========================
+withComputed
+
+	создаёт новое сигнальное свойство в сторе на основе отслеживания другого сигнального свойства. при этом если название свойств непосредственно в сторе совпадает с названием свойства в блоке withComputed, то свойство из withComputed замещает свойство из непосредственно стора.
+
+		type BooksState = {
+		  books: string[];
+		  isLoading: boolean;
+		  filter: { query: string; order: 'asc' | 'desc' };
+		};
+
+		const initialState: BooksState = {
+		  books: ['qwe', 'asd'],
+		  isLoading: false,
+		  filter: { query: '', order: 'asc' },
+		};
+
+		export const BooksStore = signalStore(
+		    withState(initialState),
+		    withComputed((state) => ({
+		        booksCount: computed(() => {
+		            return state.books().length
+		        }),
+		        books: computed(() => {
+		          return state.books().length * 3
+		        })
+		    })),
+		);	
+
+
+========================
+способы отслеживания стейта:
+
+	getState()
+
+		метод, который получает текущий стейт. он отличается от store тем, что последний не выводит computed свойства. однако ни getState ни store не выводят withProps-свойства.
+
+		    withMethods((store) => ({
+		      getInfo() {
+		        console.log('currentState', getState(store));
+		        console.log('store', store);
+		      }
+		    })),	
+
+		если getState используется в хуке, то нужно завернуть его в эффект. эффект будет каждый раз выполняться при изменении стейта.
+
+	watchState()
+
+		тоже отслеживает, но его не нужно помещать в эффект или каждый раз вызывать в методе. достаточно один раз объявить старт отслеживания:
+
+		    withHooks({
+		      onInit(store) {
+		        watchState(store, (state) => {
+		          console.log('[watchState]', state);
+		        });
+		      }
+		    })		
+
+		watchState выполнитя при инициализации и последующих изменениях значения. getState будет выполняться только при изменениях значения.
+
+		пример уничтожения отслеживания:
+
+			const { destroy } = watchState(store, console.log);
+			destroy()
+
+		есть возможность использовать watchState в компоненте, но для этого нужно передать контекст инжекции как опцию:
+
+		  readonly #injector = inject(Injector);
+		  readonly store = inject(CounterStore);		
+		  ngOnInit(): void {
+		    watchState(this.store, console.log, {
+		      injector: this.#injector,
+		    });
+		  }
+
+
+========================
+приватность
+
+	в торе можно любые свойства и любые методы объявить приватными через префикс _
+
+	после этого они будут недоступны вне стора.
+
+========================
+существует облегченная версия стора, которой можно управлять непосредственно из компоннета или сервиса. для этого импортируются необходимые сущности и после этого на лету создаётся легковесный стейт, например, в компоненте:
+
+	readonly state = signalState({ count: 0 });
+
+	increment(): void {
+		patchState(this.state, (state) => ({ count: state.count + 1 }));
+	}
+
+
+
+========================
+withLoadingFeature
+
+	служит для того чтобы расшарить часть стейта. например, в основном стейте есть много сущностей, которые используют флаг isLoading. этот флаг можно вынести в отдельную часть стейта:
+
+		const withLoadingFeature = () => {
+		  return signalStoreFeature(
+		    withState<{ loading: boolean }>({
+		      loading: false,
+		    }),
+		    withComputed((state) => ({
+		      status: computed(() => (state.loading() ? "loading" : "success")),
+		    }))
+		  );
+		};
+		function setLoading() {
+		  return { loading: true };
+		}
+		function stopLoading() {
+		  return { loading: false };
+		}
+
+	и затем подключить в основной стейт:
+
+		export const MoviesProvider = signalStore(
+		  withState(initialState),
+		  withComputed(),
+		  withHooks(),
+		  withMethods(),
+		  withLoadingFeature()
+		);
+
+
+	в результате в основном стейте будет доступно computed-свойство status
 
 ========================
 ngrx signals установить можно так:
