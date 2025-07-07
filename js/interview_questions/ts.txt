@@ -1514,6 +1514,21 @@ readonly свойства интерфейса
 
 		console.log(id, age); // 'animal', 0		
 
+
+	интерфейс может сливаться к слассом, когда они находятся в одной области видимости.
+
+		interface Animal {
+		  id: string;
+		  age: number;
+		}
+
+		class Animal {}
+
+		const animal = new Animal(); // Ok
+
+		animal.id = 'animal'; // Ok
+		animal.age = 0; // Ok
+
 ================================
 статические члены класса
 
